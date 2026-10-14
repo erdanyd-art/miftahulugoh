@@ -1,0 +1,43 @@
+import {
+  BookOpen,
+  CalendarDays,
+  ClipboardCheck,
+  HandCoins,
+  History,
+  Landmark,
+  LayoutDashboard,
+  Receipt,
+  School,
+  Settings,
+  UserCog,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
+
+export type NavItem = { label: string; href: string; icon: LucideIcon };
+export type Peran = "admin" | "tutor";
+
+// Menu per peran (CLAUDE.md). Ini hanya tampilan: hak akses ditegakkan di database dan server.
+export const menuAdmin: NavItem[] = [
+  { label: "Dashboard", href: "/", icon: LayoutDashboard },
+  { label: "Kelas", href: "/kelas", icon: School },
+  { label: "Peserta", href: "/peserta", icon: Users },
+  { label: "Jadwal", href: "/jadwal", icon: CalendarDays },
+  { label: "Absensi", href: "/absensi", icon: ClipboardCheck },
+  { label: "Honor", href: "/honor", icon: HandCoins },
+  { label: "Pembayaran", href: "/pembayaran", icon: Receipt },
+  { label: "Keuangan", href: "/keuangan", icon: Landmark },
+  { label: "Pengguna", href: "/pengguna", icon: UserCog },
+  { label: "Pengaturan", href: "/pengaturan", icon: Settings },
+  { label: "Audit", href: "/audit", icon: History },
+];
+
+export const menuTutor: NavItem[] = [
+  { label: "Dashboard", href: "/", icon: LayoutDashboard },
+  { label: "Jadwal Saya", href: "/jadwal-saya", icon: CalendarDays },
+  { label: "Kelas Saya", href: "/kelas-saya", icon: BookOpen },
+  { label: "Absensi", href: "/absensi", icon: ClipboardCheck },
+  { label: "Honor Saya", href: "/honor-saya", icon: HandCoins },
+];
+
+export const menuPerPeran: Record<Peran, NavItem[]> = { admin: menuAdmin, tutor: menuTutor };
