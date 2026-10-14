@@ -2,6 +2,7 @@
 -- JANGAN dijalankan di produksi. Tidak ada data nyata di sini.
 -- Akun lokal (kata sandi sama, hanya untuk pengembangan):
 --   admin@contoh.test, tutor1@contoh.test, tutor2@contoh.test  /  kata sandi: dev-lokal-123
+--   Untuk uji penolakan: tutor3@contoh.test (profil nonaktif), tanpaprofil@contoh.test (tanpa baris profiles)
 
 insert into auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
                         raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
@@ -12,7 +13,9 @@ select '00000000-0000-0000-0000-000000000000', u.id, 'authenticated', 'authentic
 from (values
   ('10000000-0000-0000-0000-000000000001'::uuid, 'admin@contoh.test'),
   ('10000000-0000-0000-0000-000000000002'::uuid, 'tutor1@contoh.test'),
-  ('10000000-0000-0000-0000-000000000003'::uuid, 'tutor2@contoh.test')
+  ('10000000-0000-0000-0000-000000000003'::uuid, 'tutor2@contoh.test'),
+  ('10000000-0000-0000-0000-000000000004'::uuid, 'tutor3@contoh.test'),
+  ('10000000-0000-0000-0000-000000000005'::uuid, 'tanpaprofil@contoh.test')
 ) as u (id, email);
 
 insert into auth.identities (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
@@ -25,6 +28,9 @@ insert into public.profiles (id, nama, peran) values
   ('10000000-0000-0000-0000-000000000001', 'Admin Contoh',  'admin'),
   ('10000000-0000-0000-0000-000000000002', 'Ustadz Fulan',  'tutor'),
   ('10000000-0000-0000-0000-000000000003', 'Ustadzah Fulanah', 'tutor');
+
+insert into public.profiles (id, nama, peran, aktif) values
+  ('10000000-0000-0000-0000-000000000004', 'Tutor Nonaktif', 'tutor', false);
 
 insert into public.kelas (id, nama, keterangan) values
   ('20000000-0000-0000-0000-000000000001', 'Bahasa Arab Dasar',  'Kelas contoh'),

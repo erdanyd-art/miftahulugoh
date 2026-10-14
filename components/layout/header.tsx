@@ -1,10 +1,10 @@
-import { Search } from "lucide-react";
+import { LogOut, Search } from "lucide-react";
+import { keluar } from "@/lib/aksi-auth";
 import type { Peran } from "@/lib/nav";
 import { MobileNav } from "./mobile-nav";
 
 const labelPeran: Record<Peran, string> = { admin: "Admin", tutor: "Tutor" };
 
-// Nama pengguna masih placeholder; diisi dari tabel profiles di Sprint 2.
 export function Header({ peran, nama }: { peran: Peran; nama: string }) {
   const inisial = nama
     .split(" ")
@@ -44,6 +44,16 @@ export function Header({ peran, nama }: { peran: Peran; nama: string }) {
           <span className="block text-sm font-semibold">{nama}</span>
           <span className="block text-xs text-muted-foreground">{labelPeran[peran]}</span>
         </span>
+        <form action={keluar}>
+          <button
+            type="submit"
+            title="Keluar"
+            className="flex size-10 items-center justify-center rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+          >
+            <LogOut className="size-5" aria-hidden />
+            <span className="sr-only">Keluar</span>
+          </button>
+        </form>
       </div>
     </header>
   );

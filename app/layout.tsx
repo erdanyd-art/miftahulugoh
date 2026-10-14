@@ -13,7 +13,7 @@ const naskh = Noto_Naskh_Arabic({
 });
 
 export const metadata: Metadata = {
-  title: "Lembaga Miftah al-Lughah",
+  title: { default: "Lembaga Miftah al-Lughah", template: "%s · Miftah al-Lughah" },
   description: "Dashboard administrasi Lembaga Miftah al-Lughah",
 };
 
