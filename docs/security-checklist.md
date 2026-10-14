@@ -4,6 +4,8 @@ Versi: 0.1 · Tanggal: 2026-10-14
 
 Cara pakai: setiap butir diberi status **Lulus / Gagal / Ditunda** beserta bukti (perintah, hasil tes, tangkapan layar, atau tautan PR). Jangan menandai Lulus tanpa bukti. Kolom "Sprint" menunjukkan kapan butir mulai wajib diperiksa; semuanya diperiksa ulang penuh di Sprint 7 dan sebelum Sprint 8 selesai.
 
+\*lokal = dijalankan di PostgreSQL 17 portabel yang meniru Supabase (peran, `auth.uid()`, skema `extensions`, pgTAP 1.3.3), Sprint 1, 2026-10-14. Wajib diulang dengan `npx supabase test db` di Supabase lokal/CI sebelum dianggap final.
+
 Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Menyembunyikan menu, halaman, atau tombol bukan pengamanan.
 
 ## A. Autentikasi dan sesi
@@ -12,7 +14,7 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 |---|---|---|---|
 | A1 | Pendaftaran publik dimatikan (lokal dan produksi) | 2, 8 | ☐ |
 | A2 | Tidak ada kata sandi bawaan atau bersama; pengguna menetapkan kata sandi sendiri lewat undangan/reset | 3 | ☐ |
-| A3 | Hash kata sandi lama dari Google Sheets tidak dimigrasi | 1 | ☐ |
+| A3 | Hash kata sandi lama dari Google Sheets tidak dimigrasi | 1 | Lulus — tidak ada impor data maupun hash dari Sheets (schema.md §12) |
 | A4 | Kebijakan kata sandi minimum (panjang ≥ 10) diatur di Supabase Auth | 2, 8 | ☐ |
 | A5 | URL pengalihan (redirect) Auth hanya mengizinkan domain sendiri dan localhost untuk pengembangan | 8 | ☐ |
 | A6 | Pengguna nonaktif tidak bisa masuk dan sesi yang sedang berjalan kehilangan akses (diuji) | 2, 3 | ☐ |
@@ -25,25 +27,25 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 
 | # | Butir | Sprint | Status |
 |---|---|---|---|
-| B1 | RLS aktif di **semua** tabel `public`; ada tes otomatis yang memeriksanya | 1 | ☐ |
-| B2 | Seluruh tes RLS di `supabase/tests/` lulus pada setiap PR | 1+ | ☐ |
-| B3 | Tutor tidak dapat membaca `kas`, `pembayaran`, `kategori_kas`, `audit_log` (diuji) | 1, 6 | ☐ |
+| B1 | RLS aktif di **semua** tabel `public`; ada tes otomatis yang memeriksanya | 1 | Lulus (lokal*) — `supabase/tests/00_struktur_rls.test.sql` tes 1–2 |
+| B2 | Seluruh tes RLS di `supabase/tests/` lulus pada setiap PR | 1+ | Lulus (lokal*) — 74/74 tes; job `database` di CI menunggu remote GitHub |
+| B3 | Tutor tidak dapat membaca `kas`, `pembayaran`, `kategori_kas`, `audit_log` (diuji) | 1, 6 | Lulus (lokal*) — `01_aturan_bisnis` bagian visibilitas tutor |
 | B4 | Tutor hanya melihat jadwal, kelas, peserta, sesi, dan absensi yang terkait dirinya (diuji) | 1, 4, 5 | ☐ |
-| B5 | `sesi` dan `absensi_murid` tidak bisa ditulis langsung oleh pengguna aplikasi; hanya lewat fungsi | 1, 5 | ☐ |
+| B5 | `sesi` dan `absensi_murid` tidak bisa ditulis langsung oleh pengguna aplikasi; hanya lewat fungsi | 1, 5 | Lulus (lokal*) — INSERT/UPDATE langsung ke `sesi` ditolak |
 | B6 | Honor dan jendela absen dihitung/diperiksa di database, bukan di kode aplikasi | 5 | ☐ |
 | B7 | Peran pengguna dibaca dari tabel `profiles` di server, bukan dari body request, cookie bebas, atau metadata yang bisa diubah klien | 2 | ☐ |
-| B8 | Setiap fungsi `SECURITY DEFINER` memakai `set search_path = ''`, nama objek lengkap, memeriksa `auth.uid()`, dan `EXECUTE`-nya dicabut dari `anon` | 1 | ☐ |
-| B9 | Tidak ada kebijakan DELETE untuk data keuangan; DELETE fisik ditolak; hanya soft delete | 1, 6 | ☐ |
+| B8 | Setiap fungsi `SECURITY DEFINER` memakai `set search_path = ''`, nama objek lengkap, memeriksa `auth.uid()`, dan `EXECUTE`-nya dicabut dari `anon` | 1 | Lulus (lokal*) — tes struktural `search_path` + EXECUTE anon; cek `auth.uid()` lewat telaah fungsi |
+| B9 | Tidak ada kebijakan DELETE untuk data keuangan; DELETE fisik ditolak; hanya soft delete | 1, 6 | Lulus (lokal*) — DELETE fisik `kas`/`pembayaran` ditolak (UI soft delete: Sprint 6) |
 | B10 | Tidak ada tabel baru tanpa RLS, kebijakan, dan tes pada PR yang sama | semua | ☐ |
-| B11 | Akses tanpa login (anon) ditolak di semua tabel dan fungsi (diuji) | 1 | ☐ |
-| B12 | Percobaan eskalasi (tutor mengubah perannya sendiri, mengubah honor jadwal, menulis kas) gagal (diuji) | 1 | ☐ |
+| B11 | Akses tanpa login (anon) ditolak di semua tabel dan fungsi (diuji) | 1 | Lulus (lokal*) — tes anon + tes struktural fungsi |
+| B12 | Percobaan eskalasi (tutor mengubah perannya sendiri, mengubah honor jadwal, menulis kas) gagal (diuji) | 1 | Lulus (lokal*) — ubah peran, honor jadwal, tulis kas gagal |
 
 ## C. Rahasia dan konfigurasi
 
 | # | Butir | Sprint | Status |
 |---|---|---|---|
 | C1 | `service_role` hanya ada di variabel lingkungan server; tidak berawalan `NEXT_PUBLIC_`; tidak ada di bundel klien (cari di `.next/static`) | 3 | ☐ |
-| C2 | `.env*` di `.gitignore`; hanya `.env.example` tanpa nilai asli yang di-commit | 0 | ☐ |
+| C2 | `.env*` di `.gitignore`; hanya `.env.example` tanpa nilai asli yang di-commit | 0 | Lulus — `.env*` + `!.env.example` di `.gitignore`; `git check-ignore .env.local` cocok |
 | C3 | Pemindaian rahasia pada riwayat Git (misalnya `gitleaks`) bersih | 7 | ☐ |
 | C4 | Variabel lingkungan produksi diisi di Vercel, bukan di repositori | 8 | ☐ |
 | C5 | Kunci dan kata sandi tidak muncul di log, galat yang tampil ke pengguna, atau pesan commit | 7 | ☐ |
@@ -69,7 +71,7 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 | # | Butir | Sprint | Status |
 |---|---|---|---|
 | E1 | `audit_log` mencatat perubahan `profiles`, `jadwal`, `sesi`, `kas`, `pembayaran` beserta pelakunya | 1, 7 | ☐ |
-| E2 | `audit_log` tidak bisa diubah atau dihapus pengguna aplikasi (diuji) | 1 | ☐ |
+| E2 | `audit_log` tidak bisa diubah atau dihapus pengguna aplikasi (diuji) | 1 | Lulus (lokal*) — UPDATE `audit_log` ditolak |
 | E3 | Halaman Audit hanya untuk admin | 7 | ☐ |
 | E4 | Soft delete dihormati di semua query, rekap, saldo honor, dan ekspor | 6 | ☐ |
 | E5 | Cadangan terjadwal aktif dan **satu latihan pemulihan berhasil**; langkahnya tertulis di `docs/operasional.md` | 7, 8 | ☐ |
@@ -81,9 +83,9 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 | # | Butir | Sprint | Status |
 |---|---|---|---|
 | F1 | `npm audit` tidak memiliki temuan tinggi/kritis yang belum ditangani | 7 | ☐ |
-| F2 | Pembaruan dependensi otomatis (Dependabot atau setara) aktif | 0 | ☐ |
-| F3 | Dependensi baru dicatat dan dikonfirmasi sebelum dipasang | semua | ☐ |
-| F4 | CI menjalankan lint, typecheck, tes unit, dan tes database pada setiap PR | 0+ | ☐ |
+| F2 | Pembaruan dependensi otomatis (Dependabot atau setara) aktif | 0 | Ditunda — `.github/dependabot.yml` ada; aktif setelah repo di-push ke GitHub (pemilik: Erdany) |
+| F3 | Dependensi baru dicatat dan dikonfirmasi sebelum dipasang | semua | Lulus (Sprint 0–1) — dependensi tercantum di rencana Sprint 0 dan disetujui |
+| F4 | CI menjalankan lint, typecheck, tes unit, dan tes database pada setiap PR | 0+ | Ditunda — workflow berisi lint, typecheck, unit, dan `supabase test db`; belum pernah jalan (belum ada remote) |
 | F5 | Domain memakai HTTPS penuh; HTTP dialihkan ke HTTPS | 8 | ☐ |
 | F6 | Tertulis siapa pemilik akun GitHub, Supabase, Vercel, dan domain, serta cara pemulihan aksesnya | 8 | ☐ |
 | F7 | Log Vercel/Supabase dapat diakses dan ada penanggung jawab yang memeriksanya | 8 | ☐ |
