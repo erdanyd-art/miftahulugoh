@@ -68,18 +68,20 @@ Node 24 (`.nvmrc`). Supabase CLI dipasang sebagai dev-dependency, jadi selalu le
 
 Nama tampilan: **Lembaga Miftah al-Lughah**. UI berbahasa Indonesia. Teks Arab memakai `dir="rtl"` dan kelas `font-arab` (Noto Naskh Arabic).
 
-**Referensi visual:** sebuah template dashboard pendidikan (sidebar gelap, kartu putih membulat di atas latar terang). Pakai **hanya sebagai acuan tata letak**; buat komponen sendiri dan jangan menyalin nama, logo, ilustrasi, atau aset milik pihak lain.
+**Referensi visual:** template dashboard kursus (bingkai gelap, sidebar ikon, panel terang membulat, kartu pastel dengan chip label, tabel daftar, satu kartu gelap dengan tombol oranye). Pakai **hanya sebagai acuan tata letak**; buat komponen sendiri dan jangan menyalin nama, logo, ilustrasi, atau aset milik pihak lain.
 
 **Token warna** didefinisikan sekali di `app/globals.css`; komponen memakai kelas Tailwind, **jangan menaruh hex di komponen**:
-- `bg-primary` navy `#13214a` (sidebar, tombol utama) · `bg-accent` hijau limau `#c6f135` (item aktif, sorotan; kontras 11.9:1 terhadap navy)
+- `bg-primary` navy `#13214a` (bingkai/sidebar, kartu gelap, chip label) · `bg-accent` oranye `#c2410c` (tombol sorotan, teks merek; teks putih 5.2:1)
+- Kartu ringkasan: `bg-pastel-kuning`, `bg-pastel-ungu`, `bg-pastel-biru`, `bg-pastel-pink`; teks utama gelap, teks sekunder `text-pastel-muted`
+- Item menu aktif: kotak kuning pastel (`bg-sidebar-accent`) dengan ikon navy
 - `bg-background` abu muda (latar halaman) · `bg-card` putih (kartu)
 - Status: `bg-status-lunas`/`text-status-lunas-foreground` (hijau: Lunas/Sudah), `status-menunggu` (kuning), `status-belum` (merah: Belum Lunas/Terlambat)
-- Semua pasangan teks/latar lolos WCAG AA. Kartu `rounded-2xl`, `shadow-sm`, jarak lega.
+- Semua pasangan teks/latar lolos WCAG AA. Oranye yang lebih terang (mis. `#f2643d`) tidak boleh dipakai untuk teks. Kartu `rounded-3xl`, jarak lega.
 
 **Pola tata letak:**
-- Sidebar kiri gelap dengan logo di atas, menu dengan ikon, item aktif berupa pil beraksen (`components/layout/`). Di ponsel: menu geser (`MobileNav`, shadcn Sheet).
-- Header: salam dan nama pengguna, kolom cari, avatar.
-- Kartu ringkasan berderet di atas, daftar dan grafik di bawah, panel samping di kanan pada layar lebar.
+- Bingkai navy; sidebar desktop hanya ikon (label untuk pembaca layar dan tooltip); konten di panel terang `rounded-[2rem]` (`components/layout/`). Di ponsel: layar penuh, menu geser berlabel (`MobileNav`, shadcn Sheet).
+- Header: "Selamat datang di Miftah al-Lughah", kolom cari dengan tombol oranye, avatar + nama + peran. Judul halaman (h1) di dalam konten.
+- Kartu ringkasan pastel berderet di atas, daftar/tabel dan grafik di bawah, kartu gelap di kanan pada layar lebar.
 - Daftar dengan chip status berwarna.
 
 **Pemetaan ke fitur kita:**

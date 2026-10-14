@@ -43,6 +43,11 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-pastel-kuning: var(--pastel-kuning);
+  --color-pastel-ungu: var(--pastel-ungu);
+  --color-pastel-biru: var(--pastel-biru);
+  --color-pastel-pink: var(--pastel-pink);
+  --color-pastel-muted: var(--pastel-muted);
   --color-status-lunas: var(--status-lunas);
   --color-status-lunas-foreground: var(--status-lunas-foreground);
   --color-status-menunggu: var(--status-menunggu);
@@ -59,7 +64,7 @@
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 0.875rem;
 
   /* --bg: latar halaman (abu muda); --surface: kartu (putih) */
   --background: #f2f4f8;
@@ -73,9 +78,9 @@
   --primary: #13214a;
   --primary-foreground: #ffffff;
 
-  /* --accent: hijau limau untuk item aktif dan sorotan (kontras 11.9:1 terhadap navy) */
-  --accent: #c6f135;
-  --accent-foreground: #13214a;
+  /* --accent: oranye untuk tombol sorotan dan teks merek (teks putih di atasnya 5.2:1) */
+  --accent: #c2410c;
+  --accent-foreground: #ffffff;
 
   --secondary: #e8ecf4;
   --secondary-foreground: #13214a;
@@ -94,20 +99,28 @@
   --status-belum: #fee2e2;
   --status-belum-foreground: #991b1b;
 
+  /* Kartu pastel. Teks utama #0f172a (>= 11:1), teks sekunder --pastel-muted (>= 5.9:1) */
+  --pastel-kuning: #fbd96b;
+  --pastel-ungu: #d8c4fb;
+  --pastel-biru: #bfe0fb;
+  --pastel-pink: #fbcfd9;
+  --pastel-muted: #3d4659;
+
   --chart-1: #13214a;
-  --chart-2: #c6f135;
+  --chart-2: #c2410c;
   --chart-3: #4f6bb3;
   --chart-4: #94a3c4;
   --chart-5: #5b6478;
 
   --sidebar: #13214a;
-  --sidebar-foreground: #c3cce3;
-  --sidebar-primary: #c6f135;
+  --sidebar-foreground: #b4bdd6;
+  --sidebar-primary: #fbd96b;
   --sidebar-primary-foreground: #13214a;
-  --sidebar-accent: #c6f135;
+  /* item menu aktif: kotak kuning pastel, ikon navy (11.3:1) */
+  --sidebar-accent: #fbd96b;
   --sidebar-accent-foreground: #13214a;
   --sidebar-border: #24335e;
-  --sidebar-ring: #c6f135;
+  --sidebar-ring: #fbd96b;
 }
 
 @layer base {
