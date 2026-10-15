@@ -2,10 +2,27 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-export function KepalaHalaman({ judul, tombol }: { judul: string; tombol?: { href: string; label: string } }) {
+export function KepalaHalaman({
+  judul,
+  tombol,
+  tombolKedua,
+}: {
+  judul: string;
+  tombol?: { href: string; label: string };
+  tombolKedua?: { href: string; label: string };
+}) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3">
       <h1 className="text-2xl">{judul}</h1>
+      <div className="flex flex-wrap gap-2">
+      {tombolKedua && (
+        <Link
+          href={tombolKedua.href}
+          className="rounded-full border bg-card px-5 py-2.5 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        >
+          {tombolKedua.label}
+        </Link>
+      )}
       {tombol && (
         <Link
           href={tombol.href}
@@ -14,6 +31,7 @@ export function KepalaHalaman({ judul, tombol }: { judul: string; tombol?: { hre
           {tombol.label}
         </Link>
       )}
+      </div>
     </div>
   );
 }

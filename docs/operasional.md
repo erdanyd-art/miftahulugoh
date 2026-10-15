@@ -51,6 +51,7 @@ Berkas cadangan berisi data pribadi peserta dan hash kata sandi: simpan terenkri
 
 ## 2. Tugas rutin admin
 
+- **Memasukkan banyak siswa sekaligus:** menu **Peserta → Impor CSV**. Unduh templat, isi di Excel/Google Sheets, simpan sebagai CSV, unggah, periksa pratinjau, lalu impor. Berkas CSV berisi data siswa: jangan disimpan di repositori.
 - **Menambah tutor/admin:** menu **Pengguna → Tambah pengguna**. Pengguna menerima email undangan dan membuat kata sandi sendiri.
 - **Pengguna lupa kata sandi:** pengguna klik **Lupa kata sandi?** di halaman masuk, atau admin membuka pengguna lalu **Kirim tautan buat kata sandi**.
 - **Tutor berhenti:** **Pengguna → (nama) → Nonaktifkan akun**. Akses langsung terputus; riwayat absensi dan honor tetap utuh. Jangan menghapus akun di dasbor Supabase.

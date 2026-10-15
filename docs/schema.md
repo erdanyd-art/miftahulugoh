@@ -63,6 +63,8 @@ pengaturan (1 baris)                               audit_log (dicatat oleh trigg
 
 Terapkan sebagai lima file di `supabase/migrations/` dengan urutan berikut (beri awalan timestamp sesuai konvensi Supabase CLI). Setiap file memuat tabelnya **beserta RLS**, sesuai aturan "tidak ada tabel tanpa RLS".
 
+> Migrasi tambahan setelah dokumen ini (lihat `supabase/migrations/`): `20261015000001_validasi_pengaturan.sql` (validasi zona waktu, nama lembaga, audit pengaturan) dan `20261015000002_impor_peserta.sql` (fungsi `impor_peserta(jsonb)`: SECURITY INVOKER, hanya admin, atomik). Berkas migrasi adalah sumber kebenaran SQL.
+
 ### 6.1 `0001_dasar.sql` — enum, pengaturan, profiles, fungsi bantu
 
 ```sql

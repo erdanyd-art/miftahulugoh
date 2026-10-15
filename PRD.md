@@ -1,6 +1,6 @@
 # PRD — Dashboard Lembaga Miftah al-Lughah
 
-Versi: 0.4 (draft untuk disetujui) · Tanggal: 2026-10-14
+Versi: 0.5 (draft untuk disetujui) · Tanggal: 2026-10-15
 Penulis: Erdany (dengan bantuan Claude sebagai arsitek)
 
 > Dokumen ini adalah sumber kebenaran kebutuhan produk. Claude Code wajib membacanya sebelum mengerjakan tugas apa pun, dan tidak boleh menambah fitur di luar bagian yang ditandai "Fase 1".
@@ -51,7 +51,7 @@ Aturan:
 - Tambah, ubah, nonaktifkan admin/tutor. Tidak ada hapus permanen; gunakan nonaktifkan.
 
 ### 5.4 Menu Kelas
-- **Admin:** CRUD kelas; CRUD peserta; kelola anggota kelas (peserta banyak-ke-banyak kelas); CRUD jadwal pembelajaran (kelas, tutor, hari, jam mulai/selesai, **honor per sesi**, tautan Meet).
+- **Admin:** CRUD kelas; CRUD peserta; **impor peserta dari CSV** (nama, catatan, kelas; pratinjau dulu, nama yang sudah ada dilewati, atomik); kelola anggota kelas (peserta banyak-ke-banyak kelas); CRUD jadwal pembelajaran (kelas, tutor, hari, jam mulai/selesai, **honor per sesi**, tautan Meet).
 - **Tutor:** melihat jadwal dan kelas yang diampu (hanya miliknya). Tutor boleh mengubah **tautan Meet** jadwal miliknya, dan tidak boleh mengubah kolom lain.
 - Validasi: jam selesai harus setelah jam mulai. Nama kelas sudah mewakili mata pelajaran (kolom `mapel` lama tidak dipakai).
 
@@ -154,6 +154,7 @@ Prinsip:
 | D6 | Honor otomatis (hadir ≥ 1 penuh, hadir 0 setengah) masuk Fase 1 | Aturan dari spesifikasi asli, cocok dengan data beta |
 | D7 | Ujian CBT dan portal peserta ditunda ke Fase 2 | Mengikuti D2 |
 | D8 | Stack: Next.js + TypeScript, Supabase (PostgreSQL + Auth), Vercel, GitHub | Rekomendasi, cocok untuk skala ini |
+| D10 | Impor peserta dari CSV di Fase 1 (pengganti input dari spreadsheet) | Disetujui Erdany, 2026-10-15 |
 
 ## 10. Pertanyaan yang masih terbuka
 
@@ -184,6 +185,7 @@ Prinsip:
 
 ## Riwayat perubahan
 
+- v0.5: impor peserta dari CSV (D10); fungsi database `impor_peserta`.
 - v0.4: menambah tabel `pengaturan` dan `kategori_kas` (sesuai `docs/schema.md`); admin tidak boleh mencatat absensi tanggal yang belum tiba.
 - v0.3: peserta login ditunda (tidak menghalangi Fase 1); saldo honor tutor masuk Fase 1; kolom `tutor_id` opsional di `kas`.
 - v0.2: menambah nama dan identitas visual, aturan honor otomatis, jendela absen, dashboard per peran, rincian keuangan dan ujian CBT dari spesifikasi asli beta; membagi menjadi Fase 1 dan Fase 2.

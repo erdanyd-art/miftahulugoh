@@ -14,7 +14,11 @@ const DASAR = "/peserta";
 export default function HalamanPeserta({ searchParams }: PageProps<"/peserta">) {
   return (
     <div className="flex flex-col gap-6">
-      <KepalaHalaman judul="Peserta" tombol={{ href: "/peserta/baru", label: "Tambah peserta" }} />
+      <KepalaHalaman
+        judul="Peserta"
+        tombol={{ href: "/peserta/baru", label: "Tambah peserta" }}
+        tombolKedua={{ href: "/peserta/impor", label: "Impor CSV" }}
+      />
       <Suspense fallback={<Memuat />}>
         <Daftar searchParams={searchParams} />
       </Suspense>

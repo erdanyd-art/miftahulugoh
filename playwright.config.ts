@@ -6,6 +6,8 @@ export default defineConfig({
   fullyParallel: false,
   // Semua tes memakai data seed yang sama (sesi, pengaturan), jadi dijalankan berurutan.
   workers: 1,
+  // Server dev/CI bisa lambat saat mesin sibuk; beri waktu tunggu lebih longgar untuk tiap pemeriksaan.
+  expect: { timeout: 10_000 },
   use: {
     baseURL: "http://localhost:3000",
     // Lokal memakai Google Chrome yang terpasang; CI memakai Chromium bawaan Playwright.
