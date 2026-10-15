@@ -6,12 +6,29 @@ const PUBLIK = ["/masuk", "/lupa-sandi", "/auth/"];
 
 // Proxy hanya menyegarkan sesi Supabase dan melakukan pengalihan optimistis.
 // Otorisasi sebenarnya ada di lib/auth.ts (server) dan RLS (database).
+// Bila variabel lingkungan Supabase belum diisi (mis. lupa di Vercel), tampilkan halaman yang jelas,
+// bukan galat 500 polos (yang tanpa Content-Type membuat browser menawarkan unduhan).
+function konfigurasiBelumLengkap() {
+  return new Response(
+    `<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Konfigurasi belum lengkap</title></head>
+<body style="font-family:system-ui,sans-serif;max-width:32rem;margin:15vh auto;padding:0 1rem;color:#0f172a">
+<h1 style="font-size:1.4rem">Aplikasi belum siap</h1>
+<p>Konfigurasi server belum lengkap. Admin perlu mengisi variabel lingkungan Supabase di pengaturan hosting, lalu memasang ulang aplikasi.</p>
+</body></html>`,
+    { status: 503, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } },
+  );
+}
+
 export async function proxy(request: NextRequest) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !anonKey) return konfigurasiBelumLengkap();
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
+    url,
+    anonKey,
     {
       cookies: {
         getAll: () => request.cookies.getAll(),
@@ -26,8 +43,11 @@ export async function proxy(request: NextRequest) {
   );
 
   // Wajib dipanggil agar token yang kedaluwarsa disegarkan sebelum halaman dirender.
-  const { data } = await supabase.auth.getClaims();
-  const sudahMasuk = Boolean(data?.claims);
+  // Bila Supabase tidak terjangkau, anggap belum masuk (halaman publik tetap bisa dibuka).
+  const sudahMasuk = await supabase.auth
+    .getClaims()
+    .then(({ data }) => Boolean(data?.claims))
+    .catch(() => false);
   const { pathname } = request.nextUrl;
   const publik = PUBLIK.some((awal) => pathname.startsWith(awal));
 
