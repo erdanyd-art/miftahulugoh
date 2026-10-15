@@ -82,7 +82,7 @@ Nama tampilan: **Lembaga Miftah al-Lughah**. UI berbahasa Indonesia. Teks Arab m
 - Semua pasangan teks/latar lolos WCAG AA. Oranye yang lebih terang (mis. `#f2643d`) tidak boleh dipakai untuk teks. Kartu `rounded-3xl`, jarak lega.
 
 **Pola tata letak:**
-- Bingkai navy; sidebar desktop hanya ikon (label untuk pembaca layar dan tooltip); konten di panel terang `rounded-[2rem]` (`components/layout/`). Di ponsel: layar penuh, menu geser berlabel (`MobileNav`, shadcn Sheet).
+- Bingkai navy; sidebar desktop berlabel (ikon + nama menu, lebar `w-60`); konten di panel terang `rounded-[2rem]` (`components/layout/`). Di ponsel: layar penuh, menu geser berlabel (`MobileNav`, shadcn Sheet).
 - Header: "Selamat datang di Miftah al-Lughah", kolom cari dengan tombol oranye, avatar + nama + peran. Judul halaman (h1) di dalam konten.
 - Kartu ringkasan pastel berderet di atas, daftar/tabel dan grafik di bawah, kartu gelap di kanan pada layar lebar.
 - Daftar dengan chip status berwarna.

@@ -8,7 +8,7 @@ import { penggunaWajib } from "@/lib/auth";
 export default function DasborLayout({ children }: LayoutProps<"/">) {
   return (
     <div className="flex min-h-screen bg-sidebar">
-      <Suspense fallback={<div className="min-h-screen flex-1 bg-background lg:my-3 lg:mr-3 lg:ml-20 lg:rounded-[2rem]" />}>
+      <Suspense fallback={<div className="min-h-screen flex-1 bg-background lg:my-3 lg:mr-3 lg:ml-60 lg:rounded-[2rem]" />}>
         <Kerangka>{children}</Kerangka>
       </Suspense>
     </div>
