@@ -9,6 +9,7 @@ const HALAMAN_ADMIN = [
   "/kelas/baru",
   "/peserta",
   "/peserta/baru",
+  "/peserta/impor",
   "/jadwal",
   "/jadwal/baru",
   "/absensi",
