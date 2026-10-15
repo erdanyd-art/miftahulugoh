@@ -1,0 +1,47 @@
+// Waktu menurut zona lembaga (dari tabel pengaturan), bukan jam perangkat.
+// Hanya untuk TAMPILAN (mis. menonaktifkan tombol Absen); jendela absen ditegakkan di database.
+export type WaktuLembaga = { tanggal: string; hari: number; jam: string; bulan: string };
+
+const HARI_ISO: Record<string, number> = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7 };
+
+export function waktuDiZona(zona: string, saat: Date = new Date()): WaktuLembaga {
+  const bagian = Object.fromEntries(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: zona,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      weekday: "short",
+      hourCycle: "h23",
+    })
+      .formatToParts(saat)
+      .map((p) => [p.type, p.value]),
+  );
+  const tanggal = `${bagian.year}-${bagian.month}-${bagian.day}`;
+  return { tanggal, hari: HARI_ISO[bagian.weekday] ?? 1, jam: `${bagian.hour}:${bagian.minute}`, bulan: tanggal.slice(0, 7) };
+}
+
+// Rentang tanggal satu bulan "YYYY-MM" -> [awal, awal bulan berikutnya)
+export function rentangBulan(bulan: string): { dari: string; sampai: string } {
+  const [t, b] = bulan.split("-").map(Number);
+  const berikut = b === 12 ? `${t + 1}-01` : `${t}-${String(b + 1).padStart(2, "0")}`;
+  return { dari: `${bulan}-01`, sampai: `${berikut}-01` };
+}
+
+export function bulanValid(bulan: string): boolean {
+  return /^\d{4}-(0[1-9]|1[0-2])$/.test(bulan);
+}
+
+const NAMA_BULAN = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+export function namaBulan(bulan: string): string {
+  const [t, b] = bulan.split("-").map(Number);
+  return `${NAMA_BULAN[b - 1]} ${t}`;
+}
+
+export function formatTanggal(tanggal: string): string {
+  const [t, b, h] = tanggal.split("-").map(Number);
+  return `${h} ${NAMA_BULAN[b - 1].slice(0, 3)} ${t}`;
+}

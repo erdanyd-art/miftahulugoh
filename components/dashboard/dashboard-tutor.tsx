@@ -1,33 +1,40 @@
-import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { DaftarJadwalHariIni } from "@/components/absensi/jadwal-hari-ini";
+import { Kartu } from "@/components/halaman";
+import { honorBulanIni, jadwalHariIni } from "@/lib/data/absensi";
+import { formatRupiah } from "@/lib/format";
+import { namaBulan } from "@/lib/waktu";
 
-const ringkasan = [
-  { chip: "Jadwal", judul: "Sesi hari ini", warna: "bg-pastel-kuning" },
-  { chip: "Honor", judul: "Honor bulan ini", warna: "bg-pastel-biru" },
-];
+export async function DashboardTutor() {
+  const [{ jadwal, waktu }, honor] = await Promise.all([jadwalHariIni(), honorBulanIni()]);
+  const sudah = jadwal.filter((j) => j.sesi).length;
 
-// Kerangka dashboard tutor. Jadwal hari ini dan tombol Absen diisi dari database di Sprint 5.
-export function DashboardTutor() {
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">Dashboard</h1>
+      <h1 className="text-2xl">Dashboard</h1>
 
       <section aria-label="Ringkasan" className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {ringkasan.map(({ chip, judul, warna }) => (
-          <div key={judul} className={cn("flex flex-col gap-3 rounded-3xl p-5 text-foreground", warna)}>
-            <span className="w-fit rounded-md bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">
-              {chip}
-            </span>
-            <p className="font-judul text-lg">{judul}</p>
-            <p className="font-judul text-3xl">–</p>
-            <span className="text-xs text-pastel-muted">Belum ada data</span>
-          </div>
-        ))}
+        <div className="flex flex-col gap-3 rounded-3xl bg-pastel-kuning p-5 text-foreground">
+          <span className="w-fit rounded-md bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">Jadwal</span>
+          <p className="font-judul text-lg">Sesi hari ini</p>
+          <p className="font-judul text-3xl">{jadwal.length}</p>
+          <span className="text-xs text-pastel-muted">
+            {sudah} sudah diabsen · {jadwal.length - sudah} belum
+          </span>
+        </div>
+        <div className="flex flex-col gap-3 rounded-3xl bg-pastel-biru p-5 text-foreground">
+          <span className="w-fit rounded-md bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">Honor</span>
+          <p className="font-judul text-lg">Honor {namaBulan(waktu.bulan)}</p>
+          <p className="font-judul text-3xl">{formatRupiah(honor.total)}</p>
+          <Link href="/honor-saya" className="w-fit text-xs font-medium text-pastel-muted underline">
+            Lihat riwayat dan saldo
+          </Link>
+        </div>
       </section>
 
-      <section className="rounded-3xl bg-card p-5 shadow-sm sm:p-6">
-        <h2 className="text-lg font-semibold">Jadwal hari ini</h2>
-        <p className="mt-4 text-sm text-muted-foreground">Belum ada jadwal untuk ditampilkan.</p>
-      </section>
+      <Kartu judul="Jadwal hari ini">
+        <DaftarJadwalHariIni jadwal={jadwal} waktu={waktu} tampilkanTutor={false} />
+      </Kartu>
     </div>
   );
 }
