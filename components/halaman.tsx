@@ -40,4 +40,4 @@ export function Memuat() {
 }
 
 // Pesan sukses setelah dialihkan dengan ?pesan=disimpan
-export const PESAN_UMUM: Record<string, string> = { disimpan: "Data tersimpan." };
+export const PESAN_UMUM: Record<string, string> = { disimpan: "Data tersimpan.", dihapus: "Data dihapus (tetap tercatat di log audit)." };

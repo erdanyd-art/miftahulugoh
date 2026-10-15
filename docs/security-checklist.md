@@ -59,7 +59,7 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 | D2 | Semua akses data memakai query berparameter melalui klien Supabase; tidak ada SQL yang dirangkai dari input pengguna | 3+ | Lulus (Sprint 2–3) — hanya klien Supabase (query berparameter); tidak ada SQL dirangkai di aplikasi |
 | D3 | Rute dan server action memeriksa autentikasi **dan** peran di server | 2+ | Lulus (Sprint 2) — halaman memanggil `penggunaWajib`/`wajibPeran`; E2E tutor → `/tidak-berwenang` di /keuangan, /pembayaran, /pengguna |
 | D4 | Teks Arab/RTL dan karakter khusus dirender tanpa `dangerouslySetInnerHTML` dari input pengguna | 4+ | Lulus (Sprint 4) — tidak ada `dangerouslySetInnerHTML` di kode; teks pengguna dirender React (di-escape) |
-| D5 | Ekspor CSV mencegah injeksi formula (sel berawalan `=`, `+`, `-`, `@` diberi tanda petik) | 6 | ☐ |
+| D5 | Ekspor CSV mencegah injeksi formula (sel berawalan `=`, `+`, `-`, `@` diberi tanda petik) | 6 | Lulus — `lib/csv.ts` memberi tanda petik pada sel teks berawalan = + - @ tab CR (tes unit); E2E memastikan `=HYPERLINK(...)` keluar sebagai `'=HYPERLINK(...)` |
 | D6 | Tautan Meet hanya menerima `https://` (constraint database + validasi form); dibuka dengan `rel="noopener noreferrer"` | 4 | Lulus — constraint `^https://` di database + Zod `skemaMeet` + E2E (http:// ditolak); tautan dibuka `target=_blank rel="noopener noreferrer"` |
 | D7 | Header keamanan di `next.config`: CSP, `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`/`frame-ancestors`, HSTS di produksi | 7, 8 | ☐ |
 | D8 | Server action/route yang mengubah data hanya menerima metode dan asal yang semestinya (perlindungan CSRF bawaan tidak dimatikan) | 3+ | Lulus (Sprint 2) — server action Next.js bawaan (POST + cek Origin), tidak dimatikan |
@@ -73,7 +73,7 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 | E1 | `audit_log` mencatat perubahan `profiles`, `jadwal`, `sesi`, `kas`, `pembayaran` beserta pelakunya | 1, 7 | ☐ |
 | E2 | `audit_log` tidak bisa diubah atau dihapus pengguna aplikasi (diuji) | 1 | Lulus (Supabase lokal) — UPDATE `audit_log` ditolak |
 | E3 | Halaman Audit hanya untuk admin | 7 | ☐ |
-| E4 | Soft delete dihormati di semua query, rekap, saldo honor, dan ekspor | 6 | ☐ |
+| E4 | Soft delete dihormati di semua query, rekap, saldo honor, dan ekspor | 6 | Lulus (Sprint 6) — setiap query kas/pembayaran menyaring `dihapus_pada is null` (daftar, rekap, ekspor, dashboard); `saldo_honor()` juga; E2E: baris dihapus tidak muncul di daftar maupun CSV |
 | E5 | Cadangan terjadwal aktif dan **satu latihan pemulihan berhasil**; langkahnya tertulis di `docs/operasional.md` | 7, 8 | ☐ |
 | E6 | Data fiktif dan data nyata tidak bercampur; data nyata tidak masuk repositori, tangkapan layar, atau fixture tes | semua | ☐ |
 | E7 | `peserta.catatan` terlihat tutor kelas terkait: keputusan tertulis (dibiarkan dengan pedoman "jangan isi hal sensitif", atau dipisah ke tabel khusus admin) | 4 | Keputusan (Sprint 4, perlu dikonfirmasi pemilik lembaga): catatan dibiarkan di `peserta` dengan pedoman tertulis di form "jangan isi hal sensitif"; UI tutor tidak menampilkan catatan. Tinjau ulang sebelum data nyata masuk (Sprint 8) |

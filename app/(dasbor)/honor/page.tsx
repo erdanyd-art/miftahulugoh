@@ -61,7 +61,7 @@ async function Isi({ searchParams }: { searchParams: Promise<ParamUrl> }) {
                     {formatRupiah(s.honor_terkumpul)}
                     <span className="md:hidden"> · dibayar {formatRupiah(s.honor_dibayar)}</span>
                   </span>
-                  <span className="hidden text-sm md:block">{formatRupiah(s.honor_dibayar)}</span>
+                  <span data-kolom="dibayar" className="hidden text-sm md:block">{formatRupiah(s.honor_dibayar)}</span>
                   <span className="col-start-2 row-span-2 row-start-1 font-judul md:col-start-auto md:row-span-1 md:row-start-auto">
                     {formatRupiah(s.saldo)}
                   </span>

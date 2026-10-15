@@ -45,3 +45,12 @@ export function formatTanggal(tanggal: string): string {
   const [t, b, h] = tanggal.split("-").map(Number);
   return `${h} ${NAMA_BULAN[b - 1].slice(0, 3)} ${t}`;
 }
+
+// Daftar bulan "YYYY-MM" sebanyak `banyak`, berakhir di bulanAkhir (urut lama -> baru).
+export function bulanMundur(bulanAkhir: string, banyak: number): string[] {
+  const [t, b] = bulanAkhir.split("-").map(Number);
+  return Array.from({ length: banyak }, (_, i) => {
+    const d = new Date(Date.UTC(t, b - 1 - (banyak - 1 - i), 1));
+    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+  });
+}

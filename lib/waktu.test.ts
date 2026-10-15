@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { pesanGalatAbsensi } from "./pesan-galat";
-import { bulanValid, formatTanggal, namaBulan, rentangBulan, waktuDiZona } from "./waktu";
+import { bulanMundur, bulanValid, formatTanggal, namaBulan, rentangBulan, waktuDiZona } from "./waktu";
 
 describe("waktuDiZona", () => {
   // 2026-10-14 16:30 UTC = Kamis 00:30 WITA (sudah ganti tanggal), masih Rabu 23:30 WIB
@@ -38,5 +38,11 @@ describe("pesanGalatAbsensi", () => {
     expect(pesanGalatAbsensi("daftar hadir memuat peserta yang bukan anggota aktif kelas")).toContain("bukan anggota aktif");
     expect(pesanGalatAbsensi("galat lain")).toBe("Terjadi kesalahan. Coba lagi.");
     expect(pesanGalatAbsensi(undefined)).toBe("Terjadi kesalahan. Coba lagi.");
+  });
+});
+
+describe("bulanMundur", () => {
+  it("menyusun bulan mundur melewati pergantian tahun", () => {
+    expect(bulanMundur("2026-02", 4)).toEqual(["2025-11", "2025-12", "2026-01", "2026-02"]);
   });
 });

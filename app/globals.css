@@ -27,6 +27,8 @@
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
+  --color-chart-pemasukan: var(--chart-pemasukan);
+  --color-chart-pengeluaran: var(--chart-pengeluaran);
   --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
   --color-input: var(--input);
@@ -107,6 +109,9 @@
   --pastel-pink: #fbcfd9;
   --pastel-muted: #3d4659;
 
+  /* Grafik keuangan (divalidasi skrip dataviz: lolos CVD, kontras, kecerahan) */
+  --chart-pemasukan: #3b6fd4;
+  --chart-pengeluaran: #e8590c;
   --chart-1: #13214a;
   --chart-2: #c2410c;
   --chart-3: #4f6bb3;
