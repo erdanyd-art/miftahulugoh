@@ -77,7 +77,7 @@ async function Isi({ searchParams }: { searchParams: Promise<ParamUrl> }) {
             Ekspor CSV rekap {tahun}
           </a>
         </div>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto" tabIndex={0} role="region" aria-label={`Tabel rekap ${tahun}, geser ke samping`}>
           <table className="w-full min-w-[56rem] text-sm">
             <caption className="sr-only">Rekap bulanan kas, pembayaran peserta, dan honor tahun {tahun}</caption>
             <thead>
