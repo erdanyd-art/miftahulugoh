@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useActionState, useId, useState, type InputHTMLAttributes } from "react";
 import { Button } from "@/components/ui/button";
-import { aturSandi, lupaSandi, masuk } from "@/lib/aksi-auth";
+import { aturSandi, gantiSandi, lupaSandi, masuk } from "@/lib/aksi-auth";
 import { PANJANG_SANDI_MIN } from "@/lib/validasi/auth";
 import { KolomIsian, PesanStatus } from "./bingkai-auth";
 
@@ -91,6 +91,28 @@ export function FormAturSandi() {
       <KolomSandi label="Ulangi kata sandi" name="ulangi" autoComplete="new-password" required />
       <Button type="submit" disabled={sedang} className={kelasTombol}>
         {sedang ? "Menyimpan..." : "Simpan kata sandi"}
+      </Button>
+    </form>
+  );
+}
+
+// Di dalam dashboard (halaman Akun saya), untuk semua peran.
+export function FormGantiSandi() {
+  const [status, aksi, sedang] = useActionState(gantiSandi, undefined);
+  return (
+    <form action={aksi} className="flex max-w-md flex-col gap-4">
+      <PesanStatus {...status} />
+      <KolomSandi label="Kata sandi lama" name="sandiLama" autoComplete="current-password" required />
+      <KolomSandi
+        label={`Kata sandi baru (minimal ${PANJANG_SANDI_MIN} karakter)`}
+        name="kataSandi"
+        autoComplete="new-password"
+        minLength={PANJANG_SANDI_MIN}
+        required
+      />
+      <KolomSandi label="Ulangi kata sandi baru" name="ulangi" autoComplete="new-password" required />
+      <Button type="submit" disabled={sedang} className="h-11 w-fit rounded-xl px-6">
+        {sedang ? "Menyimpan..." : "Ganti kata sandi"}
       </Button>
     </form>
   );

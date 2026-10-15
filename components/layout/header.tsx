@@ -1,4 +1,5 @@
 import { LogOut, Search } from "lucide-react";
+import Link from "next/link";
 import { keluar } from "@/lib/aksi-auth";
 import type { Peran } from "@/lib/nav";
 import { MobileNav } from "./mobile-nav";
@@ -34,16 +35,23 @@ export function Header({ peran, nama }: { peran: Peran; nama: string }) {
         </span>
       </label>
       <div className="flex items-center gap-3">
-        <span
-          aria-hidden
-          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-pastel-ungu text-sm font-semibold text-foreground"
+        <Link
+          href="/akun"
+          title="Akun saya"
+          aria-label={`Akun saya: ${nama}, ${labelPeran[peran]}`}
+          className="flex items-center gap-3 rounded-full focus-visible:outline-2 focus-visible:outline-ring"
         >
-          {inisial}
-        </span>
-        <span className="hidden leading-tight sm:block">
-          <span className="block text-sm font-semibold">{nama}</span>
-          <span className="block text-xs text-muted-foreground">{labelPeran[peran]}</span>
-        </span>
+          <span
+            aria-hidden
+            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-pastel-ungu text-sm font-semibold text-foreground"
+          >
+            {inisial}
+          </span>
+          <span className="hidden leading-tight sm:block">
+            <span className="block text-sm font-semibold">{nama}</span>
+            <span className="block text-xs text-muted-foreground">{labelPeran[peran]}</span>
+          </span>
+        </Link>
         <form action={keluar}>
           <button
             type="submit"

@@ -24,8 +24,9 @@ const HALAMAN_ADMIN = [
   "/pengguna/baru",
   "/pengaturan",
   "/audit",
+  "/akun",
 ];
-const HALAMAN_TUTOR = ["/", "/jadwal-saya", "/kelas-saya", "/absensi", "/honor-saya"];
+const HALAMAN_TUTOR = ["/", "/jadwal-saya", "/kelas-saya", "/absensi", "/honor-saya", "/akun"];
 const HALAMAN_PUBLIK = ["/masuk", "/lupa-sandi"];
 
 async function masuk(page: Page, email: string) {

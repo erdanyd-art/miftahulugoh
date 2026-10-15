@@ -1,9 +1,11 @@
 "use server";
 
+import { createClient } from "@supabase/supabase-js";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { buatKlienServer } from "@/lib/supabase/server";
-import { PANJANG_SANDI_MIN, skemaAturSandi, skemaLupaSandi, skemaMasuk } from "@/lib/validasi/auth";
+import { penggunaWajib } from "@/lib/auth";
+import { buatKlienServer, envSupabase } from "@/lib/supabase/server";
+import { PANJANG_SANDI_MIN, skemaAturSandi, skemaGantiSandi, skemaLupaSandi, skemaMasuk } from "@/lib/validasi/auth";
 
 // email dikembalikan agar isian tidak kosong lagi setelah form dikirim (React mereset form).
 export type StatusForm = { galat?: string; pesan?: string; email?: string } | undefined;
@@ -72,4 +74,38 @@ export async function aturSandi(_: StatusForm, formData: FormData): Promise<Stat
   }
 
   redirect("/");
+}
+
+// Ganti kata sandi sendiri saat sudah masuk (tanpa email). Kata sandi lama diperiksa dulu
+// lewat klien tanpa sesi, agar sesi yang tertinggal terbuka tidak cukup untuk mengganti sandi.
+export async function gantiSandi(_: StatusForm, formData: FormData): Promise<StatusForm> {
+  await penggunaWajib();
+  const hasil = skemaGantiSandi.safeParse({
+    sandiLama: formData.get("sandiLama"),
+    kataSandi: formData.get("kataSandi"),
+    ulangi: formData.get("ulangi"),
+  });
+  if (!hasil.success) {
+    return { galat: `Isi kata sandi lama. Kata sandi baru minimal ${PANJANG_SANDI_MIN} karakter dan kedua isian harus sama.` };
+  }
+
+  const supabase = await buatKlienServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user?.email) return { galat: "Sesi berakhir. Silakan masuk lagi." };
+
+  const { url, anonKey } = envSupabase();
+  const cek = createClient(url, anonKey, { auth: { persistSession: false, autoRefreshToken: false } });
+  const { error: galatCek } = await cek.auth.signInWithPassword({ email: user.email, password: hasil.data.sandiLama });
+  if (galatCek) return { galat: "Kata sandi lama salah." };
+  await cek.auth.signOut({ scope: "local" });
+
+  const { error } = await supabase.auth.updateUser({ password: hasil.data.kataSandi });
+  if (error) {
+    if (error.code === "same_password") return { galat: "Kata sandi baru harus berbeda dari yang lama." };
+    if (error.code === "weak_password") return { galat: "Kata sandi terlalu lemah. Pakai yang lebih panjang." };
+    return { galat: "Kata sandi gagal disimpan. Coba lagi." };
+  }
+  return { pesan: "Kata sandi berhasil diganti. Pakai kata sandi baru saat masuk berikutnya." };
 }
