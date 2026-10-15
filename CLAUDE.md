@@ -21,9 +21,10 @@ UI terpasang: Tailwind CSS v4, shadcn/ui (Radix, komponen di `components/ui/`), 
 ## Perintah
 
 Node 24 (`.nvmrc`). Supabase CLI dipasang sebagai dev-dependency, jadi selalu lewat `npx supabase ...`.
+Docker Desktop di Mac ini mode per pengguna: set `PATH="$HOME/.docker/bin:$PATH"` dan `DOCKER_HOST="unix://$HOME/.docker/run/docker.sock"` sebelum perintah Supabase.
 
 - `npm run dev` · `npm run build` · `npm run start`
-- `npm run lint` · `npm run typecheck` (`next typegen` + `tsc --noEmit`) · `npm test` (Vitest)
+- `npm run lint` · `npm run typecheck` (`next typegen` + `tsc --noEmit`) · `npm test` (Vitest) · `npm run test:e2e` (Playwright, butuh Supabase lokal + seed)
 - `npx supabase start` / `stop` / `status` (butuh Docker berjalan)
 - `npx supabase migration new <nama>` · `npx supabase db reset` (lokal) · `npx supabase test db` (tes pgTAP di `supabase/tests/`)
 - `npx supabase gen types typescript --local > lib/database.types.ts`
@@ -68,18 +69,22 @@ Node 24 (`.nvmrc`). Supabase CLI dipasang sebagai dev-dependency, jadi selalu le
 
 Nama tampilan: **Lembaga Miftah al-Lughah**. UI berbahasa Indonesia. Teks Arab memakai `dir="rtl"` dan kelas `font-arab` (Noto Naskh Arabic).
 
-**Referensi visual:** sebuah template dashboard pendidikan (sidebar gelap, kartu putih membulat di atas latar terang). Pakai **hanya sebagai acuan tata letak**; buat komponen sendiri dan jangan menyalin nama, logo, ilustrasi, atau aset milik pihak lain.
+**Font:** isi = Fredoka (`font-sans`, bulat dan mudah dibaca); judul h1–h3, judul kartu, angka besar, nama lembaga = Righteous (`font-judul`, hanya satu ketebalan, jangan pakai `font-bold`/`font-semibold` untuknya). Dimuat lewat `next/font` di `app/layout.tsx`.
+
+**Referensi visual:** template dashboard kursus (bingkai gelap, sidebar ikon, panel terang membulat, kartu pastel dengan chip label, tabel daftar, satu kartu gelap dengan tombol oranye). Pakai **hanya sebagai acuan tata letak**; buat komponen sendiri dan jangan menyalin nama, logo, ilustrasi, atau aset milik pihak lain.
 
 **Token warna** didefinisikan sekali di `app/globals.css`; komponen memakai kelas Tailwind, **jangan menaruh hex di komponen**:
-- `bg-primary` navy `#13214a` (sidebar, tombol utama) · `bg-accent` hijau limau `#c6f135` (item aktif, sorotan; kontras 11.9:1 terhadap navy)
+- `bg-primary` navy `#13214a` (bingkai/sidebar, kartu gelap, chip label) · `bg-accent` oranye `#c2410c` (tombol sorotan, teks merek; teks putih 5.2:1)
+- Kartu ringkasan: `bg-pastel-kuning`, `bg-pastel-ungu`, `bg-pastel-biru`, `bg-pastel-pink`; teks utama gelap, teks sekunder `text-pastel-muted`
+- Item menu aktif: kotak kuning pastel (`bg-sidebar-accent`) dengan ikon navy
 - `bg-background` abu muda (latar halaman) · `bg-card` putih (kartu)
 - Status: `bg-status-lunas`/`text-status-lunas-foreground` (hijau: Lunas/Sudah), `status-menunggu` (kuning), `status-belum` (merah: Belum Lunas/Terlambat)
-- Semua pasangan teks/latar lolos WCAG AA. Kartu `rounded-2xl`, `shadow-sm`, jarak lega.
+- Semua pasangan teks/latar lolos WCAG AA. Oranye yang lebih terang (mis. `#f2643d`) tidak boleh dipakai untuk teks. Kartu `rounded-3xl`, jarak lega.
 
 **Pola tata letak:**
-- Sidebar kiri gelap dengan logo di atas, menu dengan ikon, item aktif berupa pil beraksen (`components/layout/`). Di ponsel: menu geser (`MobileNav`, shadcn Sheet).
-- Header: salam dan nama pengguna, kolom cari, avatar.
-- Kartu ringkasan berderet di atas, daftar dan grafik di bawah, panel samping di kanan pada layar lebar.
+- Bingkai navy; sidebar desktop hanya ikon (label untuk pembaca layar dan tooltip); konten di panel terang `rounded-[2rem]` (`components/layout/`). Di ponsel: layar penuh, menu geser berlabel (`MobileNav`, shadcn Sheet).
+- Header: "Selamat datang di Miftah al-Lughah", kolom cari dengan tombol oranye, avatar + nama + peran. Judul halaman (h1) di dalam konten.
+- Kartu ringkasan pastel berderet di atas, daftar/tabel dan grafik di bawah, kartu gelap di kanan pada layar lebar.
 - Daftar dengan chip status berwarna.
 
 **Pemetaan ke fitur kita:**
@@ -104,7 +109,10 @@ Ponsel diutamakan untuk tutor (absen). Semua tabel punya cari, filter, urut, dan
 app/                   halaman dan route (App Router); (dasbor)/ = halaman ber-sidebar
 components/ui/         komponen shadcn
 components/layout/     sidebar, header, menu ponsel
-lib/                   utilitas (format, nav), nanti klien Supabase dan skema Zod
+lib/                   auth.ts (identitas + peran, server), aksi-auth.ts (server action), supabase/server.ts, validasi/ (Zod), format, nav
+proxy.ts               penyegaran sesi + alih ke /masuk (bukan otorisasi)
+supabase/templates/    template email undangan & atur ulang sandi (token_hash -> /auth/confirm)
+e2e/                   tes Playwright
 supabase/migrations/   migrasi dan kebijakan RLS
 supabase/tests/        tes RLS (pgTAP)
 docs/                  schema.md, roadmap.md, security-checklist.md, uji_rls.sql
@@ -115,5 +123,12 @@ docs/                  schema.md, roadmap.md, security-checklist.md, uji_rls.sql
 - TypeScript strict; tanpa `any` kecuali beralasan dan dikomentari.
 - Nama tabel/kolom domain mengikuti PRD (bahasa Indonesia); kode umum dan komentar teknis boleh bahasa Inggris. Teks yang dilihat pengguna: bahasa Indonesia.
 - Ikon (komponen) tidak boleh dikirim sebagai prop dari Server Component ke Client Component; kirim data sederhana (misalnya nama peran).
+- Identitas: pakai `penggunaWajib()` / `wajibPeran()` dari `lib/auth.ts` di setiap halaman dan server action yang butuh login. Pembacaan sesi harus di dalam `<Suspense>` (Cache Components).
+- Halaman admin baru: panggil `wajibPeran("admin")` di server; menyembunyikan menu bukan pengaman.
+- `service_role` HANYA di `lib/supabase/admin.ts` (`server-only`), hanya untuk API Auth admin, hanya setelah `wajibPeran("admin")`. Data tabel tetap ditulis dengan sesi pengguna (RLS + audit).
+- ID dari klien divalidasi `z.guid()` (bukan `z.uuid()`: ID seed fiktif bukan UUID RFC).
+- Tabel: pola cari/filter/urut/halaman lewat parameter URL (`lib/tabel.ts`, `components/tabel.tsx`); form filter memakai GET.
+- Setelah mutasi di server action panggil `refresh()` dari `next/cache` agar tampilan memuat data baru.
+- E2E: pakai locator berbasis role/`exact` (Next menyimpan halaman sebelumnya tersembunyi lewat Activity) dan tunggu `networkidle` sebelum mengisi form yang di-stream.
 - Commit kecil dan fokus, pesan jelas. Satu sprint = satu cabang/PR.
 - Saat ragu soal kebutuhan, **tanya**; jangan mengarang.

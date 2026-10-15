@@ -1,0 +1,142 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/*
+ * Design token Lembaga Miftah al-Lughah.
+ * Semua warna hanya didefinisikan di sini; komponen memakai kelas Tailwind
+ * (bg-primary, text-accent, bg-status-lunas, ...), bukan hex.
+ * Semua pasangan teks/latar di bawah lolos WCAG AA (>= 4.5:1), dihitung saat Sprint 0.
+ */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-fredoka);
+  --font-judul: var(--font-righteous);
+  --font-arab: var(--font-naskh), serif; /* teks Arab, dipakai bersama dir="rtl" */
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-pastel-kuning: var(--pastel-kuning);
+  --color-pastel-ungu: var(--pastel-ungu);
+  --color-pastel-biru: var(--pastel-biru);
+  --color-pastel-pink: var(--pastel-pink);
+  --color-pastel-muted: var(--pastel-muted);
+  --color-status-lunas: var(--status-lunas);
+  --color-status-lunas-foreground: var(--status-lunas-foreground);
+  --color-status-menunggu: var(--status-menunggu);
+  --color-status-menunggu-foreground: var(--status-menunggu-foreground);
+  --color-status-belum: var(--status-belum);
+  --color-status-belum-foreground: var(--status-belum-foreground);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --radius: 0.875rem;
+
+  /* --bg: latar halaman (abu muda); --surface: kartu (putih) */
+  --background: #f2f4f8;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  /* --primary: navy untuk sidebar dan tombol utama */
+  --primary: #13214a;
+  --primary-foreground: #ffffff;
+
+  /* --accent: oranye untuk tombol sorotan dan teks merek (teks putih di atasnya 5.2:1) */
+  --accent: #c2410c;
+  --accent-foreground: #ffffff;
+
+  --secondary: #e8ecf4;
+  --secondary-foreground: #13214a;
+  --muted: #e8ecf4;
+  --muted-foreground: #5b6478;
+  --destructive: #dc2626;
+  --border: #e2e6ee;
+  --input: #d5dbe6;
+  --ring: #13214a;
+
+  /* Status: Lunas/Sudah, Menunggu, Belum Lunas/Terlambat */
+  --status-lunas: #dcfce7;
+  --status-lunas-foreground: #166534;
+  --status-menunggu: #fef3c7;
+  --status-menunggu-foreground: #854d0e;
+  --status-belum: #fee2e2;
+  --status-belum-foreground: #991b1b;
+
+  /* Kartu pastel. Teks utama #0f172a (>= 11:1), teks sekunder --pastel-muted (>= 5.9:1) */
+  --pastel-kuning: #fbd96b;
+  --pastel-ungu: #d8c4fb;
+  --pastel-biru: #bfe0fb;
+  --pastel-pink: #fbcfd9;
+  --pastel-muted: #3d4659;
+
+  --chart-1: #13214a;
+  --chart-2: #c2410c;
+  --chart-3: #4f6bb3;
+  --chart-4: #94a3c4;
+  --chart-5: #5b6478;
+
+  --sidebar: #13214a;
+  --sidebar-foreground: #b4bdd6;
+  --sidebar-primary: #fbd96b;
+  --sidebar-primary-foreground: #13214a;
+  /* item menu aktif: kotak kuning pastel, ikon navy (11.3:1) */
+  --sidebar-accent: #fbd96b;
+  --sidebar-accent-foreground: #13214a;
+  --sidebar-border: #24335e;
+  --sidebar-ring: #fbd96b;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+  /* Righteous hanya satu ketebalan: jangan ditebalkan palsu oleh font-semibold */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-judul);
+    font-synthesis: none;
+    letter-spacing: 0.01em;
+  }
+}

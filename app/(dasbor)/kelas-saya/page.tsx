@@ -1,0 +1,8 @@
+import type { Metadata } from "next";
+import { HalamanSegera } from "@/components/layout/halaman-segera";
+
+export const metadata: Metadata = { title: "Kelas Saya" };
+
+export default function Halaman() {
+  return <HalamanSegera judul="Kelas Saya" sprint={4} untuk="tutor" />;
+}
