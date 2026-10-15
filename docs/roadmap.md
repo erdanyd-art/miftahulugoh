@@ -199,3 +199,17 @@ docs/uji_rls.sql            (bahan tes RLS; diubah menjadi pgTAP di Sprint 1)
 ## Setelah Fase 1
 
 Putuskan bersama teman: portal peserta dan ujian CBT (Fase 2), tagihan SPP otomatis, pengingat WhatsApp, atau pembatasan bentrok jadwal. Jangan dimulai sebelum UAT Fase 1 selesai.
+
+---
+
+## Fase 2 — Ujian CBT (D2, D11, D12, D14)
+
+Mulai setelah Fase 1 terpasang. Tiap sprint = satu cabang/PR, dengan migrasi + RLS + tes pgTAP + E2E.
+
+**Sprint 9 — Login peserta.** Peran `peserta` (migrasi enum tersendiri). Admin membuat akun peserta dari halaman Peserta: username + sandi awal acak yang tampil sekali; username dipetakan ke email sintetis yang tidak pernah dikirimi surat. Login pertama wajib ganti sandi; admin dapat mereset sandi peserta. Menu peserta: Ujian Saya, Akun saya. RLS: peserta hanya membaca datanya sendiri.
+
+**Sprint 10 — Menyusun ujian.** `ujian` (judul, kelas, jendela mulai–selesai, durasi), `soal` (pilihan ganda/isian, bobot, urutan, teks Arab RTL), `soal_kunci` (tanpa kebijakan baca untuk peserta), `audio_ujian` (bucket Storage privat, mp3/m4a ≤ 10 MB, satu audio untuk beberapa soal).
+
+**Sprint 11 — Mengerjakan.** `mulai_ujian()` membuat `percobaan_ujian` dengan `batas_selesai = least(mulai + durasi, ujian.selesai)`; `simpan_jawaban()` menolak setelah batas (database). Simpan otomatis per soal, timer dari server, satu percobaan per peserta. Audio lewat tautan bertanda tangan berumur pendek yang hanya dibuat selama percobaan aktif.
+
+**Sprint 12 — Penilaian.** Pilihan ganda dinilai di fungsi database; tutor/admin memeriksa isian; admin "Umumkan nilai"; nilai terbaca peserta (miliknya), tutor (kelasnya), admin (semua); ekspor CSV.

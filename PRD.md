@@ -1,6 +1,6 @@
 # PRD — Dashboard Lembaga Miftah al-Lughah
 
-Versi: 0.6 (draft untuk disetujui) · Tanggal: 2026-10-15
+Versi: 0.7 (draft untuk disetujui) · Tanggal: 2026-10-15
 Penulis: Erdany (dengan bantuan Claude sebagai arsitek)
 
 > Dokumen ini adalah sumber kebenaran kebutuhan produk. Claude Code wajib membacanya sebelum mengerjakan tugas apa pun, dan tidak boleh menambah fitur di luar bagian yang ditandai "Fase 1".
@@ -96,6 +96,8 @@ Dikerjakan setelah Fase 1 stabil. Tidak ada kode Fase 2 yang dibuat di Fase 1, k
 - **Kunci jawaban tidak boleh pernah terkirim ke peserta** (disimpan terpisah dan tidak terbaca oleh peran peserta).
 - Nilai akhir = nilai otomatis + nilai isian yang diperiksa manual. Nilai dapat dibaca peserta (miliknya), tutor (kelas yang diampu), dan admin (semua).
 - Asumsi: satu kali percobaan per peserta per ujian.
+- **Soal audio (D14):** admin mengunggah audio (mp3/m4a, maks ±10 MB) ke penyimpanan privat. Satu audio boleh dipakai beberapa soal (mis. satu percakapan untuk 3 soal). Peserta memutar lewat tautan sementara, hanya selama percobaannya berlangsung; putar ulang bebas. Jawaban rekaman suara (speaking) belum.
+- **Nilai diumumkan admin:** peserta melihat nilai setelah admin menekan "Umumkan nilai" (setelah isian diperiksa).
 
 ## 7. Model data tingkat tinggi
 
@@ -118,7 +120,7 @@ Skema SQL rinci, constraint, indeks, dan kebijakan RLS ada di dokumen terpisah (
 | `kas` | tanggal, jenis, kategori, keterangan, jumlah, `tutor_id` (opsional, wajib untuk kategori Honor Tutor) |
 | `audit_log` | siapa, kapan, aksi, data sebelum/sesudah |
 
-**Fase 2 (migrasi terpisah):** `ujian`, `soal`, `soal_kunci` (tidak terbaca peserta), `percobaan_ujian`, `jawaban`.
+**Fase 2 (migrasi terpisah):** `ujian`, `audio_ujian` (berkas di Storage privat), `soal`, `soal_kunci` (tidak terbaca peserta), `percobaan_ujian`, `jawaban`.
 
 Prinsip:
 - Primary key `uuid`. Uang sebagai bilangan bulat rupiah (bukan float, bukan teks). Jam bertipe `time`, tanggal bertipe `date`.
@@ -158,6 +160,7 @@ Prinsip:
 | D10 | Impor peserta dari CSV di Fase 1 (pengganti input dari spreadsheet) | Disetujui Erdany, 2026-10-15 |
 | D11 | Peserta login dengan **username + kata sandi** (tanpa email). Admin membuat akun dengan kata sandi awal; **wajib diganti saat login pertama** (pengecualian terkendali dari aturan "tanpa kata sandi bawaan", khusus peserta) | Diputuskan Erdany, 2026-10-15 |
 | D13 | Pembayaran peserta berstatus **Lunas otomatis masuk kas** (kategori "Pembayaran Peserta", disinkron trigger database; tidak bisa dicatat/diubah manual di Kas) | Diputuskan Erdany, 2026-10-15 |
+| D14 | Ujian CBT: soal boleh berisi **audio** (satu audio dapat dipakai beberapa soal), putar bebas selama ujian, **nilai tampil setelah diumumkan admin**, belum ada jawaban rekaman suara | Diputuskan Erdany, 2026-10-15 |
 | D12 | Fase 2 tahap pertama: **ujian saja** (daftar ujian, mengerjakan, nilai). Portal peserta lain (jadwal, Meet, riwayat pembayaran; bagian 6.1) menyusul | Diputuskan Erdany, 2026-10-15 |
 
 ## 10. Pertanyaan yang masih terbuka
@@ -189,6 +192,7 @@ Prinsip:
 
 ## Riwayat perubahan
 
+- v0.7: rencana ujian CBT dengan soal audio dan pengumuman nilai (D14).
 - v0.6: pembayaran Lunas otomatis masuk kas (D13, menggantikan D4).
 - v0.5: impor peserta dari CSV (D10); fungsi database `impor_peserta`. Keputusan Fase 2: ujian CBT setelah Sprint 8 (D2), login peserta username + ganti sandi pertama (D11), tahap pertama ujian saja (D12).
 - v0.4: menambah tabel `pengaturan` dan `kategori_kas` (sesuai `docs/schema.md`); admin tidak boleh mencatat absensi tanggal yang belum tiba.
