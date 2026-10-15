@@ -75,3 +75,14 @@ test("lupa kata sandi memberi pesan yang sama untuk email apa pun", async ({ pag
   await page.getByRole("button", { name: "Kirim tautan" }).click();
   await expect(page.getByRole("status")).toContainText("Jika email terdaftar");
 });
+
+test("tombol lihat/sembunyikan kata sandi", async ({ page }) => {
+  await page.goto("/masuk");
+  const sandi = page.getByLabel("Kata sandi", { exact: true });
+  await sandi.fill("rahasia-123");
+  await expect(sandi).toHaveAttribute("type", "password");
+  await page.getByRole("button", { name: "Tampilkan kata sandi" }).click();
+  await expect(sandi).toHaveAttribute("type", "text");
+  await page.getByRole("button", { name: "Sembunyikan kata sandi" }).click();
+  await expect(sandi).toHaveAttribute("type", "password");
+});

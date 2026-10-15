@@ -9,7 +9,7 @@ export default function HalamanTidakBerwenang() {
     <BingkaiAuth judul="Tidak berwenang" keterangan="Halaman ini tidak tersedia untuk peran Anda.">
       <Link
         href="/"
-        className="flex h-11 items-center justify-center rounded-full bg-primary text-base font-medium text-primary-foreground"
+        className="flex h-12 items-center justify-center rounded-xl bg-hangat text-base font-semibold text-primary hover:bg-hangat/85"
       >
         Kembali ke Dashboard
       </Link>

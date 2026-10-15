@@ -54,3 +54,16 @@ export function bulanMundur(bulanAkhir: string, banyak: number): string[] {
     return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
   });
 }
+
+// Awal hari (00:00) suatu tanggal di zona lembaga sebagai ISO dengan offset, mis. "2026-10-15T00:00:00+08:00".
+export function awalHariDiZona(tanggal: string, zona: string): string {
+  const nama = new Intl.DateTimeFormat("en-US", { timeZone: zona, timeZoneName: "longOffset" })
+    .formatToParts(new Date(`${tanggal}T12:00:00Z`))
+    .find((p) => p.type === "timeZoneName")?.value;
+  const offset = nama && nama !== "GMT" ? nama.replace("GMT", "") : "+00:00";
+  return `${tanggal}T00:00:00${offset}`;
+}
+
+export function tanggalBerikut(tanggal: string): string {
+  return new Date(Date.parse(`${tanggal}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10);
+}

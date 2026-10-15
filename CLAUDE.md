@@ -134,6 +134,8 @@ docs/                  schema.md, roadmap.md, security-checklist.md, uji_rls.sql
 - Pesan galat fungsi database diterjemahkan di `lib/pesan-galat.ts`.
 - Keuangan: setiap query `kas`/`pembayaran` WAJIB `.is("dihapus_pada", null)`; "Hapus" = isi `dihapus_pada`. Jenis kas diambil dari kategori di server. Ekspor CSV lewat `lib/csv.ts` (anti injeksi formula).
 - Grafik: tanpa pustaka (`components/keuangan/grafik-bulanan.tsx`); warna `bg-chart-pemasukan` (#3b6fd4) / `bg-chart-pengeluaran` (#e8590c), divalidasi skrip dataviz.
+- Header keamanan & CSP ada di `next.config.ts` (tanpa nonce). Sumber eksternal baru (skrip, font, API) harus ditambahkan ke CSP secara sadar.
+- Halaman baru: tambahkan ke `e2e/kualitas.spec.ts` (axe WCAG AA, galat konsol/CSP, geser horizontal di 390px).
 - Data master tidak dihapus permanen: peserta, kelas, dan jadwal dinonaktifkan lewat centang "Aktif" (riwayat sesi dan honor tetap utuh).
 - E2E: pakai locator berbasis role/`exact` (Next menyimpan halaman sebelumnya tersembunyi lewat Activity) dan tunggu `networkidle` sebelum mengisi form yang di-stream.
 - Commit kecil dan fokus, pesan jelas. Satu sprint = satu cabang/PR.

@@ -18,7 +18,7 @@ async function PesanDariUrl({ searchParams }: { searchParams: PageProps<"/masuk"
 
 export default function HalamanMasuk({ searchParams }: PageProps<"/masuk">) {
   return (
-    <BingkaiAuth judul="Masuk" keterangan="Gunakan akun yang dibuat oleh admin lembaga.">
+    <BingkaiAuth judul="Masuk" keterangan="Assalamu'alaikum! Masukkan email dan kata sandi untuk melanjutkan.">
       <Suspense fallback={null}>
         <PesanDariUrl searchParams={searchParams} />
       </Suspense>

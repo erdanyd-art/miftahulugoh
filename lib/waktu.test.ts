@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { pesanGalatAbsensi } from "./pesan-galat";
-import { bulanMundur, bulanValid, formatTanggal, namaBulan, rentangBulan, waktuDiZona } from "./waktu";
+import { awalHariDiZona, bulanMundur, bulanValid, tanggalBerikut, formatTanggal, namaBulan, rentangBulan, waktuDiZona } from "./waktu";
 
 describe("waktuDiZona", () => {
   // 2026-10-14 16:30 UTC = Kamis 00:30 WITA (sudah ganti tanggal), masih Rabu 23:30 WIB
@@ -44,5 +44,14 @@ describe("pesanGalatAbsensi", () => {
 describe("bulanMundur", () => {
   it("menyusun bulan mundur melewati pergantian tahun", () => {
     expect(bulanMundur("2026-02", 4)).toEqual(["2025-11", "2025-12", "2026-01", "2026-02"]);
+  });
+});
+
+describe("awalHariDiZona", () => {
+  it("memakai offset zona lembaga", () => {
+    expect(awalHariDiZona("2026-10-15", "Asia/Makassar")).toBe("2026-10-15T00:00:00+08:00");
+    expect(awalHariDiZona("2026-10-15", "Asia/Jakarta")).toBe("2026-10-15T00:00:00+07:00");
+    expect(awalHariDiZona("2026-10-15", "UTC")).toBe("2026-10-15T00:00:00+00:00");
+    expect(tanggalBerikut("2026-12-31")).toBe("2027-01-01");
   });
 });

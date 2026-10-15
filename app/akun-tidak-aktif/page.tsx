@@ -12,7 +12,7 @@ export default function HalamanAkunTidakAktif() {
       keterangan="Akun Anda belum terdaftar atau sudah dinonaktifkan. Hubungi admin lembaga untuk mengaktifkannya."
     >
       <form action={keluar}>
-        <Button type="submit" className="h-11 w-full rounded-full text-base">
+        <Button type="submit" className="h-12 w-full rounded-xl bg-hangat text-base font-semibold text-primary hover:bg-hangat/85">
           Keluar
         </Button>
       </form>
