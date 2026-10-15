@@ -146,7 +146,7 @@ Prinsip:
 | # | Keputusan / asumsi | Status |
 |---|---|---|
 | D1 | Satu lembaga, tanpa multi-tenant | Dikonfirmasi |
-| D2 | Fase 1 hanya admin dan tutor yang login. Peserta login dan ujian CBT (Fase 2) **belum diputuskan**; keputusan ditunda sampai Fase 1 selesai dan dipakai | Ditunda; struktur sudah disiapkan agar bisa ditambah tanpa membongkar |
+| D2 | Fase 1 hanya admin dan tutor yang login. **Ujian CBT dibutuhkan** (Fase 2), dikerjakan **setelah Fase 1 dipasang di domain (Sprint 8)** | Diputuskan Erdany, 2026-10-15 |
 | D9 | Saldo honor tutor masuk Fase 1 dalam bentuk ringan (honor sesi dikurangi pembayaran honor di kas) | Disetujui sementara ("mungkin iya"); mudah dibalik |
 | D3 | Absensi dicatat per murid | Dikonfirmasi |
 | D4 | Pembayaran peserta tidak otomatis masuk kas | Dikonfirmasi (sengaja) |
@@ -155,10 +155,12 @@ Prinsip:
 | D7 | Ujian CBT dan portal peserta ditunda ke Fase 2 | Mengikuti D2 |
 | D8 | Stack: Next.js + TypeScript, Supabase (PostgreSQL + Auth), Vercel, GitHub | Rekomendasi, cocok untuk skala ini |
 | D10 | Impor peserta dari CSV di Fase 1 (pengganti input dari spreadsheet) | Disetujui Erdany, 2026-10-15 |
+| D11 | Peserta login dengan **username + kata sandi** (tanpa email). Admin membuat akun dengan kata sandi awal; **wajib diganti saat login pertama** (pengecualian terkendali dari aturan "tanpa kata sandi bawaan", khusus peserta) | Diputuskan Erdany, 2026-10-15 |
+| D12 | Fase 2 tahap pertama: **ujian saja** (daftar ujian, mengerjakan, nilai). Portal peserta lain (jadwal, Meet, riwayat pembayaran; bagian 6.1) menyusul | Diputuskan Erdany, 2026-10-15 |
 
 ## 10. Pertanyaan yang masih terbuka
 
-1. ~~Peserta login (D2)~~ Ditunda; tidak menghalangi Fase 1.
+1. ~~Peserta login (D2)~~ Diputuskan: ujian CBT dibutuhkan, login username (D11, D12).
 2. ~~Saldo honor~~ Diputuskan sementara: masuk Fase 1 (D9).
 3. **Sesi tanpa peserta terdaftar** (total = 0): honor penuh atau setengah?
 4. **"Atur pembayaran"** pada spesifikasi asli: apakah berarti menetapkan tagihan (misalnya nominal SPP per kelas/peserta), atau hanya mencatat pembayaran seperti sekarang?
@@ -185,7 +187,7 @@ Prinsip:
 
 ## Riwayat perubahan
 
-- v0.5: impor peserta dari CSV (D10); fungsi database `impor_peserta`.
+- v0.5: impor peserta dari CSV (D10); fungsi database `impor_peserta`. Keputusan Fase 2: ujian CBT setelah Sprint 8 (D2), login peserta username + ganti sandi pertama (D11), tahap pertama ujian saja (D12).
 - v0.4: menambah tabel `pengaturan` dan `kategori_kas` (sesuai `docs/schema.md`); admin tidak boleh mencatat absensi tanggal yang belum tiba.
 - v0.3: peserta login ditunda (tidak menghalangi Fase 1); saldo honor tutor masuk Fase 1; kolom `tutor_id` opsional di `kas`.
 - v0.2: menambah nama dan identitas visual, aturan honor otomatis, jendela absen, dashboard per peran, rincian keuangan dan ujian CBT dari spesifikasi asli beta; membagi menjadi Fase 1 dan Fase 2.
