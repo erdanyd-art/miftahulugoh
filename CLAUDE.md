@@ -130,6 +130,8 @@ docs/                  schema.md, roadmap.md, security-checklist.md, uji_rls.sql
 - Tabel: pola cari/filter/urut/halaman lewat parameter URL (`lib/tabel.ts`, `components/tabel.tsx`); form filter memakai GET.
 - Setelah mutasi di server action panggil `refresh()` dari `next/cache` agar tampilan memuat data baru.
 - Form dengan isian memakai `useFormAksi` (`components/use-form-aksi.ts`), bukan `<form action>` langsung: React mereset form setelah aksi, sehingga isian (terutama dropdown) hilang saat server menolak.
+- Waktu lembaga: `lib/waktu.ts` + `waktuLembaga()` (zona dari `pengaturan`). Hanya untuk tampilan; jendela absen dan honor ditegakkan `simpan_absensi()`.
+- Pesan galat fungsi database diterjemahkan di `lib/pesan-galat.ts`.
 - Data master tidak dihapus permanen: peserta, kelas, dan jadwal dinonaktifkan lewat centang "Aktif" (riwayat sesi dan honor tetap utuh).
 - E2E: pakai locator berbasis role/`exact` (Next menyimpan halaman sebelumnya tersembunyi lewat Activity) dan tunggu `networkidle` sebelum mengisi form yang di-stream.
 - Commit kecil dan fokus, pesan jelas. Satu sprint = satu cabang/PR.
