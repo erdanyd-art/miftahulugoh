@@ -19,3 +19,10 @@ export function namaHari(hari: number): string {
   }
   return nama;
 }
+
+// Jam dari database ("08:00:00") ditampilkan gaya Indonesia ("08.00").
+export function formatJam(jam: string): string {
+  return jam.slice(0, 5).replace(":", ".");
+}
+
+export const DAFTAR_HARI = [1, 2, 3, 4, 5, 6, 7] as const;

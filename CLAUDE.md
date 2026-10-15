@@ -26,7 +26,7 @@ Docker Desktop di Mac ini mode per pengguna: set `PATH="$HOME/.docker/bin:$PATH"
 - `npm run dev` · `npm run build` · `npm run start`
 - `npm run lint` · `npm run typecheck` (`next typegen` + `tsc --noEmit`) · `npm test` (Vitest) · `npm run test:e2e` (Playwright, butuh Supabase lokal + seed)
 - `npx supabase start` / `stop` / `status` (butuh Docker berjalan)
-- `npx supabase migration new <nama>` · `npx supabase db reset` (lokal) · `npx supabase test db` (tes pgTAP di `supabase/tests/`)
+- `npx supabase migration new <nama>` · `npm run db:reset` (lokal; = `supabase db reset` + restart Kong, karena setelah reset template email lokal 404) · `npx supabase test db` (tes pgTAP di `supabase/tests/`)
 - `npx supabase gen types typescript --local > lib/database.types.ts`
 
 ## Aturan kerja
@@ -129,6 +129,8 @@ docs/                  schema.md, roadmap.md, security-checklist.md, uji_rls.sql
 - ID dari klien divalidasi `z.guid()` (bukan `z.uuid()`: ID seed fiktif bukan UUID RFC).
 - Tabel: pola cari/filter/urut/halaman lewat parameter URL (`lib/tabel.ts`, `components/tabel.tsx`); form filter memakai GET.
 - Setelah mutasi di server action panggil `refresh()` dari `next/cache` agar tampilan memuat data baru.
+- Form dengan isian memakai `useFormAksi` (`components/use-form-aksi.ts`), bukan `<form action>` langsung: React mereset form setelah aksi, sehingga isian (terutama dropdown) hilang saat server menolak.
+- Data master tidak dihapus permanen: peserta, kelas, dan jadwal dinonaktifkan lewat centang "Aktif" (riwayat sesi dan honor tetap utuh).
 - E2E: pakai locator berbasis role/`exact` (Next menyimpan halaman sebelumnya tersembunyi lewat Activity) dan tunggu `networkidle` sebelum mengisi form yang di-stream.
 - Commit kecil dan fokus, pesan jelas. Satu sprint = satu cabang/PR.
 - Saat ragu soal kebutuhan, **tanya**; jangan mengarang.

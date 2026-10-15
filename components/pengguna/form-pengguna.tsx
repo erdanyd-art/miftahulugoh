@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { useFormAksi } from "@/components/use-form-aksi";
 import { Button } from "@/components/ui/button";
 import { KolomIsian, KolomPilihan, PesanStatus } from "@/components/form";
 import {
@@ -25,9 +26,9 @@ function PilihanPeran({ awal }: { awal?: Peran }) {
 }
 
 export function FormTambahPengguna() {
-  const [status, aksi, sedang] = useActionState(tambahPengguna, undefined);
+  const { status, onSubmit, sedang } = useFormAksi(tambahPengguna);
   return (
-    <form action={aksi} className="flex max-w-lg flex-col gap-4">
+    <form onSubmit={onSubmit} className="flex max-w-lg flex-col gap-4">
       <PesanStatus {...status} />
       <KolomIsian label="Nama" name="nama" required maxLength={100} autoComplete="off" />
       <KolomIsian label="Email" name="email" type="email" required autoComplete="off" />
@@ -53,9 +54,9 @@ export function FormUbahPengguna({
   peran: Peran;
   diriSendiri: boolean;
 }) {
-  const [status, aksi, sedang] = useActionState(aksiUbah, undefined);
+  const { status, onSubmit, sedang } = useFormAksi(aksiUbah);
   return (
-    <form action={aksi} className="flex flex-col gap-4">
+    <form onSubmit={onSubmit} className="flex flex-col gap-4">
       <PesanStatus {...status} />
       <KolomIsian label="Nama" name="nama" defaultValue={nama} required maxLength={100} />
       {diriSendiri ? (
@@ -112,10 +113,10 @@ export function TombolKirimTautan({ id }: { id: string }) {
 }
 
 export function FormPengaturan({ namaLembaga, zonaWaktu }: { namaLembaga: string; zonaWaktu: string }) {
-  const [status, aksi, sedang] = useActionState(simpanPengaturan, undefined);
+  const { status, onSubmit, sedang } = useFormAksi(simpanPengaturan);
   const dikenal = ZONA_WAKTU.some((z) => z.nilai === zonaWaktu);
   return (
-    <form action={aksi} className="flex max-w-lg flex-col gap-4">
+    <form onSubmit={onSubmit} className="flex max-w-lg flex-col gap-4">
       <PesanStatus {...status} />
       <KolomIsian label="Nama lembaga" name="namaLembaga" defaultValue={namaLembaga} required maxLength={150} />
       <KolomPilihan label="Zona waktu lembaga" name="zonaWaktu" defaultValue={zonaWaktu} required>

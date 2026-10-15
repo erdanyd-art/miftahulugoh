@@ -30,7 +30,7 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 | B1 | RLS aktif di **semua** tabel `public`; ada tes otomatis yang memeriksanya | 1 | Lulus (Supabase lokal) — `supabase/tests/00_struktur_rls.test.sql` tes 1–2 |
 | B2 | Seluruh tes RLS di `supabase/tests/` lulus pada setiap PR | 1+ | Lulus (Supabase lokal) — `npx supabase test db`: Files=2, Tests=74, PASS; job `database` di CI menunggu remote GitHub |
 | B3 | Tutor tidak dapat membaca `kas`, `pembayaran`, `kategori_kas`, `audit_log` (diuji) | 1, 6 | Lulus (Supabase lokal) — `01_aturan_bisnis` bagian visibilitas tutor |
-| B4 | Tutor hanya melihat jadwal, kelas, peserta, sesi, dan absensi yang terkait dirinya (diuji) | 1, 4, 5 | ☐ |
+| B4 | Tutor hanya melihat jadwal, kelas, peserta, sesi, dan absensi yang terkait dirinya (diuji) | 1, 4, 5 | Lulus (Sprint 1+4) — RLS diuji pgTAP; E2E: tutor 2 tidak melihat jadwal/kelas tutor 1; halaman admin data master → /tidak-berwenang. Sesi/absensi: diuji lagi di Sprint 5 |
 | B5 | `sesi` dan `absensi_murid` tidak bisa ditulis langsung oleh pengguna aplikasi; hanya lewat fungsi | 1, 5 | Lulus (Supabase lokal) — INSERT/UPDATE langsung ke `sesi` ditolak |
 | B6 | Honor dan jendela absen dihitung/diperiksa di database, bukan di kode aplikasi | 5 | ☐ |
 | B7 | Peran pengguna dibaca dari tabel `profiles` di server, bukan dari body request, cookie bebas, atau metadata yang bisa diubah klien | 2 | Lulus — `lib/auth.ts` membaca peran dari `profiles` lewat RLS setelah `getUser()` |
@@ -58,9 +58,9 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 | D1 | Semua input divalidasi di server dengan Zod, selain constraint di database | 3+ | Lulus (Sprint 2–3) — Zod di setiap server action (`lib/validasi/`), ID divalidasi `z.guid()`; constraint/trigger di database |
 | D2 | Semua akses data memakai query berparameter melalui klien Supabase; tidak ada SQL yang dirangkai dari input pengguna | 3+ | Lulus (Sprint 2–3) — hanya klien Supabase (query berparameter); tidak ada SQL dirangkai di aplikasi |
 | D3 | Rute dan server action memeriksa autentikasi **dan** peran di server | 2+ | Lulus (Sprint 2) — halaman memanggil `penggunaWajib`/`wajibPeran`; E2E tutor → `/tidak-berwenang` di /keuangan, /pembayaran, /pengguna |
-| D4 | Teks Arab/RTL dan karakter khusus dirender tanpa `dangerouslySetInnerHTML` dari input pengguna | 4+ | ☐ |
+| D4 | Teks Arab/RTL dan karakter khusus dirender tanpa `dangerouslySetInnerHTML` dari input pengguna | 4+ | Lulus (Sprint 4) — tidak ada `dangerouslySetInnerHTML` di kode; teks pengguna dirender React (di-escape) |
 | D5 | Ekspor CSV mencegah injeksi formula (sel berawalan `=`, `+`, `-`, `@` diberi tanda petik) | 6 | ☐ |
-| D6 | Tautan Meet hanya menerima `https://` (constraint database + validasi form); dibuka dengan `rel="noopener noreferrer"` | 4 | ☐ |
+| D6 | Tautan Meet hanya menerima `https://` (constraint database + validasi form); dibuka dengan `rel="noopener noreferrer"` | 4 | Lulus — constraint `^https://` di database + Zod `skemaMeet` + E2E (http:// ditolak); tautan dibuka `target=_blank rel="noopener noreferrer"` |
 | D7 | Header keamanan di `next.config`: CSP, `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`/`frame-ancestors`, HSTS di produksi | 7, 8 | ☐ |
 | D8 | Server action/route yang mengubah data hanya menerima metode dan asal yang semestinya (perlindungan CSRF bawaan tidak dimatikan) | 3+ | Lulus (Sprint 2) — server action Next.js bawaan (POST + cek Origin), tidak dimatikan |
 | D9 | Pembatasan percobaan masuk (rate limit) aktif: periksa pengaturan bawaan Supabase Auth dan sesuaikan | 8 | ☐ |
@@ -76,14 +76,14 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 | E4 | Soft delete dihormati di semua query, rekap, saldo honor, dan ekspor | 6 | ☐ |
 | E5 | Cadangan terjadwal aktif dan **satu latihan pemulihan berhasil**; langkahnya tertulis di `docs/operasional.md` | 7, 8 | ☐ |
 | E6 | Data fiktif dan data nyata tidak bercampur; data nyata tidak masuk repositori, tangkapan layar, atau fixture tes | semua | ☐ |
-| E7 | `peserta.catatan` terlihat tutor kelas terkait: keputusan tertulis (dibiarkan dengan pedoman "jangan isi hal sensitif", atau dipisah ke tabel khusus admin) | 4 | ☐ |
+| E7 | `peserta.catatan` terlihat tutor kelas terkait: keputusan tertulis (dibiarkan dengan pedoman "jangan isi hal sensitif", atau dipisah ke tabel khusus admin) | 4 | Keputusan (Sprint 4, perlu dikonfirmasi pemilik lembaga): catatan dibiarkan di `peserta` dengan pedoman tertulis di form "jangan isi hal sensitif"; UI tutor tidak menampilkan catatan. Tinjau ulang sebelum data nyata masuk (Sprint 8) |
 
 ## F. Dependensi dan operasional
 
 | # | Butir | Sprint | Status |
 |---|---|---|---|
 | F1 | `npm audit` tidak memiliki temuan tinggi/kritis yang belum ditangani | 7 | ☐ |
-| F2 | Pembaruan dependensi otomatis (Dependabot atau setara) aktif | 0 | Ditunda — `.github/dependabot.yml` ada; aktif setelah repo di-push ke GitHub (pemilik: Erdany) |
+| F2 | Pembaruan dependensi otomatis (Dependabot atau setara) aktif | 0 | Lulus — Dependabot aktif: PR otomatis `actions/checkout`, `actions/setup-node`, npm (2026-10-15) |
 | F3 | Dependensi baru dicatat dan dikonfirmasi sebelum dipasang | semua | Lulus (Sprint 0–1) — dependensi tercantum di rencana Sprint 0 dan disetujui |
 | F4 | CI menjalankan lint, typecheck, tes unit, dan tes database pada setiap PR | 0+ | Ditunda — workflow berisi lint, typecheck, unit, build, `supabase test db`, dan E2E; belum pernah jalan (belum ada remote) |
 | F5 | Domain memakai HTTPS penuh; HTTP dialihkan ke HTTPS | 8 | ☐ |

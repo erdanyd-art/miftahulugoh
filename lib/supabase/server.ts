@@ -16,9 +16,10 @@ export function envSupabase() {
 // Klien Supabase untuk Server Component, Server Action, dan Route Handler. Buat baru per permintaan.
 // Memakai kunci anon + sesi pengguna dari cookie, jadi semua akses tetap dibatasi RLS.
 export async function buatKlienServer() {
-  const { url, anonKey } = envSupabase();
   // Sesi selalu dibaca saat permintaan (supabase-js memakai jam saat ini, tidak boleh ikut prerender).
+  // Dipanggil sebelum membaca env, agar build tanpa variabel Supabase (job CI "app") tetap berhasil.
   await connection();
+  const { url, anonKey } = envSupabase();
   const cookieStore = await cookies();
 
   return createServerClient<Database>(url, anonKey, {
