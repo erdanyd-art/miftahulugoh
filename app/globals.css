@@ -51,6 +51,8 @@
   --color-pastel-biru: var(--pastel-biru);
   --color-pastel-pink: var(--pastel-pink);
   --color-pastel-muted: var(--pastel-muted);
+  --color-krem: var(--krem);
+  --color-hangat: var(--hangat);
   --color-status-lunas: var(--status-lunas);
   --color-status-lunas-foreground: var(--status-lunas-foreground);
   --color-status-menunggu: var(--status-menunggu);
@@ -108,6 +110,10 @@
   --pastel-biru: #bfe0fb;
   --pastel-pink: #fbcfd9;
   --pastel-muted: #3d4659;
+
+  /* Halaman masuk: latar krem dan tombol hangat (teks navy 10:1) */
+  --krem: #f6f1e7;
+  --hangat: #f7c873;
 
   /* Grafik keuangan (divalidasi skrip dataviz: lolos CVD, kontras, kecerahan) */
   --chart-pemasukan: #3b6fd4;

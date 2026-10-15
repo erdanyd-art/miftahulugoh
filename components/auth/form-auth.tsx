@@ -1,13 +1,44 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useId, useState, type InputHTMLAttributes } from "react";
 import { Button } from "@/components/ui/button";
 import { aturSandi, lupaSandi, masuk } from "@/lib/aksi-auth";
 import { PANJANG_SANDI_MIN } from "@/lib/validasi/auth";
 import { KolomIsian, PesanStatus } from "./bingkai-auth";
 
-const kelasTombol = "h-11 w-full rounded-full text-base";
+const kelasTombol = "h-12 w-full rounded-xl bg-hangat text-base font-semibold text-primary hover:bg-hangat/85";
+const kelasTautan = "text-sm font-medium text-primary underline-offset-4 hover:underline";
+
+// Kolom kata sandi dengan tombol lihat/sembunyikan (nyaman saat mengetik di ponsel).
+// Tombol sengaja di luar <label> agar nama aksesibel kolom tetap persis teks label.
+function KolomSandi({ label, ...props }: { label: string; name: string } & InputHTMLAttributes<HTMLInputElement>) {
+  const [terlihat, setTerlihat] = useState(false);
+  const id = useId();
+  return (
+    <div className="flex flex-col gap-1.5 text-sm font-medium">
+      <label htmlFor={id}>{label}</label>
+      <div className="relative">
+        <input
+          {...props}
+          id={id}
+          type={terlihat ? "text" : "password"}
+          className="h-11 w-full rounded-xl border border-input bg-card pr-28 pl-4 text-base font-normal focus-visible:outline-2 focus-visible:outline-ring"
+        />
+        <button
+          type="button"
+          onClick={() => setTerlihat((v) => !v)}
+          aria-label={terlihat ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
+          aria-pressed={terlihat}
+          aria-controls={id}
+          className="absolute top-1/2 right-2 -translate-y-1/2 rounded-lg px-2 py-1 text-xs font-medium text-muted-foreground hover:text-foreground"
+        >
+          {terlihat ? "Sembunyikan" : "Lihat"}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export function FormMasuk() {
   const [status, aksi, sedang] = useActionState(masuk, undefined);
@@ -15,13 +46,16 @@ export function FormMasuk() {
     <form action={aksi} className="flex flex-col gap-4">
       <PesanStatus galat={status?.galat} />
       <KolomIsian label="Email" name="email" type="email" autoComplete="email" defaultValue={status?.email} required />
-      <KolomIsian label="Kata sandi" name="kataSandi" type="password" autoComplete="current-password" required />
+      <KolomSandi label="Kata sandi" name="kataSandi" autoComplete="current-password" required />
+      <Link href="/lupa-sandi" className={`${kelasTautan} w-fit`}>
+        Lupa kata sandi?
+      </Link>
       <Button type="submit" disabled={sedang} className={kelasTombol}>
         {sedang ? "Memproses..." : "Masuk"}
       </Button>
-      <Link href="/lupa-sandi" className="text-center text-sm font-medium text-accent hover:underline">
-        Lupa kata sandi?
-      </Link>
+      <p className="mt-2 text-center text-xs text-muted-foreground">
+        Belum punya akun? Akun dibuat oleh admin lembaga.
+      </p>
     </form>
   );
 }
@@ -35,7 +69,7 @@ export function FormLupaSandi() {
       <Button type="submit" disabled={sedang} className={kelasTombol}>
         {sedang ? "Mengirim..." : "Kirim tautan"}
       </Button>
-      <Link href="/masuk" className="text-center text-sm font-medium text-accent hover:underline">
+      <Link href="/masuk" className={`${kelasTautan} text-center`}>
         Kembali ke halaman masuk
       </Link>
     </form>
@@ -47,15 +81,14 @@ export function FormAturSandi() {
   return (
     <form action={aksi} className="flex flex-col gap-4">
       <PesanStatus {...status} />
-      <KolomIsian
+      <KolomSandi
         label={`Kata sandi baru (minimal ${PANJANG_SANDI_MIN} karakter)`}
         name="kataSandi"
-        type="password"
         autoComplete="new-password"
         minLength={PANJANG_SANDI_MIN}
         required
       />
-      <KolomIsian label="Ulangi kata sandi" name="ulangi" type="password" autoComplete="new-password" required />
+      <KolomSandi label="Ulangi kata sandi" name="ulangi" autoComplete="new-password" required />
       <Button type="submit" disabled={sedang} className={kelasTombol}>
         {sedang ? "Menyimpan..." : "Simpan kata sandi"}
       </Button>
