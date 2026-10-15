@@ -1,6 +1,6 @@
 # PRD — Dashboard Lembaga Miftah al-Lughah
 
-Versi: 0.5 (draft untuk disetujui) · Tanggal: 2026-10-15
+Versi: 0.6 (draft untuk disetujui) · Tanggal: 2026-10-15
 Penulis: Erdany (dengan bantuan Claude sebagai arsitek)
 
 > Dokumen ini adalah sumber kebenaran kebutuhan produk. Claude Code wajib membacanya sebelum mengerjakan tugas apa pun, dan tidak boleh menambah fitur di luar bagian yang ditandai "Fase 1".
@@ -72,7 +72,8 @@ Aturan:
 ### 5.6 Keuangan (khusus admin)
 - **Kas:** CRUD pemasukan dan pengeluaran (tanggal, jenis, kategori, keterangan, jumlah). Kategori awal: Donasi, Infaq, Operasional, Honor Tutor, Honor Pegawai (dapat ditambah admin). Untuk kategori Honor Tutor, admin wajib memilih tutornya (kolom `tutor_id`), agar saldo honor bisa dihitung.
 - **Pembayaran peserta:** CRUD (tanggal, peserta, keterangan seperti SPP/infaq, jumlah, status `Lunas` / `Belum Lunas`), dengan filter status, peserta, bulan.
-- **Rekap:** ringkasan per bulan untuk kas, pembayaran peserta, dan honor tutor/pegawai. Kas dan pembayaran peserta ditampilkan terpisah dan **tidak dijumlahkan otomatis** (lihat D4 dan pertanyaan terbuka).
+- **Pembayaran berstatus Lunas otomatis tercatat sebagai pemasukan kas** (kategori "Pembayaran Peserta"); perubahan atau penghapusan pembayaran ikut menyesuaikan kas (D13).
+- **Rekap:** ringkasan per bulan untuk kas, pembayaran peserta, dan honor tutor/pegawai. Pemasukan kas sudah termasuk pembayaran Lunas; kolom pembayaran adalah rinciannya.
 - Ekspor CSV untuk pembayaran, kas, dan rekap honor.
 
 ### 5.7 Umum
@@ -149,13 +150,14 @@ Prinsip:
 | D2 | Fase 1 hanya admin dan tutor yang login. **Ujian CBT dibutuhkan** (Fase 2), dikerjakan **setelah Fase 1 dipasang di domain (Sprint 8)** | Diputuskan Erdany, 2026-10-15 |
 | D9 | Saldo honor tutor masuk Fase 1 dalam bentuk ringan (honor sesi dikurangi pembayaran honor di kas) | Disetujui sementara ("mungkin iya"); mudah dibalik |
 | D3 | Absensi dicatat per murid | Dikonfirmasi |
-| D4 | Pembayaran peserta tidak otomatis masuk kas | Dikonfirmasi (sengaja) |
+| D4 | ~~Pembayaran peserta tidak otomatis masuk kas~~ | Diganti D13 |
 | D5 | Google Sheets ditinggalkan; beta, data uji tidak dimigrasi | Asumsi, perlu konfirmasi |
 | D6 | Honor otomatis (hadir ≥ 1 penuh, hadir 0 setengah) masuk Fase 1 | Aturan dari spesifikasi asli, cocok dengan data beta |
 | D7 | Ujian CBT dan portal peserta ditunda ke Fase 2 | Mengikuti D2 |
 | D8 | Stack: Next.js + TypeScript, Supabase (PostgreSQL + Auth), Vercel, GitHub | Rekomendasi, cocok untuk skala ini |
 | D10 | Impor peserta dari CSV di Fase 1 (pengganti input dari spreadsheet) | Disetujui Erdany, 2026-10-15 |
 | D11 | Peserta login dengan **username + kata sandi** (tanpa email). Admin membuat akun dengan kata sandi awal; **wajib diganti saat login pertama** (pengecualian terkendali dari aturan "tanpa kata sandi bawaan", khusus peserta) | Diputuskan Erdany, 2026-10-15 |
+| D13 | Pembayaran peserta berstatus **Lunas otomatis masuk kas** (kategori "Pembayaran Peserta", disinkron trigger database; tidak bisa dicatat/diubah manual di Kas) | Diputuskan Erdany, 2026-10-15 |
 | D12 | Fase 2 tahap pertama: **ujian saja** (daftar ujian, mengerjakan, nilai). Portal peserta lain (jadwal, Meet, riwayat pembayaran; bagian 6.1) menyusul | Diputuskan Erdany, 2026-10-15 |
 
 ## 10. Pertanyaan yang masih terbuka
@@ -164,7 +166,7 @@ Prinsip:
 2. ~~Saldo honor~~ Diputuskan sementara: masuk Fase 1 (D9).
 3. **Sesi tanpa peserta terdaftar** (total = 0): honor penuh atau setengah?
 4. **"Atur pembayaran"** pada spesifikasi asli: apakah berarti menetapkan tagihan (misalnya nominal SPP per kelas/peserta), atau hanya mencatat pembayaran seperti sekarang?
-5. **Rekap keuangan:** boleh menjumlahkan kas dan pembayaran peserta, atau tetap terpisah?
+5. ~~Rekap keuangan~~ Diputuskan: pembayaran Lunas masuk kas (D13).
 6. Zona waktu lembaga (WIB/WITA), ukuran lembaga (tutor, peserta, kelas aktif), pemilik akun Supabase/Vercel/domain dan siapa yang merawat, nama domain, anggaran bulanan.
 7. Adakah data nyata dari Sheets yang harus dibawa (misalnya daftar kelas dan peserta aktif)?
 
@@ -187,6 +189,7 @@ Prinsip:
 
 ## Riwayat perubahan
 
+- v0.6: pembayaran Lunas otomatis masuk kas (D13, menggantikan D4).
 - v0.5: impor peserta dari CSV (D10); fungsi database `impor_peserta`. Keputusan Fase 2: ujian CBT setelah Sprint 8 (D2), login peserta username + ganti sandi pertama (D11), tahap pertama ujian saja (D12).
 - v0.4: menambah tabel `pengaturan` dan `kategori_kas` (sesuai `docs/schema.md`); admin tidak boleh mencatat absensi tanggal yang belum tiba.
 - v0.3: peserta login ditunda (tidak menghalangi Fase 1); saldo honor tutor masuk Fase 1; kolom `tutor_id` opsional di `kas`.

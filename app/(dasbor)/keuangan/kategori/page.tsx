@@ -35,9 +35,10 @@ async function Isi() {
                   {k.jenis === "pemasukan" ? "Pemasukan" : "Pengeluaran"}
                 </Chip>
                 {k.butuh_tutor && <Chip warna="netral">Pilih tutor</Chip>}
+                {k.otomatis && <Chip warna="netral">Otomatis dari Pembayaran</Chip>}
                 {!k.aktif && <Chip warna="merah">Nonaktif</Chip>}
               </span>
-              <TombolAktifKategori id={k.id} aktif={k.aktif} nama={k.nama} />
+              {!k.otomatis && <TombolAktifKategori id={k.id} aktif={k.aktif} nama={k.nama} />}
             </li>
           ))}
         </ul>

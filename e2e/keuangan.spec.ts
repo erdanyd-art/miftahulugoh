@@ -112,6 +112,18 @@ test("admin mencatat pembayaran Belum Lunas lalu menandai Lunas; ekspor pembayar
   const bulan = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Makassar", year: "numeric", month: "2-digit" }).format(new Date());
   const csv = await (await page.request.get(`/ekspor/pembayaran?bulan=${bulan}`)).text();
   expect(csv).toContain(`Peserta Satu,${ketSpp},150000,Lunas`);
+
+  // D13: pembayaran Lunas otomatis menjadi pemasukan kas, hanya bisa diubah lewat Pembayaran
+  await page.goto(`/keuangan?q=${encodeURIComponent(ketSpp)}`);
+  await page.waitForLoadState("networkidle");
+  const kasOtomatis = page.getByRole("link", { name: new RegExp(ketSpp) });
+  await expect(kasOtomatis).toContainText("Pembayaran Peserta");
+  await expect(kasOtomatis).toContainText("+Rp 150.000");
+  await kasOtomatis.click();
+  await expect(page.getByRole("heading", { name: "Dicatat otomatis" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Hapus" })).toHaveCount(0);
+  await page.goto("/keuangan/baru");
+  await expect(pilihan(page, "Kategori").locator("option", { hasText: "Pembayaran Peserta" })).toHaveCount(0);
 });
 
 test("admin menambah dan menonaktifkan kategori kas", async ({ page }) => {

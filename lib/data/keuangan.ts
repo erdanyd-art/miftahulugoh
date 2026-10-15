@@ -6,12 +6,12 @@ import { rentangBulan } from "@/lib/waktu";
 // Keuangan khusus admin (RLS juga menolak tutor). Soft delete: SETIAP query menyaring dihapus_pada is null.
 
 const KOLOM_KAS =
-  "id, tanggal, jenis, keterangan, jumlah, kategori_id, tutor_id, kategori:kategori_kas(id, nama, jenis, butuh_tutor), tutor:profiles!kas_tutor_id_fkey(id, nama)" as const;
+  "id, tanggal, jenis, keterangan, jumlah, kategori_id, tutor_id, pembayaran_id, kategori:kategori_kas(id, nama, jenis, butuh_tutor, otomatis), tutor:profiles!kas_tutor_id_fkey(id, nama)" as const;
 
 export async function daftarKategori() {
   await wajibPeran("admin");
   const supabase = await buatKlienServer();
-  const { data, error } = await supabase.from("kategori_kas").select("id, nama, jenis, butuh_tutor, aktif").order("nama");
+  const { data, error } = await supabase.from("kategori_kas").select("id, nama, jenis, butuh_tutor, aktif, otomatis").order("nama");
   if (error) throw new Error("Gagal memuat kategori");
   return data;
 }
@@ -66,7 +66,8 @@ export async function pilihanKeuangan() {
   await wajibPeran("admin");
   const supabase = await buatKlienServer();
   const [kategori, tutor, peserta] = await Promise.all([
-    supabase.from("kategori_kas").select("id, nama, jenis, butuh_tutor").eq("aktif", true).order("nama"),
+    // Kategori otomatis ("Pembayaran Peserta") diisi lewat menu Pembayaran, tidak dipilih manual.
+    supabase.from("kategori_kas").select("id, nama, jenis, butuh_tutor").eq("aktif", true).eq("otomatis", false).order("nama"),
     supabase.from("profiles").select("id, nama").eq("peran", "tutor").order("nama"),
     supabase.from("peserta").select("id, nama").eq("aktif", true).order("nama"),
   ]);

@@ -91,14 +91,14 @@ isOneToOne: false
                   ]
                 },"kas": {
                   Row: {
-                    "dibuat_oleh": string | null,"dibuat_pada": string,"dihapus_pada": string | null,"diubah_pada": string,"id": string,"jenis": Database["public"]['Enums']["jenis_kas"],"jumlah": number,"kategori_id": string,"keterangan": string | null,"tanggal": string,"tutor_id": string | null
+                    "dibuat_oleh": string | null,"dibuat_pada": string,"dihapus_pada": string | null,"diubah_pada": string,"id": string,"jenis": Database["public"]['Enums']["jenis_kas"],"jumlah": number,"kategori_id": string,"keterangan": string | null,"pembayaran_id": string | null,"tanggal": string,"tutor_id": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "dibuat_oleh"?: string | null,"dibuat_pada"?: string,"dihapus_pada"?: string | null,"diubah_pada"?: string,"id"?: string,"jenis": Database["public"]['Enums']["jenis_kas"],"jumlah": number,"kategori_id": string,"keterangan"?: string | null,"tanggal": string,"tutor_id"?: string | null
+                    "dibuat_oleh"?: string | null,"dibuat_pada"?: string,"dihapus_pada"?: string | null,"diubah_pada"?: string,"id"?: string,"jenis": Database["public"]['Enums']["jenis_kas"],"jumlah": number,"kategori_id": string,"keterangan"?: string | null,"pembayaran_id"?: string | null,"tanggal": string,"tutor_id"?: string | null
                   }
                   Update: {
-                    "dibuat_oleh"?: string | null,"dibuat_pada"?: string,"dihapus_pada"?: string | null,"diubah_pada"?: string,"id"?: string,"jenis"?: Database["public"]['Enums']["jenis_kas"],"jumlah"?: number,"kategori_id"?: string,"keterangan"?: string | null,"tanggal"?: string,"tutor_id"?: string | null
+                    "dibuat_oleh"?: string | null,"dibuat_pada"?: string,"dihapus_pada"?: string | null,"diubah_pada"?: string,"id"?: string,"jenis"?: Database["public"]['Enums']["jenis_kas"],"jumlah"?: number,"kategori_id"?: string,"keterangan"?: string | null,"pembayaran_id"?: string | null,"tanggal"?: string,"tutor_id"?: string | null
                   }
                   Relationships: [
                     {
@@ -114,6 +114,12 @@ isOneToOne: false
       referencedRelation: "kategori_kas"
       referencedColumns: ["id"]
     },{
+      foreignKeyName: "kas_pembayaran_id_fkey"
+      columns: ["pembayaran_id"]
+isOneToOne: true
+      referencedRelation: "pembayaran"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "kas_tutor_id_fkey"
       columns: ["tutor_id"]
 isOneToOne: false
@@ -123,14 +129,14 @@ isOneToOne: false
                   ]
                 },"kategori_kas": {
                   Row: {
-                    "aktif": boolean,"butuh_tutor": boolean,"id": string,"jenis": Database["public"]['Enums']["jenis_kas"],"nama": string
+                    "aktif": boolean,"butuh_tutor": boolean,"id": string,"jenis": Database["public"]['Enums']["jenis_kas"],"nama": string,"otomatis": boolean
                   }
                   ComputedFields: never
                   Insert: {
-                    "aktif"?: boolean,"butuh_tutor"?: boolean,"id"?: string,"jenis": Database["public"]['Enums']["jenis_kas"],"nama": string
+                    "aktif"?: boolean,"butuh_tutor"?: boolean,"id"?: string,"jenis": Database["public"]['Enums']["jenis_kas"],"nama": string,"otomatis"?: boolean
                   }
                   Update: {
-                    "aktif"?: boolean,"butuh_tutor"?: boolean,"id"?: string,"jenis"?: Database["public"]['Enums']["jenis_kas"],"nama"?: string
+                    "aktif"?: boolean,"butuh_tutor"?: boolean,"id"?: string,"jenis"?: Database["public"]['Enums']["jenis_kas"],"nama"?: string,"otomatis"?: boolean
                   }
                   Relationships: [
                     

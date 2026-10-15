@@ -13,6 +13,7 @@ const idValid = (id: unknown): id is string => z.guid().safeParse(id).success;
 
 function pesanGalatKeuangan(galat: { code?: string; message?: string }): string {
   const m = galat.message ?? "";
+  if (m.includes("otomatis dari menu Pembayaran")) return "Catatan ini otomatis dari menu Pembayaran; ubah atau hapus lewat Pembayaran.";
   if (m.includes("wajib memilih tutor")) return "Kategori ini wajib memilih tutor.";
   if (m.includes("hanya untuk kategori")) return "Tutor hanya diisi untuk kategori Honor Tutor.";
   if (m.includes("tidak sesuai kategori")) return "Jenis kas tidak sesuai kategori.";
@@ -39,8 +40,9 @@ export async function simpanKas(id: string | null, _: StatusAksi, formData: Form
 
   const supabase = await buatKlienServer();
   // Jenis diambil dari kategori, bukan dari klien.
-  const { data: kategori } = await supabase.from("kategori_kas").select("jenis, butuh_tutor").eq("id", d.kategoriId).maybeSingle();
+  const { data: kategori } = await supabase.from("kategori_kas").select("jenis, butuh_tutor, otomatis").eq("id", d.kategoriId).maybeSingle();
   if (!kategori) return { galat: "Kategori tidak ditemukan." };
+  if (kategori.otomatis) return { galat: "Kategori ini otomatis dari menu Pembayaran." };
   if (kategori.butuh_tutor && !d.tutorId) return { galat: "Kategori ini wajib memilih tutor." };
 
   const baris = {
@@ -75,7 +77,8 @@ export async function hapusKas(id: string): Promise<StatusAksi> {
     .eq("id", id)
     .is("dihapus_pada", null)
     .select("tanggal");
-  if (error || !data?.length) return { galat: "Data kas gagal dihapus." };
+  if (error) return { galat: pesanGalatKeuangan(error) };
+  if (!data?.length) return { galat: "Data kas gagal dihapus." };
   redirect(`/keuangan?bulan=${data[0].tanggal.slice(0, 7)}&pesan=dihapus`);
 }
 
