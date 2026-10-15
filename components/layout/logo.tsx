@@ -15,7 +15,7 @@ export function Logo() {
       <LogoTanda />
       <span className="leading-tight">
         <span className="block text-xs text-sidebar-foreground">Lembaga</span>
-        <span className="block font-semibold text-white">Miftah al-Lughah</span>
+        <span className="block font-judul text-white">Miftah al-Lughah</span>
       </span>
     </div>
   );

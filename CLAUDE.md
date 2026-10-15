@@ -69,6 +69,8 @@ Docker Desktop di Mac ini mode per pengguna: set `PATH="$HOME/.docker/bin:$PATH"
 
 Nama tampilan: **Lembaga Miftah al-Lughah**. UI berbahasa Indonesia. Teks Arab memakai `dir="rtl"` dan kelas `font-arab` (Noto Naskh Arabic).
 
+**Font:** isi = Fredoka (`font-sans`, bulat dan mudah dibaca); judul h1–h3, judul kartu, angka besar, nama lembaga = Righteous (`font-judul`, hanya satu ketebalan, jangan pakai `font-bold`/`font-semibold` untuknya). Dimuat lewat `next/font` di `app/layout.tsx`.
+
 **Referensi visual:** template dashboard kursus (bingkai gelap, sidebar ikon, panel terang membulat, kartu pastel dengan chip label, tabel daftar, satu kartu gelap dengan tombol oranye). Pakai **hanya sebagai acuan tata letak**; buat komponen sendiri dan jangan menyalin nama, logo, ilustrasi, atau aset milik pihak lain.
 
 **Token warna** didefinisikan sekali di `app/globals.css`; komponen memakai kelas Tailwind, **jangan menaruh hex di komponen**:

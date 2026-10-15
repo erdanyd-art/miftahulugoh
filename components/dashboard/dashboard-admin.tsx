@@ -33,8 +33,8 @@ export function DashboardAdmin() {
             <span className="w-fit rounded-md bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">
               {chip}
             </span>
-            <p className="font-medium">{judul}</p>
-            <p className="text-2xl font-semibold">–</p>
+            <p className="font-judul text-lg">{judul}</p>
+            <p className="font-judul text-3xl">–</p>
             <div className="mt-auto flex items-center justify-between gap-2">
               <span className="text-xs text-pastel-muted">Belum ada data</span>
               <Link
@@ -93,7 +93,7 @@ export function DashboardAdmin() {
             Pembayaran
           </span>
           <h2 className="text-lg font-semibold">Pembayaran peserta belum lunas</h2>
-          <p className="text-4xl font-semibold">–</p>
+          <p className="font-judul text-5xl">–</p>
           <p className="text-sm text-sidebar-foreground">Jumlah tagihan berstatus Belum Lunas bulan ini.</p>
           <Link
             href="/pembayaran"
