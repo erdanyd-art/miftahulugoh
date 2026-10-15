@@ -28,10 +28,11 @@ select is(
 select is(
   (select array_agg(p.proname::text order by p.proname)
      from pg_proc p join pg_namespace n on n.oid = p.pronamespace
-    where n.nspname = 'public' and p.prorettype <> 'trigger'::regtype
-      and has_function_privilege('anon', p.oid, 'execute')),
+    where n.nspname = 'public'
+      and (has_function_privilege('anon', p.oid, 'execute')
+           or (p.prorettype = 'trigger'::regtype and has_function_privilege('authenticated', p.oid, 'execute')))),
   null::text[],
-  'anon tidak bisa menjalankan fungsi apa pun di public');
+  'anon tidak bisa menjalankan fungsi apa pun di public; fungsi trigger tidak bisa dipanggil lewat API');
 
 select * from finish();
 rollback;
