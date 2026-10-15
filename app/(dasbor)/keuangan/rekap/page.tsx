@@ -63,7 +63,7 @@ async function Isi({ searchParams }: { searchParams: Promise<ParamUrl> }) {
           </KolomPilihan>
         </FormFilter>
         <p className="mt-4 text-xs text-muted-foreground">
-          Kas, pembayaran peserta, dan honor ditampilkan terpisah dan tidak dijumlahkan (pembayaran peserta tidak otomatis masuk kas).
+          Pemasukan kas sudah termasuk pembayaran peserta berstatus Lunas (kategori Pembayaran Peserta). Kolom “Bayar lunas” dan “Belum lunas” adalah rinciannya, bukan tambahan.
         </p>
       </Kartu>
 

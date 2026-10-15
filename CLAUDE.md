@@ -62,7 +62,7 @@ Docker Desktop di Mac ini mode per pengguna: set `PATH="$HOME/.docker/bin:$PATH"
 - **Honor sesi:** hadir ≥ 1 → honor penuh sesuai jadwal; hadir = 0 → setengah (dibulatkan ke bawah). Hitung di server saat absensi disimpan; koreksi admin dicatat di audit.
 - **Jendela absen:** tutor dapat mengabsen sesi miliknya mulai jam mulai jadwal sampai pergantian tanggal. Di luar itu ditolak oleh database.
 - Satu jadwal hanya satu sesi per tanggal. `hadir` dan `total` dihitung dari `absensi_murid`, tidak diketik.
-- Pembayaran peserta **tidak** otomatis masuk kas (disengaja).
+- Pembayaran peserta berstatus **Lunas otomatis masuk kas** (D13): trigger `sinkron_pembayaran_kas`; kategori "Pembayaran Peserta" (`kategori_kas.otomatis`) dan baris `kas.pembayaran_id` tidak boleh ditulis manual.
 - Tutor hanya boleh mengubah **tautan Meet** pada jadwal miliknya; kolom lain hanya admin.
 
 ## Tampilan dan desain

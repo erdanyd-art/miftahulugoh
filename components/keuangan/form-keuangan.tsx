@@ -139,7 +139,9 @@ export function FormPembayaran({
           <option value="belum_lunas">Belum Lunas</option>
         </KolomPilihan>
       </div>
-      <p className="text-xs text-muted-foreground">Pembayaran peserta tidak otomatis masuk kas (sesuai kebijakan lembaga).</p>
+      <p className="text-xs text-muted-foreground">
+        Pembayaran berstatus Lunas otomatis tercatat sebagai pemasukan kas (kategori Pembayaran Peserta).
+      </p>
       <Button type="submit" disabled={sedang} className={kelasTombol}>
         {sedang ? "Menyimpan..." : "Simpan"}
       </Button>

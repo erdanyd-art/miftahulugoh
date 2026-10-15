@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { z } from "zod";
@@ -40,6 +41,20 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
         {kas.kategori?.nama} · {formatRupiah(kas.jumlah)}
       </h1>
       <p className="-mt-4 text-sm text-muted-foreground">{formatTanggal(kas.tanggal)}</p>
+      {kas.pembayaran_id ? (
+        <Kartu judul="Dicatat otomatis">
+          <p className="text-sm text-muted-foreground">
+            Catatan ini dibuat otomatis dari pembayaran peserta berstatus Lunas{kas.keterangan ? ` (${kas.keterangan})` : ""}.
+            Untuk mengubah jumlah, tanggal, status, atau menghapusnya, ubah pembayaran asalnya.
+          </p>
+          <Link
+            href={`/pembayaran/${kas.pembayaran_id}`}
+            className="mt-4 inline-block rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground"
+          >
+            Buka pembayaran asal
+          </Link>
+        </Kartu>
+      ) : (
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         <Kartu judul="Data kas" className="xl:col-span-2">
           <FormKas
@@ -57,6 +72,7 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
           <TombolHapus jenis="kas" id={kas.id} />
         </Kartu>
       </div>
+      )}
     </>
   );
 }
