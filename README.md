@@ -48,14 +48,15 @@ CI GitHub Actions menjalankan lint, typecheck, tes unit, build, `supabase test d
 
 Pendaftaran publik dimatikan, jadi admin pertama dibuat manual satu kali (lihat `docs/schema.md` bagian 8):
 
-1. Di dasbor Supabase produksi: **Authentication → Users → Add user → Create new user**. Isi email admin, isi kata sandi acak panjang (tidak perlu dicatat), centang **Auto Confirm User**. Catat `id` (UUID) pengguna itu.
-2. Di **SQL Editor**, jalankan sekali:
+1. Di dasbor Supabase produksi, salin template email ke **Authentication → Emails → Templates**: isi `supabase/templates/undangan.html` ke **Invite user**, isi `supabase/templates/atur-ulang.html` ke **Reset password**. Tanpa ini tautan di email tidak akan bekerja.
+2. Pastikan **Authentication → Sign In / Providers → Allow new users to sign up** dimatikan.
+3. **Authentication → Users → Add user → Create new user**: isi email admin, kata sandi acak panjang (tidak perlu dicatat), centang **Auto Confirm User**. Catat `id` (UUID) pengguna itu.
+4. Di **SQL Editor**, jalankan sekali:
    ```sql
    insert into public.profiles (id, nama, peran) values ('<UUID-PENGGUNA>', 'Nama Admin', 'admin');
    ```
-3. Admin membuka situs, klik **Lupa kata sandi?**, lalu menetapkan kata sandinya sendiri (minimal 10 karakter) dari tautan di email.
-4. Pastikan **Authentication → Sign In / Providers → Allow new users to sign up** dimatikan.
-5. Tutor dan admin berikutnya dibuat dari halaman **Pengguna** (Sprint 3).
+5. Admin membuka situs, klik **Lupa kata sandi?**, lalu menetapkan kata sandinya sendiri (minimal 10 karakter) dari tautan di email.
+6. Tutor dan admin berikutnya dibuat dari halaman **Pengguna** (tombol **Tambah pengguna**; undangan terkirim ke email).
 
 ## Rahasia
 

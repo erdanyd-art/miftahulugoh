@@ -13,11 +13,11 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 | # | Butir | Sprint | Status |
 |---|---|---|---|
 | A1 | Pendaftaran publik dimatikan (lokal dan produksi) | 2, 8 | Lulus (lokal) — `[auth].enable_signup=false`; `POST /auth/v1/signup` → 422 `signup_disabled`. Produksi: Sprint 8 |
-| A2 | Tidak ada kata sandi bawaan atau bersama; pengguna menetapkan kata sandi sendiri lewat undangan/reset | 3 | ☐ |
+| A2 | Tidak ada kata sandi bawaan atau bersama; pengguna menetapkan kata sandi sendiri lewat undangan/reset | 3 | Lulus — admin mengundang lewat email; pengguna membuat sandi sendiri via tautan (E2E `pengguna.spec.ts`); tidak ada sandi bawaan |
 | A3 | Hash kata sandi lama dari Google Sheets tidak dimigrasi | 1 | Lulus — tidak ada impor data maupun hash dari Sheets (schema.md §12) |
 | A4 | Kebijakan kata sandi minimum (panjang ≥ 10) diatur di Supabase Auth | 2, 8 | Lulus (lokal) — `minimum_password_length=10` + Zod `skemaAturSandi`. Produksi: Sprint 8 |
 | A5 | URL pengalihan (redirect) Auth hanya mengizinkan domain sendiri dan localhost untuk pengembangan | 8 | ☐ |
-| A6 | Pengguna nonaktif tidak bisa masuk dan sesi yang sedang berjalan kehilangan akses (diuji) | 2, 3 | Sebagian — tutor nonaktif ditolak saat masuk (E2E); profil dicek ulang tiap permintaan di `lib/auth.ts`. Uji "sesi berjalan" saat admin menonaktifkan: Sprint 3 |
+| A6 | Pengguna nonaktif tidak bisa masuk dan sesi yang sedang berjalan kehilangan akses (diuji) | 2, 3 | Lulus — E2E: tutor nonaktif ditolak saat masuk; admin menonaktifkan tutor yang sedang login → navigasi berikutnya ditolak; login diblokir (ban Auth); aktif lagi memulihkan |
 | A7 | Akun Auth tanpa baris `profiles` aktif tidak punya akses apa pun (diuji) | 2 | Lulus — E2E "akun tanpa profil tidak bisa masuk"; RLS memeriksa `profiles` aktif |
 | A8 | Login memakai sesi cookie aman (`@supabase/ssr`); tidak menyimpan token di `localStorage` secara manual | 2 | Lulus — `@supabase/ssr` (cookie); tidak ada `localStorage` di kode |
 | A9 | Pesan galat login tidak membocorkan apakah email terdaftar | 2 | Lulus — E2E: pesan sama untuk sandi salah dan email tak terdaftar; lupa sandi selalu pesan sama |
@@ -44,7 +44,7 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 
 | # | Butir | Sprint | Status |
 |---|---|---|---|
-| C1 | `service_role` hanya ada di variabel lingkungan server; tidak berawalan `NEXT_PUBLIC_`; tidak ada di bundel klien (cari di `.next/static`) | 3 | ☐ |
+| C1 | `service_role` hanya ada di variabel lingkungan server; tidak berawalan `NEXT_PUBLIC_`; tidak ada di bundel klien (cari di `.next/static`) | 3 | Lulus — kunci hanya di `lib/supabase/admin.ts` (`server-only`); build 2026-10-15: nilai kunci & nama `SERVICE_ROLE` = 0 berkas di `.next/static` |
 | C2 | `.env*` di `.gitignore`; hanya `.env.example` tanpa nilai asli yang di-commit | 0 | Lulus — `.env*` + `!.env.example` di `.gitignore`; `git check-ignore .env.local` cocok |
 | C3 | Pemindaian rahasia pada riwayat Git (misalnya `gitleaks`) bersih | 7 | ☐ |
 | C4 | Variabel lingkungan produksi diisi di Vercel, bukan di repositori | 8 | ☐ |
@@ -55,8 +55,8 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 
 | # | Butir | Sprint | Status |
 |---|---|---|---|
-| D1 | Semua input divalidasi di server dengan Zod, selain constraint di database | 3+ | ☐ |
-| D2 | Semua akses data memakai query berparameter melalui klien Supabase; tidak ada SQL yang dirangkai dari input pengguna | 3+ | ☐ |
+| D1 | Semua input divalidasi di server dengan Zod, selain constraint di database | 3+ | Lulus (Sprint 2–3) — Zod di setiap server action (`lib/validasi/`), ID divalidasi `z.guid()`; constraint/trigger di database |
+| D2 | Semua akses data memakai query berparameter melalui klien Supabase; tidak ada SQL yang dirangkai dari input pengguna | 3+ | Lulus (Sprint 2–3) — hanya klien Supabase (query berparameter); tidak ada SQL dirangkai di aplikasi |
 | D3 | Rute dan server action memeriksa autentikasi **dan** peran di server | 2+ | Lulus (Sprint 2) — halaman memanggil `penggunaWajib`/`wajibPeran`; E2E tutor → `/tidak-berwenang` di /keuangan, /pembayaran, /pengguna |
 | D4 | Teks Arab/RTL dan karakter khusus dirender tanpa `dangerouslySetInnerHTML` dari input pengguna | 4+ | ☐ |
 | D5 | Ekspor CSV mencegah injeksi formula (sel berawalan `=`, `+`, `-`, `@` diberi tanda petik) | 6 | ☐ |

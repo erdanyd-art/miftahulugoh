@@ -37,7 +37,8 @@ export async function masuk(_: StatusForm, formData: FormData): Promise<StatusFo
 
 export async function keluar() {
   const supabase = await buatKlienServer();
-  await supabase.auth.signOut();
+  // Hanya perangkat ini; sesi di perangkat lain tidak ikut keluar.
+  await supabase.auth.signOut({ scope: "local" });
   redirect("/masuk");
 }
 

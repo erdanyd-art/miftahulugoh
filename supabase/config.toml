@@ -252,6 +252,16 @@ otp_expiry = 3600
 # subject = "You have been invited"
 # content_path = "./supabase/templates/invite.html"
 
+# Template berbahasa Indonesia; tautan memakai token_hash ke /auth/confirm (bekerja di browser mana pun).
+# Produksi: salin isi berkas ini ke Authentication > Email Templates di dasbor Supabase.
+[auth.email.template.invite]
+subject = "Undangan Dashboard Lembaga Miftah al-Lughah"
+content_path = "./supabase/templates/undangan.html"
+
+[auth.email.template.recovery]
+subject = "Atur ulang kata sandi - Lembaga Miftah al-Lughah"
+content_path = "./supabase/templates/atur-ulang.html"
+
 # Uncomment to customize notification email template
 # [auth.email.notification.password_changed]
 # enabled = true

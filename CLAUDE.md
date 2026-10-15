@@ -109,6 +109,7 @@ components/ui/         komponen shadcn
 components/layout/     sidebar, header, menu ponsel
 lib/                   auth.ts (identitas + peran, server), aksi-auth.ts (server action), supabase/server.ts, validasi/ (Zod), format, nav
 proxy.ts               penyegaran sesi + alih ke /masuk (bukan otorisasi)
+supabase/templates/    template email undangan & atur ulang sandi (token_hash -> /auth/confirm)
 e2e/                   tes Playwright
 supabase/migrations/   migrasi dan kebijakan RLS
 supabase/tests/        tes RLS (pgTAP)
@@ -122,5 +123,10 @@ docs/                  schema.md, roadmap.md, security-checklist.md, uji_rls.sql
 - Ikon (komponen) tidak boleh dikirim sebagai prop dari Server Component ke Client Component; kirim data sederhana (misalnya nama peran).
 - Identitas: pakai `penggunaWajib()` / `wajibPeran()` dari `lib/auth.ts` di setiap halaman dan server action yang butuh login. Pembacaan sesi harus di dalam `<Suspense>` (Cache Components).
 - Halaman admin baru: panggil `wajibPeran("admin")` di server; menyembunyikan menu bukan pengaman.
+- `service_role` HANYA di `lib/supabase/admin.ts` (`server-only`), hanya untuk API Auth admin, hanya setelah `wajibPeran("admin")`. Data tabel tetap ditulis dengan sesi pengguna (RLS + audit).
+- ID dari klien divalidasi `z.guid()` (bukan `z.uuid()`: ID seed fiktif bukan UUID RFC).
+- Tabel: pola cari/filter/urut/halaman lewat parameter URL (`lib/tabel.ts`, `components/tabel.tsx`); form filter memakai GET.
+- Setelah mutasi di server action panggil `refresh()` dari `next/cache` agar tampilan memuat data baru.
+- E2E: pakai locator berbasis role/`exact` (Next menyimpan halaman sebelumnya tersembunyi lewat Activity) dan tunggu `networkidle` sebelum mengisi form yang di-stream.
 - Commit kecil dan fokus, pesan jelas. Satu sprint = satu cabang/PR.
 - Saat ragu soal kebutuhan, **tanya**; jangan mengarang.

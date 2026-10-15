@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { LogoTanda } from "@/components/layout/logo";
 
+export { KolomIsian, PesanStatus } from "@/components/form";
+
 // Kerangka halaman di luar dashboard (masuk, lupa sandi, pesan akses).
 export function BingkaiAuth({ judul, keterangan, children }: { judul: string; keterangan?: string; children: ReactNode }) {
   return (
@@ -18,37 +20,4 @@ export function BingkaiAuth({ judul, keterangan, children }: { judul: string; ke
       </div>
     </main>
   );
-}
-
-export function KolomIsian({
-  label,
-  ...props
-}: { label: string } & React.InputHTMLAttributes<HTMLInputElement> & { name: string }) {
-  return (
-    <label className="flex flex-col gap-1.5 text-sm font-medium">
-      {label}
-      <input
-        {...props}
-        className="h-11 rounded-xl border border-input bg-card px-4 text-base font-normal focus-visible:outline-2 focus-visible:outline-ring"
-      />
-    </label>
-  );
-}
-
-export function PesanStatus({ galat, pesan }: { galat?: string; pesan?: string }) {
-  if (galat) {
-    return (
-      <p role="alert" className="rounded-xl bg-status-belum px-4 py-3 text-sm text-status-belum-foreground">
-        {galat}
-      </p>
-    );
-  }
-  if (pesan) {
-    return (
-      <p role="status" className="rounded-xl bg-status-lunas px-4 py-3 text-sm text-status-lunas-foreground">
-        {pesan}
-      </p>
-    );
-  }
-  return null;
 }

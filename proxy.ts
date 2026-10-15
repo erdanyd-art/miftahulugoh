@@ -37,8 +37,8 @@ export async function proxy(request: NextRequest) {
     return hasil;
   };
 
+  // Tidak mengalihkan /masuk -> / walau ada token: token bisa sudah dicabut di server (menimbulkan putaran).
   if (!sudahMasuk && !publik) return alihkan("/masuk");
-  if (sudahMasuk && pathname === "/masuk") return alihkan("/");
   return response;
 }
 
