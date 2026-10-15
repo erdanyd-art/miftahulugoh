@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatRupiah, namaHari } from "./format";
+import { formatJam, formatRupiah, namaHari } from "./format";
 
 describe("formatRupiah", () => {
   it("memakai pemisah ribuan titik tanpa desimal", () => {
@@ -18,5 +18,12 @@ describe("namaHari", () => {
     expect(() => namaHari(0)).toThrow(RangeError);
     expect(() => namaHari(8)).toThrow(RangeError);
     expect(() => namaHari(1.5)).toThrow(RangeError);
+  });
+});
+
+describe("formatJam", () => {
+  it("memotong detik dan memakai titik", () => {
+    expect(formatJam("08:00:00")).toBe("08.00");
+    expect(formatJam("16:30")).toBe("16.30");
   });
 });

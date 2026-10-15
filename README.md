@@ -38,6 +38,7 @@ npm run lint
 npm run typecheck
 npm test                    # tes unit (Vitest)
 npx supabase test db        # tes RLS/aturan bisnis (pgTAP), butuh Supabase lokal menyala
+npm run db:reset            # kosongkan DB lokal + seed ulang (memakai `supabase db reset` + restart gateway; tanpa restart, email lokal memakai template bawaan)
 npm run test:e2e            # Playwright (login per peran), butuh Supabase lokal + seed
 npm run build
 ```
