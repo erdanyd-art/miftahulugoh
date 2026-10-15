@@ -132,6 +132,8 @@ docs/                  schema.md, roadmap.md, security-checklist.md, uji_rls.sql
 - Form dengan isian memakai `useFormAksi` (`components/use-form-aksi.ts`), bukan `<form action>` langsung: React mereset form setelah aksi, sehingga isian (terutama dropdown) hilang saat server menolak.
 - Waktu lembaga: `lib/waktu.ts` + `waktuLembaga()` (zona dari `pengaturan`). Hanya untuk tampilan; jendela absen dan honor ditegakkan `simpan_absensi()`.
 - Pesan galat fungsi database diterjemahkan di `lib/pesan-galat.ts`.
+- Keuangan: setiap query `kas`/`pembayaran` WAJIB `.is("dihapus_pada", null)`; "Hapus" = isi `dihapus_pada`. Jenis kas diambil dari kategori di server. Ekspor CSV lewat `lib/csv.ts` (anti injeksi formula).
+- Grafik: tanpa pustaka (`components/keuangan/grafik-bulanan.tsx`); warna `bg-chart-pemasukan` (#3b6fd4) / `bg-chart-pengeluaran` (#e8590c), divalidasi skrip dataviz.
 - Data master tidak dihapus permanen: peserta, kelas, dan jadwal dinonaktifkan lewat centang "Aktif" (riwayat sesi dan honor tetap utuh).
 - E2E: pakai locator berbasis role/`exact` (Next menyimpan halaman sebelumnya tersembunyi lewat Activity) dan tunggu `networkidle` sebelum mengisi form yang di-stream.
 - Commit kecil dan fokus, pesan jelas. Satu sprint = satu cabang/PR.
