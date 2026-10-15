@@ -86,3 +86,29 @@ test("tombol lihat/sembunyikan kata sandi", async ({ page }) => {
   await page.getByRole("button", { name: "Sembunyikan kata sandi" }).click();
   await expect(sandi).toHaveAttribute("type", "password");
 });
+
+test("pengguna mengganti kata sandi sendiri dari halaman Akun saya", async ({ page }) => {
+  const baru = "sandi-baru-uji-456";
+  const ganti = async (lama: string, sandiBaru: string) => {
+    await page.goto("/akun");
+    await page.waitForLoadState("networkidle");
+    await page.getByLabel("Kata sandi lama", { exact: true }).fill(lama);
+    await page.getByLabel(/^Kata sandi baru/).fill(sandiBaru);
+    await page.getByLabel("Ulangi kata sandi baru", { exact: true }).fill(sandiBaru);
+    await page.getByRole("button", { name: "Ganti kata sandi" }).click();
+  };
+
+  await masuk(page, "tutor2@contoh.test");
+  await page.getByRole("link", { name: /Akun saya/ }).first().click();
+  await expect(page.getByRole("heading", { name: "Akun saya" })).toBeVisible();
+
+  await ganti("salah-sekali-123", baru);
+  await expect(pesanGalat(page)).toHaveText("Kata sandi lama salah.");
+
+  await ganti(SANDI, baru);
+  await expect(page.getByText("Kata sandi berhasil diganti")).toBeVisible();
+
+  // Kembalikan ke sandi seed agar tes lain tetap jalan; sekaligus membuktikan sandi baru berlaku.
+  await ganti(baru, SANDI);
+  await expect(page.getByText("Kata sandi berhasil diganti")).toBeVisible();
+});

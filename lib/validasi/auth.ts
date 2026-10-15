@@ -18,6 +18,14 @@ export const skemaAturSandi = z
   })
   .refine((d) => d.kataSandi === d.ulangi, { path: ["ulangi"] });
 
+export const skemaGantiSandi = z
+  .object({
+    sandiLama: z.string().min(1).max(200),
+    kataSandi: z.string().min(PANJANG_SANDI_MIN).max(200),
+    ulangi: z.string(),
+  })
+  .refine((d) => d.kataSandi === d.ulangi, { path: ["ulangi"] });
+
 // Hanya izinkan pengalihan ke jalur internal ("/..."), bukan ke situs lain ("//..." atau "https://...").
 export function jalurAman(nilai: string | null | undefined, cadangan = "/"): string {
   if (!nilai || !nilai.startsWith("/") || nilai.startsWith("//") || nilai.startsWith("/\\")) return cadangan;

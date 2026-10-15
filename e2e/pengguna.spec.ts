@@ -91,7 +91,7 @@ test("admin menambah tutor; tutor membuat sandi; nonaktif memutus akses; aktif l
 test("admin mengubah nama pengguna dan tidak bisa menonaktifkan diri sendiri", async ({ page }) => {
   await masuk(page, "admin@contoh.test");
   await page.goto("/pengguna?q=admin%40contoh.test");
-  await page.getByRole("link", { name: /Admin Contoh/ }).click();
+  await page.getByRole("main").getByRole("link", { name: /Admin Contoh/ }).click();
   await expect(page.getByRole("heading", { name: "Admin Contoh" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Kirim tautan buat kata sandi" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Nonaktifkan akun" })).toHaveCount(0);
@@ -128,11 +128,11 @@ test("cari dan filter daftar pengguna", async ({ page }) => {
   await page.getByRole("button", { name: "Terapkan" }).click();
   await expect(page).toHaveURL(/q=fulan/);
   await expect(page.getByRole("link", { name: /Ustadz Fulan/ }).first()).toBeVisible();
-  await expect(page.getByRole("link", { name: /Admin Contoh/ })).toHaveCount(0);
+  await expect(page.getByRole("main").getByRole("link", { name: /Admin Contoh/ })).toHaveCount(0);
 
   await page.goto("/pengguna?status=nonaktif");
   await expect(page.getByRole("link", { name: /Tutor Nonaktif/ })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Admin Contoh/ })).toHaveCount(0);
+  await expect(page.getByRole("main").getByRole("link", { name: /Admin Contoh/ })).toHaveCount(0);
 });
 
 test("admin menyimpan zona waktu lembaga", async ({ page }) => {
