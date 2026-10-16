@@ -30,7 +30,7 @@ const HALAMAN_ADMIN = [
 ];
 const HALAMAN_TUTOR = ["/", "/jadwal-saya", "/kelas-saya", "/absensi", "/honor-saya", "/periksa-ujian", "/akun"];
 const HALAMAN_PUBLIK = ["/", "/masuk", "/lupa-sandi"];
-const HALAMAN_PESERTA = ["/", "/akun"];
+const HALAMAN_PESERTA = ["/", "/jadwal-kelas", "/pembayaran-saya", "/akun"];
 
 async function masuk(page: Page, email: string) {
   await page.goto("/masuk");
