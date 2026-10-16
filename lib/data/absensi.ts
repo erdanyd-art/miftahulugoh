@@ -1,12 +1,12 @@
 import "server-only";
-import { penggunaWajib, wajibPeran } from "@/lib/auth";
+import { penggunaStaf, wajibPeran } from "@/lib/auth";
 import { buatKlienServer } from "@/lib/supabase/server";
 import { rentangBulan, waktuDiZona, type WaktuLembaga } from "@/lib/waktu";
 
 // Semua bacaan memakai sesi pengguna: RLS membatasi tutor ke jadwal/sesi miliknya.
 
 export async function waktuLembaga(): Promise<WaktuLembaga> {
-  await penggunaWajib();
+  await penggunaStaf();
   const supabase = await buatKlienServer();
   const { data } = await supabase.from("pengaturan").select("zona_waktu").single();
   return waktuDiZona(data?.zona_waktu ?? "Asia/Makassar");
@@ -16,7 +16,7 @@ export type JadwalHariIni = Awaited<ReturnType<typeof jadwalHariIni>>["jadwal"][
 
 // Jadwal aktif hari ini (zona lembaga) beserta sesi hari ini bila sudah diabsen.
 export async function jadwalHariIni() {
-  const pengguna = await penggunaWajib();
+  const pengguna = await penggunaStaf();
   const waktu = await waktuLembaga();
   const supabase = await buatKlienServer();
 
@@ -49,7 +49,7 @@ export async function jadwalHariIni() {
 
 // Data form absen: jadwal, anggota aktif kelas, dan sesi pada tanggal itu (bila ada).
 export async function dataFormAbsen(jadwalId: string, tanggal: string) {
-  await penggunaWajib();
+  await penggunaStaf();
   const supabase = await buatKlienServer();
   const { data: jadwal } = await supabase
     .from("jadwal")
@@ -79,7 +79,7 @@ const KOLOM_SESI =
   "id, tanggal, hadir, total, honor, honor_standar, honor_dikoreksi, dikunci, jadwal_id, kelas:kelas!sesi_kelas_id_fkey(id, nama), tutor:profiles!sesi_tutor_id_fkey(id, nama), jadwal(jam_mulai, jam_selesai)" as const;
 
 export async function daftarSesi(bulan: string) {
-  await penggunaWajib();
+  await penggunaStaf();
   const { dari, sampai } = rentangBulan(bulan);
   const supabase = await buatKlienServer();
   const { data, error } = await supabase
@@ -93,7 +93,7 @@ export async function daftarSesi(bulan: string) {
 }
 
 export async function ambilSesi(id: string) {
-  await penggunaWajib();
+  await penggunaStaf();
   const supabase = await buatKlienServer();
   const { data } = await supabase
     .from("sesi")
@@ -109,7 +109,7 @@ export async function ambilSesi(id: string) {
 
 // Saldo honor dari fungsi database (tutor: miliknya; admin: semua tutor).
 export async function saldoHonor() {
-  await penggunaWajib();
+  await penggunaStaf();
   const supabase = await buatKlienServer();
   const { data, error } = await supabase.rpc("saldo_honor");
   if (error) throw new Error("Gagal memuat saldo honor");

@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { Suspense, type ReactNode } from "react";
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
@@ -17,6 +18,8 @@ export default function DasborLayout({ children }: LayoutProps<"/">) {
 
 async function Kerangka({ children }: { children: ReactNode }) {
   const pengguna = await penggunaWajib();
+  // Kata sandi awal dari admin (akun peserta) harus diganti sebelum memakai dashboard.
+  if (pengguna.wajibGantiSandi) redirect("/ganti-sandi");
   return (
     <>
       <Sidebar peran={pengguna.peran} />

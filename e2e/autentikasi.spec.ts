@@ -20,13 +20,13 @@ test("belum masuk diarahkan ke halaman masuk", async ({ page }) => {
 
 test("kata sandi salah memberi pesan umum", async ({ page }) => {
   await masuk(page, "admin@contoh.test", "salah-sekali-123");
-  await expect(pesanGalat(page)).toHaveText("Email atau kata sandi salah.");
+  await expect(pesanGalat(page)).toHaveText("Email/username atau kata sandi salah.");
   await expect(page.getByLabel("Email")).toHaveValue("admin@contoh.test");
 });
 
 test("email tak terdaftar memberi pesan yang sama", async ({ page }) => {
   await masuk(page, "tidak-ada@contoh.test");
-  await expect(pesanGalat(page)).toHaveText("Email atau kata sandi salah.");
+  await expect(pesanGalat(page)).toHaveText("Email/username atau kata sandi salah.");
 });
 
 test("admin masuk, melihat menu admin, lalu keluar", async ({ page }) => {

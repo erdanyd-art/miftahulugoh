@@ -100,6 +100,7 @@ Nama tampilan: **Lembaga Miftah al-Lughah**. UI berbahasa Indonesia. Teks Arab m
 **Menu per peran (Fase 1)** — didefinisikan di `lib/nav.ts`:
 - Admin: Dashboard, Kelas, Peserta, Jadwal, Absensi, Honor, Pembayaran, Keuangan, Pengguna, Pengaturan, Audit
 - Tutor: Dashboard, Jadwal Saya, Kelas Saya, Absensi, Honor Saya
+- Peserta (Fase 2): Beranda, Akun saya (Ujian Saya menyusul Sprint 11)
 
 Ponsel diutamakan untuk tutor (absen). Semua tabel punya cari, filter, urut, dan pagination.
 
@@ -123,7 +124,8 @@ docs/                  schema.md, roadmap.md, security-checklist.md, uji_rls.sql
 - TypeScript strict; tanpa `any` kecuali beralasan dan dikomentari.
 - Nama tabel/kolom domain mengikuti PRD (bahasa Indonesia); kode umum dan komentar teknis boleh bahasa Inggris. Teks yang dilihat pengguna: bahasa Indonesia.
 - Ikon (komponen) tidak boleh dikirim sebagai prop dari Server Component ke Client Component; kirim data sederhana (misalnya nama peran).
-- Identitas: pakai `penggunaWajib()` / `wajibPeran()` dari `lib/auth.ts` di setiap halaman dan server action yang butuh login. Pembacaan sesi harus di dalam `<Suspense>` (Cache Components).
+- Identitas: pakai `penggunaWajib()` / `wajibPeran()` / `penggunaStaf()` (admin atau tutor; peserta ditolak) dari `lib/auth.ts` di setiap halaman dan server action yang butuh login. Halaman/aksi untuk admin dan tutor bersama WAJIB `penggunaStaf()`, bukan `penggunaWajib()`. Fungsi database yang bercabang per peran harus menolak peran selain yang diizinkan (jangan "bukan tutor = admin").
+- Akun peserta (D11): username → email sintetis `@peserta.miftah.invalid` (`lib/validasi/auth.ts`), dibuat admin di halaman peserta (`lib/aksi-akun-peserta.ts`), sandi awal acak tampil sekali, `profiles.wajib_ganti_sandi` memaksa ke `/ganti-sandi`. Akun peserta tidak tampil di menu Pengguna. Pembacaan sesi harus di dalam `<Suspense>` (Cache Components).
 - Halaman admin baru: panggil `wajibPeran("admin")` di server; menyembunyikan menu bukan pengaman.
 - `service_role` HANYA di `lib/supabase/admin.ts` (`server-only`), hanya untuk API Auth admin, hanya setelah `wajibPeran("admin")`. Data tabel tetap ditulis dengan sesi pengguna (RLS + audit).
 - ID dari klien divalidasi `z.guid()` (bukan `z.uuid()`: ID seed fiktif bukan UUID RFC).

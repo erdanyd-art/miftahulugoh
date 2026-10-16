@@ -237,14 +237,14 @@ isOneToOne: false
                   ]
                 },"profiles": {
                   Row: {
-                    "aktif": boolean,"dibuat_pada": string,"id": string,"nama": string,"peran": Database["public"]['Enums']["peran_pengguna"]
+                    "aktif": boolean,"dibuat_pada": string,"id": string,"nama": string,"peran": Database["public"]['Enums']["peran_pengguna"],"wajib_ganti_sandi": boolean
                   }
                   ComputedFields: never
                   Insert: {
-                    "aktif"?: boolean,"dibuat_pada"?: string,"id": string,"nama": string,"peran": Database["public"]['Enums']["peran_pengguna"]
+                    "aktif"?: boolean,"dibuat_pada"?: string,"id": string,"nama": string,"peran": Database["public"]['Enums']["peran_pengguna"],"wajib_ganti_sandi"?: boolean
                   }
                   Update: {
-                    "aktif"?: boolean,"dibuat_pada"?: string,"id"?: string,"nama"?: string,"peran"?: Database["public"]['Enums']["peran_pengguna"]
+                    "aktif"?: boolean,"dibuat_pada"?: string,"id"?: string,"nama"?: string,"peran"?: Database["public"]['Enums']["peran_pengguna"],"wajib_ganti_sandi"?: boolean
                   }
                   Relationships: [
                     
@@ -287,7 +287,10 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            "impor_peserta":
+            "hubungkan_akun_peserta":
+{ Args: { "p_peserta_id": string,"p_user_id": string }; Returns: undefined
+                           },
+"impor_peserta":
 { Args: { "p_baris": Json }; Returns: number
                            },
 "is_admin":
@@ -307,6 +310,9 @@ isOneToOne: false
               "honor_dibayar": number,"honor_terkumpul": number,"nama": string,"saldo": number,"tutor_id": string
             }[]
                            },
+"selesai_ganti_sandi":
+{ Args: Record<PropertyKey, never>; Returns: undefined
+                           },
 "simpan_absensi":
 { Args: { "p_hadir_ids": (string)[],"p_jadwal_id": string,"p_tanggal": string }; Returns: string
                            },
@@ -315,7 +321,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "jenis_kas": "pemasukan"|"pengeluaran","peran_pengguna": "admin"|"tutor","status_pembayaran": "lunas"|"belum_lunas"
+            "jenis_kas": "pemasukan"|"pengeluaran","peran_pengguna": "admin"|"tutor"|"peserta","status_pembayaran": "lunas"|"belum_lunas"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -435,7 +441,7 @@ export const Constants = {
           }
         },"public": {
           Enums: {
-            "jenis_kas": ["pemasukan", "pengeluaran"],"peran_pengguna": ["admin", "tutor"],"status_pembayaran": ["lunas", "belum_lunas"]
+            "jenis_kas": ["pemasukan", "pengeluaran"],"peran_pengguna": ["admin", "tutor", "peserta"],"status_pembayaran": ["lunas", "belum_lunas"]
           }
         }
 } as const

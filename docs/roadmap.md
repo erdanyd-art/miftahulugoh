@@ -206,7 +206,7 @@ Putuskan bersama teman: portal peserta dan ujian CBT (Fase 2), tagihan SPP otoma
 
 Mulai setelah Fase 1 terpasang. Tiap sprint = satu cabang/PR, dengan migrasi + RLS + tes pgTAP + E2E.
 
-**Sprint 9 — Login peserta.** Peran `peserta` (migrasi enum tersendiri). Admin membuat akun peserta dari halaman Peserta: username + sandi awal acak yang tampil sekali; username dipetakan ke email sintetis yang tidak pernah dikirimi surat. Login pertama wajib ganti sandi; admin dapat mereset sandi peserta. Menu peserta: Ujian Saya, Akun saya. RLS: peserta hanya membaca datanya sendiri.
+**Sprint 9 — Login peserta (selesai 2026-10-16).** Peran `peserta` (migrasi enum tersendiri). Admin membuat akun peserta dari halaman Peserta: username + sandi awal acak yang tampil sekali; username dipetakan ke email sintetis yang tidak pernah dikirimi surat. Login pertama wajib ganti sandi; admin dapat mereset sandi peserta. Menu peserta: Beranda, Akun saya (Ujian Saya ditambahkan di Sprint 11). RLS: peserta hanya membaca datanya sendiri.
 
 **Sprint 10 — Menyusun ujian.** `ujian` (judul, kelas, jendela mulai–selesai, durasi), `soal` (pilihan ganda/isian, bobot, urutan, teks Arab RTL), `soal_kunci` (tanpa kebijakan baca untuk peserta), `audio_ujian` (bucket Storage privat, mp3/m4a ≤ 10 MB, satu audio untuk beberapa soal).
 
