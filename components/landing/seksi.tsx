@@ -62,7 +62,7 @@ export function Program({ konten = siteContent }: { konten?: KontenSitus }) {
         {PROGRAM.map((p) => {
           const info = konten.programs.find((x) => x.key === p.key);
           return (
-            <article key={p.key} className={`lp-program ${p.latar}`}>
+            <article key={p.key} data-tilt="7" className={`lp-program ${p.latar}`}>
               {/* Huruf hiasan samar lewat CSS (::before): dekoratif, bukan teks yang perlu dibaca */}
               <span aria-hidden="true" data-huruf={p.hiasan} className={`lp-hiasan-huruf ${p.hiasanKelas}`} />
               {p.labelArab ? (
@@ -105,7 +105,7 @@ export function CaraBelajar() {
       </div>
       <ol className="lp-langkah-baris">
         {LANGKAH.map((l, i) => (
-          <li key={l.judul} className="lp-langkah">
+          <li key={l.judul} data-tilt="8" className="lp-langkah">
             <span aria-hidden="true" className="lp-nomor">
               {i + 1}
             </span>

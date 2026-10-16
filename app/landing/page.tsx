@@ -3,6 +3,7 @@ import { Amiri, Bricolage_Grotesque } from "next/font/google";
 import { Band } from "@/components/landing/art";
 import { Hero, Nav } from "@/components/landing/hero";
 import { CaraBelajar, Daftar, Footer, Program } from "@/components/landing/seksi";
+import { Gerak } from "@/components/landing/gerak";
 import "@/components/landing/landing.css";
 import { siteContent, tautanWhatsApp, urlSitus } from "@/lib/site-content";
 
@@ -44,6 +45,7 @@ export default function HalamanLanding() {
         <Daftar />
       </main>
       <Footer />
+      <Gerak />
     </div>
   );
 }

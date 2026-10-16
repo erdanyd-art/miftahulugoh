@@ -20,7 +20,7 @@ export function Squiggle({ style }: { style?: CSSProperties }) {
       width="100"
       height="24"
       viewBox="0 0 100 24"
-      className="lp-abs lp-putih"
+      className="lp-abs lp-putih lp-ombak lp-z-2"
       style={style}
       fill="none"
       stroke="currentColor"
@@ -67,7 +67,7 @@ export function SpeechBubble({
   children: ReactNode;
 }) {
   return (
-    <div className="lp-abs" style={{ ...style, transform: `rotate(${miring}deg)` }}>
+    <div className="lp-abs lp-melayang lp-z-3" style={{ ...style, rotate: `${miring}deg` }}>
       <div className={`lp-balon ${warna === "putih" ? "lp-balon-putih" : "lp-balon-limau"}`}>
         {children}
         <span className={`lp-ekor ${ekor === "bawah" ? "lp-ekor-bawah" : "lp-ekor-atas"}`} />
@@ -76,13 +76,23 @@ export function SpeechBubble({
   );
 }
 
-export function LetterTile({ huruf, limau, miring }: { huruf: string; limau?: boolean; miring: number }) {
+export function LetterTile({
+  huruf,
+  limau,
+  miring,
+  style,
+}: {
+  huruf: string;
+  limau?: boolean;
+  miring: number;
+  style?: CSSProperties;
+}) {
   return (
     <span
       lang="ar"
       dir="rtl"
       className={`lp-ubin lp-arab ${limau ? "lp-ubin-limau" : ""}`}
-      style={{ transform: `rotate(${miring}deg)` }}
+      style={{ ...style, rotate: `${miring}deg` }}
     >
       {huruf}
     </span>
@@ -96,23 +106,26 @@ const ISI_PITA: { teks: string; arab?: boolean }[] = [
   { teks: "مفتاح اللغة", arab: true },
 ];
 
-// Pita miring berulang: Bahasa Arab ✦ English ✦ نحو وصرف ✦ مفتاح اللغة (✦ digambar sebagai SVG).
+// Pita miring berjalan: Bahasa Arab ✦ English ✦ نحو وصرف ✦ مفتاح اللغة (✦ digambar sebagai SVG).
+// Urutan diulang 6 kali dan digeser -50% berulang, sehingga sambungannya tak terlihat di layar selebar apa pun.
 export function Band() {
-  const urutan = [...ISI_PITA, ...ISI_PITA, ...ISI_PITA.slice(0, 2)];
+  const urutan = Array.from({ length: 6 }, () => ISI_PITA).flat();
   return (
     <div aria-hidden="true" className="lp-pita">
-      {urutan.map((item, i) => (
-        <Fragment key={i}>
-          {i > 0 && <Sparkle ukuran={22} className="lp-putih" />}
-          {item.arab ? (
-            <span lang="ar" dir="rtl" className="lp-arab lp-pita-arab">
-              {item.teks}
-            </span>
-          ) : (
-            <span>{item.teks}</span>
-          )}
-        </Fragment>
-      ))}
+      <div className="lp-pita-jalur">
+        {urutan.map((item, i) => (
+          <Fragment key={i}>
+            {item.arab ? (
+              <span lang="ar" dir="rtl" className="lp-arab lp-pita-arab">
+                {item.teks}
+              </span>
+            ) : (
+              <span>{item.teks}</span>
+            )}
+            <Sparkle ukuran={22} className="lp-putih" />
+          </Fragment>
+        ))}
+      </div>
     </div>
   );
 }

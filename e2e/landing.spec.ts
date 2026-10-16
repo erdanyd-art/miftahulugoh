@@ -86,3 +86,26 @@ test("hanya / yang boleh diindeks", async ({ request }) => {
   const sitemap = await (await request.get("/sitemap.xml")).text();
   expect(sitemap.match(/<loc>/g)).toHaveLength(1);
 });
+
+test("gerak 3D berjalan dan mengikuti kursor", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  expect(await page.evaluate(() => document.getAnimations().length)).toBeGreaterThan(10);
+
+  const adegan = page.locator(".lp-adegan");
+  const kotak = (await adegan.boundingBox())!;
+  await page.mouse.move(kotak.x + kotak.width * 0.9, kotak.y + kotak.height * 0.1, { steps: 5 });
+  await expect.poll(() => adegan.evaluate((e) => e.style.getPropertyValue("--ry"))).not.toBe("");
+  await page.mouse.move(0, 0);
+  await expect.poll(() => adegan.evaluate((e) => e.style.getPropertyValue("--ry"))).toBe("");
+});
+
+test.describe("kurangi gerakan", () => {
+  test.use({ contextOptions: { reducedMotion: "reduce" } });
+
+  test("semua animasi mati bila pengguna memilih kurangi gerakan", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+  });
+});
