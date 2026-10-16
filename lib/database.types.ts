@@ -445,6 +445,9 @@ isOneToOne: false
 "impor_peserta":
 { Args: { "p_baris": Json }; Returns: number
                            },
+"impor_soal":
+{ Args: { "p_baris": Json,"p_ujian_id": string }; Returns: number
+                           },
 "is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },

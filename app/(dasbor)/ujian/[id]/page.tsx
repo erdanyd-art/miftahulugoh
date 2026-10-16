@@ -118,12 +118,20 @@ async function Isi({
               <h2 className="text-lg">Soal ({ujian.soal.length})</h2>
               <p className="text-xs text-muted-foreground">Total bobot: {totalBobot}</p>
             </div>
-            <Link
-              href={`/ujian/${ujian.id}/soal/baru`}
-              className="rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-accent-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-            >
-              Tambah soal
-            </Link>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href={`/ujian/${ujian.id}/impor`}
+                className="rounded-full border bg-card px-5 py-2.5 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              >
+                Impor CSV
+              </Link>
+              <Link
+                href={`/ujian/${ujian.id}/soal/baru`}
+                className="rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-accent-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              >
+                Tambah soal
+              </Link>
+            </div>
           </div>
           {ujian.soal.length === 0 ? (
             <p className="text-sm text-muted-foreground">Belum ada soal.</p>
