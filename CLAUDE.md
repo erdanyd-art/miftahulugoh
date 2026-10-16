@@ -2,7 +2,7 @@
 
 Baca dulu: @PRD.md (sumber kebenaran kebutuhan). Jika CLAUDE.md dan PRD.md berbeda, PRD.md menang; tanyakan sebelum melanjutkan.
 
-Rujukan (baca saat relevan, jangan dimuat semuanya sekaligus): `docs/schema.md` (skema dan SQL teruji), `docs/roadmap.md` (sprint dan kriteria selesai), `docs/security-checklist.md` (daftar periksa keamanan). Kerjakan **hanya sprint yang diminta**.
+Rujukan (baca saat relevan, jangan dimuat semuanya sekaligus): `docs/schema.md` (skema dan SQL teruji), `docs/roadmap.md` (sprint dan kriteria selesai), `docs/security-checklist.md` (daftar periksa keamanan), `docs/landing-page.md` dan `docs/landing-reference.html` (hanya untuk Sprint 2b). Kerjakan **hanya sprint yang diminta**.
 
 Next.js di proyek ini versi 16 (lihat `AGENTS.md`): baca panduan di `node_modules/next/dist/docs/` sebelum memakai API Next.js yang belum pasti.
 
@@ -69,9 +69,11 @@ Docker Desktop di Mac ini mode per pengguna: set `PATH="$HOME/.docker/bin:$PATH"
 
 Nama tampilan: **Lembaga Miftah al-Lughah**. UI berbahasa Indonesia. Teks Arab memakai `dir="rtl"` dan kelas `font-arab` (Noto Naskh Arabic).
 
+**Landing page publik (`/`) memakai gaya visual sendiri yang ceria**, terpisah dari dashboard; ikuti `docs/landing-page.md`, jangan menerapkan gaya itu ke dashboard dan sebaliknya. Halaman di `app/landing/` (pengunjung belum masuk di `/` di-rewrite ke sana oleh `proxy.ts`; yang sudah masuk tetap ke dashboard), komponen di `components/landing/`, gaya di `components/landing/landing.css` (kelas berawalan `lp-`, bukan CSS module: aturan Turbopack `*.css` di `next.config.ts` mematikan CSS module), isi kontak/jadwal/biaya di `lib/site-content.ts`. Bagian di bawah ini berlaku untuk **dashboard**.
+
 **Font:** isi = Fredoka (`font-sans`, bulat dan mudah dibaca); judul h1–h3, judul kartu, angka besar, nama lembaga = Righteous (`font-judul`, hanya satu ketebalan, jangan pakai `font-bold`/`font-semibold` untuknya). Dimuat lewat `next/font` di `app/layout.tsx`.
 
-**Referensi visual:** template dashboard kursus (bingkai gelap, sidebar ikon, panel terang membulat, kartu pastel dengan chip label, tabel daftar, satu kartu gelap dengan tombol oranye). Pakai **hanya sebagai acuan tata letak**; buat komponen sendiri dan jangan menyalin nama, logo, ilustrasi, atau aset milik pihak lain.
+**Referensi visual dashboard:** template dashboard kursus (bingkai gelap, sidebar ikon, panel terang membulat, kartu pastel dengan chip label, tabel daftar, satu kartu gelap dengan tombol oranye). Pakai **hanya sebagai acuan tata letak**; buat komponen sendiri dan jangan menyalin nama, logo, ilustrasi, atau aset milik pihak lain.
 
 **Token warna** didefinisikan sekali di `app/globals.css`; komponen memakai kelas Tailwind, **jangan menaruh hex di komponen**:
 - `bg-primary` navy `#13214a` (bingkai/sidebar, kartu gelap, chip label) · `bg-accent` oranye `#c2410c` (tombol sorotan, teks merek; teks putih 5.2:1)
@@ -116,7 +118,7 @@ supabase/templates/    template email undangan & atur ulang sandi (token_hash ->
 e2e/                   tes Playwright
 supabase/migrations/   migrasi dan kebijakan RLS
 supabase/tests/        tes RLS (pgTAP)
-docs/                  schema.md, roadmap.md, security-checklist.md, uji_rls.sql
+docs/                  schema.md, roadmap.md, security-checklist.md, uji_rls.sql, landing-page.md
 ```
 
 ## Konvensi

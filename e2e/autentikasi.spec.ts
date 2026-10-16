@@ -41,7 +41,10 @@ test("admin masuk, melihat menu admin, lalu keluar", async ({ page }) => {
 
   await page.getByRole("button", { name: "Keluar" }).click();
   await expect(page).toHaveURL(/\/masuk$/);
+  // Setelah keluar, "/" menampilkan landing page publik, bukan dashboard.
   await page.goto("/");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("kunci");
+  await page.goto("/keuangan");
   await expect(page).toHaveURL(/\/masuk$/);
 });
 
@@ -61,6 +64,8 @@ test("tutor nonaktif tidak bisa masuk", async ({ page }) => {
   await masuk(page, "tutor3@contoh.test");
   await expect(pesanGalat(page)).toContainText("tidak aktif");
   await page.goto("/");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("kunci");
+  await page.goto("/absensi");
   await expect(page).toHaveURL(/\/masuk$/);
 });
 

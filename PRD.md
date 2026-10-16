@@ -1,6 +1,6 @@
 # PRD — Dashboard Lembaga Miftah al-Lughah
 
-Versi: 0.9 (draft untuk disetujui) · Tanggal: 2026-10-15
+Versi: 0.10 (draft untuk disetujui) · Tanggal: 2026-10-16
 Penulis: Erdany (dengan bantuan Claude sebagai arsitek)
 
 > Dokumen ini adalah sumber kebenaran kebutuhan produk. Claude Code wajib membacanya sebelum mengerjakan tugas apa pun, dan tidak boleh menambah fitur di luar bagian yang ditandai "Fase 1".
@@ -79,6 +79,14 @@ Aturan:
 ### 5.7 Umum
 - Tabel dengan pencarian, filter, urutan, dan pagination.
 - Log audit untuk tindakan penting (ubah/hapus pembayaran, kas, honor, kunci sesi, ubah pengguna): siapa, kapan, apa.
+
+### 5.8 Halaman publik (landing page)
+- Rute `/` berupa halaman statis yang memperkenalkan lembaga dan tiga program (Bahasa Arab Dasar, Bahasa Inggris Percakapan, Nahwu Shorof), dengan tombol **Daftar** (membuka WhatsApp lembaga; tidak ada formulir pendaftaran) dan **Masuk** (tautan ke halaman masuk `/masuk`).
+- Tidak membaca database, tidak memakai kunci apa pun, tanpa login. Tanpa testimoni, harga, atau klaim yang tidak disediakan pemilik lembaga.
+- Gaya visual sendiri (ceria, kertas berkotak, ilustrasi SVG buatan sendiri), terpisah dari gaya dashboard. Spesifikasi lengkap: `docs/landing-page.md`; acuan visual: `docs/landing-reference.html`.
+- Kontak, jadwal, dan biaya per program disimpan di satu berkas konfigurasi konten; selama kosong, ditampilkan sebagai placeholder.
+- Hanya `/` yang boleh diindeks mesin pencari.
+- Landing tampil di `/` untuk pengunjung yang belum masuk; pengguna yang sudah masuk tetap melihat dashboard di `/` (dashboard tidak berubah).
 
 ## 6. Fase 2 — Portal peserta dan ujian CBT
 
@@ -192,6 +200,7 @@ Prinsip:
 
 ## Riwayat perubahan
 
+- v0.10: Sprint 2b — bagian 5.8 halaman publik (landing page) beserta `docs/landing-page.md` dan `docs/landing-reference.html`.
 - v0.9: Sprint 10 — admin menyusun ujian (soal pilihan ganda/isian, bobot, audio di Storage privat, terbit/draf).
 - v0.8: Sprint 9 — akun peserta (username + sandi awal acak, wajib ganti saat masuk pertama, reset oleh admin). UAT Fase 1 selesai (2026-10-16).
 - v0.7: rencana ujian CBT dengan soal audio dan pengumuman nilai (D14).
