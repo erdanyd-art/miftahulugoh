@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@supabase/supabase-js";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { penggunaWajib } from "@/lib/auth";
 import { buatKlienServer, envSupabase } from "@/lib/supabase/server";
@@ -46,8 +46,14 @@ export async function masuk(_: StatusForm, formData: FormData): Promise<StatusFo
 
 export async function keluar() {
   const supabase = await buatKlienServer();
-  // Hanya perangkat ini; sesi di perangkat lain tidak ikut keluar.
-  await supabase.auth.signOut({ scope: "local" });
+  // Hanya perangkat ini; sesi di perangkat lain tidak ikut keluar. Bila Supabase lambat/tak terjangkau,
+  // jangan menahan pengguna: setelah 4 detik cookie sesi di perangkat ini dihapus langsung.
+  const habis = new Promise<"habis">((r) => setTimeout(() => r("habis"), 4000));
+  const hasil = await Promise.race([supabase.auth.signOut({ scope: "local" }).catch(() => ({ error: true })), habis]);
+  if (hasil === "habis" || hasil.error) {
+    const toples = await cookies();
+    for (const c of toples.getAll()) if (c.name.startsWith("sb-")) toples.delete(c.name);
+  }
   redirect("/masuk");
 }
 
