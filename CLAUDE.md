@@ -133,6 +133,7 @@ docs/                  schema.md, roadmap.md, security-checklist.md, uji_rls.sql
 - ID dari klien divalidasi `z.guid()` (bukan `z.uuid()`: ID seed fiktif bukan UUID RFC).
 - Tabel: pola cari/filter/urut/halaman lewat parameter URL (`lib/tabel.ts`, `components/tabel.tsx`); form filter memakai GET.
 - Setelah mutasi di server action panggil `refresh()` dari `next/cache` agar tampilan memuat data baru.
+- Umpan balik loading: tombol aksi menampilkan status "...", aksi yang memindahkan halaman (mis. Keluar) memakai `OverlayMemuat` (`components/overlay-memuat.tsx`) lewat `useFormStatus`; menu samping memakai `useLinkStatus` (ikon berputar). Keluar tidak menunggu Supabase lebih dari 4 detik (cookie `sb-*` dihapus lokal).
 - Form dengan isian memakai `useFormAksi` (`components/use-form-aksi.ts`), bukan `<form action>` langsung: React mereset form setelah aksi, sehingga isian (terutama dropdown) hilang saat server menolak.
 - Waktu lembaga: `lib/waktu.ts` + `waktuLembaga()` (zona dari `pengaturan`). Hanya untuk tampilan; jendela absen dan honor ditegakkan `simpan_absensi()`.
 - Pesan galat fungsi database diterjemahkan di `lib/pesan-galat.ts`.

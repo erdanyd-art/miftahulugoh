@@ -1,9 +1,20 @@
 "use client";
 
-import Link from "next/link";
+import { Loader2 } from "lucide-react";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { menuPerPeran, type Peran } from "@/lib/nav";
+import { menuPerPeran, type NavItem, type Peran } from "@/lib/nav";
+
+// Ikon berganti putaran saat halaman tujuan masih dimuat (umpan balik bila server lambat).
+function IkonMenu({ icon: Icon }: { icon: NavItem["icon"] }) {
+  const { pending } = useLinkStatus();
+  return pending ? (
+    <Loader2 className="size-5 shrink-0 animate-spin" aria-hidden />
+  ) : (
+    <Icon className="size-5 shrink-0" aria-hidden />
+  );
+}
 
 // Ikon adalah komponen, jadi menu dipilih di sisi klien dari nama peran (bukan dikirim dari server).
 export function NavLinks({ peran, onNavigate }: { peran: Peran; onNavigate?: () => void }) {
@@ -30,7 +41,7 @@ export function NavLinks({ peran, onNavigate }: { peran: Peran; onNavigate?: () 
                     : "text-sidebar-foreground hover:bg-sidebar-border hover:text-white",
                 )}
               >
-                <Icon className="size-5 shrink-0" aria-hidden />
+                <IkonMenu icon={Icon} />
                 <span>{label}</span>
               </Link>
             </li>
