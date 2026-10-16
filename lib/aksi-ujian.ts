@@ -12,6 +12,8 @@ import { lokalKeIso } from "@/lib/waktu";
 
 export type StatusAksi = { galat?: string; pesan?: string } | undefined;
 
+const GALAT_TERKUNCI = "Soal tidak bisa diubah: sudah ada peserta yang mulai mengerjakan ujian ini. Kunci jawaban dan bobot tetap bisa dikoreksi.";
+
 const idValid = (id: unknown): id is string => z.guid().safeParse(id).success;
 
 async function zona(supabase: Awaited<ReturnType<typeof buatKlienServer>>) {
@@ -78,6 +80,9 @@ export async function hapusUjian(id: string): Promise<StatusAksi> {
   const supabase = await buatKlienServer();
   const { data: audio } = await supabase.from("audio_ujian").select("path").eq("ujian_id", id);
   const { data, error } = await supabase.from("ujian").delete().eq("id", id).select("id");
+  if (error?.message.includes("foreign key") || error?.message.includes("sudah dikerjakan peserta")) {
+    return { galat: "Ujian sudah dikerjakan peserta, jadi tidak bisa dihapus. Jadikan draf bila tidak ingin terlihat." };
+  }
   if (error || !data?.length) return { galat: "Ujian gagal dihapus." };
   if (audio?.length) await supabase.storage.from(BUCKET_AUDIO).remove(audio.map((a) => a.path));
   redirect("/ujian?pesan=dihapus");
@@ -125,6 +130,7 @@ export async function simpanSoal(
     p_kunci_isian: pilihanGanda ? "" : (d.kunciIsian ?? ""),
   });
   if (error) {
+    if (error.message.includes("sudah dikerjakan peserta")) return { galat: GALAT_TERKUNCI };
     if (error.message.includes("foreign key")) return { galat: "Audio tidak ditemukan di ujian ini. Muat ulang halaman." };
     return { galat: "Soal gagal disimpan." };
   }
@@ -136,6 +142,7 @@ export async function hapusSoal(ujianId: string, soalId: string): Promise<Status
   if (!idValid(ujianId) || !idValid(soalId)) return { galat: "Soal tidak ditemukan." };
   const supabase = await buatKlienServer();
   const { data, error } = await supabase.from("soal").delete().eq("id", soalId).eq("ujian_id", ujianId).select("id");
+  if (error?.message.includes("sudah dikerjakan peserta")) return { galat: GALAT_TERKUNCI };
   if (error || !data?.length) return { galat: "Soal gagal dihapus." };
   redirect(`/ujian/${ujianId}?pesan=dihapus#soal`);
 }

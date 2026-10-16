@@ -109,6 +109,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"jawaban": {
+                  Row: {
+                    "disimpan_pada": string,"id": string,"isian": string | null,"percobaan_id": string,"pilihan": number | null,"soal_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "disimpan_pada"?: string,"id"?: string,"isian"?: string | null,"percobaan_id": string,"pilihan"?: number | null,"soal_id": string
+                  }
+                  Update: {
+                    "disimpan_pada"?: string,"id"?: string,"isian"?: string | null,"percobaan_id"?: string,"pilihan"?: number | null,"soal_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "jawaban_percobaan_id_fkey"
+      columns: ["percobaan_id"]
+isOneToOne: false
+      referencedRelation: "percobaan_ujian"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "jawaban_soal_id_fkey"
+      columns: ["soal_id"]
+isOneToOne: false
+      referencedRelation: "soal"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"kas": {
                   Row: {
                     "dibuat_oleh": string | null,"dibuat_pada": string,"dihapus_pada": string | null,"diubah_pada": string,"id": string,"jenis": Database["public"]['Enums']["jenis_kas"],"jumlah": number,"kategori_id": string,"keterangan": string | null,"pembayaran_id": string | null,"tanggal": string,"tutor_id": string | null
@@ -240,6 +266,32 @@ isOneToOne: false
                   }
                   Relationships: [
                     
+                  ]
+                },"percobaan_ujian": {
+                  Row: {
+                    "batas_selesai": string,"id": string,"mulai_pada": string,"peserta_id": string,"selesai_pada": string | null,"ujian_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "batas_selesai": string,"id"?: string,"mulai_pada"?: string,"peserta_id": string,"selesai_pada"?: string | null,"ujian_id": string
+                  }
+                  Update: {
+                    "batas_selesai"?: string,"id"?: string,"mulai_pada"?: string,"peserta_id"?: string,"selesai_pada"?: string | null,"ujian_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "percobaan_ujian_peserta_id_fkey"
+      columns: ["peserta_id"]
+isOneToOne: false
+      referencedRelation: "peserta"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "percobaan_ujian_ujian_id_fkey"
+      columns: ["ujian_id"]
+isOneToOne: false
+      referencedRelation: "ujian"
+      referencedColumns: ["id"]
+    }
                   ]
                 },"peserta": {
                   Row: {
@@ -388,8 +440,14 @@ isOneToOne: false
 "kunci_sesi":
 { Args: { "p_kunci": boolean,"p_sesi_id": string }; Returns: undefined
                            },
+"mulai_ujian":
+{ Args: { "p_ujian_id": string }; Returns: string
+                           },
 "peran_saya":
 { Args: Record<PropertyKey, never>; Returns: Database["public"]['Enums']["peran_pengguna"]
+                           },
+"peserta_saya":
+{ Args: Record<PropertyKey, never>; Returns: string
                            },
 "saldo_honor":
 { Args: Record<PropertyKey, never>; Returns: {
@@ -399,14 +457,28 @@ isOneToOne: false
 "selesai_ganti_sandi":
 { Args: Record<PropertyKey, never>; Returns: undefined
                            },
+"selesai_ujian":
+{ Args: { "p_percobaan_id": string }; Returns: undefined
+                           },
 "simpan_absensi":
 { Args: { "p_hadir_ids": (string)[],"p_jadwal_id": string,"p_tanggal": string }; Returns: string
+                           },
+"simpan_jawaban":
+{ Args: { "p_isian": string,"p_percobaan_id": string,"p_pilihan": number,"p_soal_id": string }; Returns: undefined
                            },
 "simpan_soal":
 { Args: { "p_audio_id": string,"p_bobot": number,"p_jawaban_benar": number,"p_jenis": Database["public"]['Enums']["jenis_soal"],"p_kunci_isian": string,"p_opsi": (string)[],"p_pertanyaan": string,"p_soal_id": string,"p_ujian_id": string,"p_urutan": number }; Returns: string
                            },
+"toleransi_jawaban":
+{ Args: Record<PropertyKey, never>; Returns: string
+                           },
 "ubah_meet":
 { Args: { "p_jadwal_id": string,"p_url": string }; Returns: undefined
+                           },
+"ujian_saya":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "batas_selesai": string,"durasi_menit": number,"id": string,"judul": string,"jumlah_soal": number,"kelas": string,"keterangan": string,"mulai": string,"percobaan_id": string,"sekarang": string,"selesai": string,"selesai_pada": string
+            }[]
                            }
           }
           Enums: {
