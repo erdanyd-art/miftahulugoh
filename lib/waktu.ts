@@ -67,3 +67,28 @@ export function awalHariDiZona(tanggal: string, zona: string): string {
 export function tanggalBerikut(tanggal: string): string {
   return new Date(Date.parse(`${tanggal}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10);
 }
+
+// Offset zona (mis. "+08:00") pada suatu tanggal. Zona Indonesia tanpa DST, tetapi tetap dihitung per tanggal.
+function offsetZona(tanggal: string, zona: string): string {
+  const nama = new Intl.DateTimeFormat("en-US", { timeZone: zona, timeZoneName: "longOffset" })
+    .formatToParts(new Date(`${tanggal}T12:00:00Z`))
+    .find((p) => p.type === "timeZoneName")?.value;
+  return nama && nama !== "GMT" ? nama.replace("GMT", "") : "+00:00";
+}
+
+// Isian <input type="datetime-local"> ("2026-11-01T08:00") yang dimaksud di zona lembaga -> ISO dengan offset.
+export function lokalKeIso(lokal: string, zona: string): string {
+  return `${lokal.slice(0, 16)}:00${offsetZona(lokal.slice(0, 10), zona)}`;
+}
+
+// Kebalikan lokalKeIso: timestamptz -> nilai datetime-local di zona lembaga.
+export function isoKeLokal(iso: string, zona: string): string {
+  const w = waktuDiZona(zona, new Date(iso));
+  return `${w.tanggal}T${w.jam}`;
+}
+
+// Tampilan tanggal + jam di zona lembaga, mis. "1 Nov 2026 08.00".
+export function formatWaktu(iso: string, zona: string): string {
+  const w = waktuDiZona(zona, new Date(iso));
+  return `${formatTanggal(w.tanggal)} ${w.jam.replace(":", ".")}`;
+}

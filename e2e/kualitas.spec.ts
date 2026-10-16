@@ -24,6 +24,8 @@ const HALAMAN_ADMIN = [
   "/pengguna/baru",
   "/pengaturan",
   "/audit",
+  "/ujian",
+  "/ujian/baru",
   "/akun",
 ];
 const HALAMAN_TUTOR = ["/", "/jadwal-saya", "/kelas-saya", "/absensi", "/honor-saya", "/akun"];

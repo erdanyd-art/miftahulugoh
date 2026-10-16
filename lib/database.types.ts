@@ -49,6 +49,26 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"audio_ujian": {
+                  Row: {
+                    "dibuat_pada": string,"id": string,"judul": string,"path": string,"ujian_id": string,"ukuran": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "dibuat_pada"?: string,"id"?: string,"judul": string,"path": string,"ujian_id": string,"ukuran": number
+                  }
+                  Update: {
+                    "dibuat_pada"?: string,"id"?: string,"judul"?: string,"path"?: string,"ujian_id"?: string,"ukuran"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "audio_ujian_ujian_id_fkey"
+      columns: ["ujian_id"]
+isOneToOne: false
+      referencedRelation: "ujian"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"audit_log": {
                   Row: {
                     "aksi": string,"baris_id": string | null,"id": number,"pengguna_id": string | null,"sebelum": Json | null,"sesudah": Json | null,"tabel": string,"waktu": string
@@ -281,6 +301,72 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"soal": {
+                  Row: {
+                    "audio_id": string | null,"bobot": number,"dibuat_pada": string,"diubah_pada": string,"id": string,"jenis": Database["public"]['Enums']["jenis_soal"],"opsi": (string)[] | null,"pertanyaan": string,"ujian_id": string,"urutan": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "audio_id"?: string | null,"bobot"?: number,"dibuat_pada"?: string,"diubah_pada"?: string,"id"?: string,"jenis": Database["public"]['Enums']["jenis_soal"],"opsi"?: (string)[] | null,"pertanyaan": string,"ujian_id": string,"urutan": number
+                  }
+                  Update: {
+                    "audio_id"?: string | null,"bobot"?: number,"dibuat_pada"?: string,"diubah_pada"?: string,"id"?: string,"jenis"?: Database["public"]['Enums']["jenis_soal"],"opsi"?: (string)[] | null,"pertanyaan"?: string,"ujian_id"?: string,"urutan"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "soal_audio_id_ujian_id_fkey"
+      columns: ["audio_id","ujian_id"]
+isOneToOne: false
+      referencedRelation: "audio_ujian"
+      referencedColumns: ["id","ujian_id"]
+    },{
+      foreignKeyName: "soal_ujian_id_fkey"
+      columns: ["ujian_id"]
+isOneToOne: false
+      referencedRelation: "ujian"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"soal_kunci": {
+                  Row: {
+                    "jawaban_benar": number | null,"kunci_isian": string | null,"soal_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "jawaban_benar"?: number | null,"kunci_isian"?: string | null,"soal_id": string
+                  }
+                  Update: {
+                    "jawaban_benar"?: number | null,"kunci_isian"?: string | null,"soal_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "soal_kunci_soal_id_fkey"
+      columns: ["soal_id"]
+isOneToOne: true
+      referencedRelation: "soal"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"ujian": {
+                  Row: {
+                    "dibuat_pada": string,"diubah_pada": string,"durasi_menit": number,"id": string,"judul": string,"kelas_id": string,"keterangan": string | null,"mulai": string,"selesai": string,"terbit": boolean
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "dibuat_pada"?: string,"diubah_pada"?: string,"durasi_menit": number,"id"?: string,"judul": string,"kelas_id": string,"keterangan"?: string | null,"mulai": string,"selesai": string,"terbit"?: boolean
+                  }
+                  Update: {
+                    "dibuat_pada"?: string,"diubah_pada"?: string,"durasi_menit"?: number,"id"?: string,"judul"?: string,"kelas_id"?: string,"keterangan"?: string | null,"mulai"?: string,"selesai"?: string,"terbit"?: boolean
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "ujian_kelas_id_fkey"
+      columns: ["kelas_id"]
+isOneToOne: false
+      referencedRelation: "kelas"
+      referencedColumns: ["id"]
+    }
+                  ]
                 }
           }
           Views: {
@@ -316,12 +402,15 @@ isOneToOne: false
 "simpan_absensi":
 { Args: { "p_hadir_ids": (string)[],"p_jadwal_id": string,"p_tanggal": string }; Returns: string
                            },
+"simpan_soal":
+{ Args: { "p_audio_id": string,"p_bobot": number,"p_jawaban_benar": number,"p_jenis": Database["public"]['Enums']["jenis_soal"],"p_kunci_isian": string,"p_opsi": (string)[],"p_pertanyaan": string,"p_soal_id": string,"p_ujian_id": string,"p_urutan": number }; Returns: string
+                           },
 "ubah_meet":
 { Args: { "p_jadwal_id": string,"p_url": string }; Returns: undefined
                            }
           }
           Enums: {
-            "jenis_kas": "pemasukan"|"pengeluaran","peran_pengguna": "admin"|"tutor"|"peserta","status_pembayaran": "lunas"|"belum_lunas"
+            "jenis_kas": "pemasukan"|"pengeluaran","jenis_soal": "pilihan_ganda"|"isian","peran_pengguna": "admin"|"tutor"|"peserta","status_pembayaran": "lunas"|"belum_lunas"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -441,7 +530,7 @@ export const Constants = {
           }
         },"public": {
           Enums: {
-            "jenis_kas": ["pemasukan", "pengeluaran"],"peran_pengguna": ["admin", "tutor", "peserta"],"status_pembayaran": ["lunas", "belum_lunas"]
+            "jenis_kas": ["pemasukan", "pengeluaran"],"jenis_soal": ["pilihan_ganda", "isian"],"peran_pengguna": ["admin", "tutor", "peserta"],"status_pembayaran": ["lunas", "belum_lunas"]
           }
         }
 } as const
