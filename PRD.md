@@ -1,6 +1,6 @@
 # PRD — Dashboard Lembaga Miftah al-Lughah
 
-Versi: 0.12 (draft untuk disetujui) · Tanggal: 2026-10-16
+Versi: 0.13 (draft untuk disetujui) · Tanggal: 2026-10-16
 Penulis: Erdany (dengan bantuan Claude sebagai arsitek)
 
 > Dokumen ini adalah sumber kebenaran kebutuhan produk. Claude Code wajib membacanya sebelum mengerjakan tugas apa pun, dan tidak boleh menambah fitur di luar bagian yang ditandai "Fase 1".
@@ -200,6 +200,7 @@ Prinsip:
 
 ## Riwayat perubahan
 
+- v0.13: Sprint 13 — portal peserta (6.1): jadwal kelas yang diikuti dengan tombol Google Meet (kelas hari ini di Beranda) dan riwayat pembayaran sendiri (baca saja).
 - v0.12: Sprint 12 — penilaian: pilihan ganda otomatis dari kunci (koreksi kunci langsung berlaku), isian dinilai admin/tutor pengampu (0..bobot, diaudit), nilai = skor/total bobot × 100, pengumuman admin setelah ujian ditutup, peserta melihat nilai sendiri tanpa kunci per soal, ekspor CSV. Fase 2 tahap pertama (D12) selesai.
 - v0.11: Sprint 11 — peserta mengerjakan ujian (mulai dalam jendela, timer server, simpan otomatis, satu percobaan, selesai otomatis saat waktu habis; toleransi jaringan 15 detik untuk jawaban terakhir).
 - v0.10: Sprint 2b — bagian 5.8 halaman publik (landing page) beserta `docs/landing-page.md` dan `docs/landing-reference.html`.

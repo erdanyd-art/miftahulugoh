@@ -1,5 +1,8 @@
 import Link from "next/link";
+import { TombolMeet } from "@/components/portal/tombol-meet";
 import { Chip } from "@/components/tabel";
+import { jadwalKelasSaya } from "@/lib/data/portal-peserta";
+import { formatJam } from "@/lib/format";
 import { daftarUjianSaya, type StatusUjianSaya } from "@/lib/data/ujian-peserta";
 import { formatWaktu } from "@/lib/waktu";
 
@@ -13,13 +16,30 @@ export const LABEL_STATUS: Record<StatusUjianSaya, { label: string; warna: "hija
 
 // Beranda peserta: ujian kelasnya. Yang bisa dikerjakan ditaruh paling atas.
 export async function DashboardPeserta({ nama }: { nama: string }) {
-  const { zona, ujian } = await daftarUjianSaya();
+  const [{ zona, ujian }, { waktu, jadwal }] = await Promise.all([daftarUjianSaya(), jadwalKelasSaya()]);
+  const hariIni = jadwal.filter((j) => j.hari === waktu.hari);
   const urutan: StatusUjianSaya[] = ["dikerjakan", "dibuka", "terjadwal", "selesai", "terlewat"];
   const tersusun = [...ujian].sort((a, b) => urutan.indexOf(a.status) - urutan.indexOf(b.status));
 
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl">Assalamu&apos;alaikum, {nama}</h1>
+      {hariIni.length > 0 && (
+        <section className="flex flex-col gap-3">
+          <h2 className="text-lg">Kelas hari ini</h2>
+          <ul className="flex flex-col gap-3">
+            {hariIni.map((j) => (
+              <li key={j.jadwal_id} className="flex flex-col gap-2 rounded-3xl bg-pastel-biru p-5">
+                <span className="font-judul text-lg">{j.kelas}</span>
+                <span className="text-sm text-pastel-muted">
+                  {formatJam(j.jam_mulai)}–{formatJam(j.jam_selesai)} · {j.tutor}
+                </span>
+                {j.meet_url && <TombolMeet url={j.meet_url} kelas={j.kelas} />}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       <section className="flex flex-col gap-3">
         <h2 className="text-lg">Ujian</h2>
         {tersusun.length === 0 ? (

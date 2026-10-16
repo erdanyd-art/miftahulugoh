@@ -102,7 +102,7 @@ Nama tampilan: **Lembaga Miftah al-Lughah**. UI berbahasa Indonesia. Teks Arab m
 **Menu per peran (Fase 1)** — didefinisikan di `lib/nav.ts`:
 - Admin: Dashboard, Kelas, Peserta, Jadwal, Absensi, Honor, Ujian, Pembayaran, Keuangan, Pengguna, Pengaturan, Audit
 - Tutor: Dashboard, Jadwal Saya, Kelas Saya, Absensi, Honor Saya, Periksa Ujian
-- Peserta (Fase 2): Beranda (daftar ujian kelasnya), Akun saya; mengerjakan di `/ujian-saya/[id]`
+- Peserta (Fase 2): Beranda (kelas hari ini + daftar ujian), Jadwal Kelas, Pembayaran Saya, Akun saya; mengerjakan di `/ujian-saya/[id]`. Data portal lewat `lib/data/portal-peserta.ts` (fungsi `jadwal_kelas_saya`, `pembayaran_saya`)
 
 Ponsel diutamakan untuk tutor (absen). Semua tabel punya cari, filter, urut, dan pagination.
 

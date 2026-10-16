@@ -236,3 +236,5 @@ Mulai setelah Fase 1 terpasang. Tiap sprint = satu cabang/PR, dengan migrasi + R
 **Sprint 11 — Mengerjakan (selesai 2026-10-16).** `mulai_ujian()` membuat `percobaan_ujian` dengan `batas_selesai = least(mulai + durasi, ujian.selesai)`; `simpan_jawaban()` menolak setelah batas (database). Simpan otomatis per soal, timer dari server, satu percobaan per peserta. Audio lewat tautan bertanda tangan berumur pendek yang hanya dibuat selama percobaan aktif.
 
 **Sprint 12 — Penilaian (selesai 2026-10-16).** Pilihan ganda dinilai di fungsi database; tutor/admin memeriksa isian; admin "Umumkan nilai"; nilai terbaca peserta (miliknya), tutor (kelasnya), admin (semua); ekspor CSV.
+
+**Sprint 13 — Portal peserta (selesai 2026-10-16; PRD 6.1).** Menu peserta Jadwal Kelas (tombol Google Meet, kelas hari ini juga di Beranda) dan Pembayaran Saya (baca saja), lewat fungsi `jadwal_kelas_saya()` dan `pembayaran_saya()`.

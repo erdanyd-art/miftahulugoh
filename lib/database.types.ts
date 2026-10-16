@@ -453,6 +453,11 @@ isOneToOne: false
               "acuan": string,"bobot": number,"isian": string,"jawaban_id": string,"nomor": number,"pertanyaan": string,"peserta": string,"skor_isian": number,"soal_id": string
             }[]
                            },
+"jadwal_kelas_saya":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "hari": number,"jadwal_id": string,"jam_mulai": string,"jam_selesai": string,"kelas": string,"meet_url": string,"tutor": string
+            }[]
+                           },
 "koreksi_honor":
 { Args: { "p_honor": number,"p_sesi_id": string }; Returns: undefined
                            },
@@ -468,6 +473,11 @@ isOneToOne: false
 "nilai_saya":
 { Args: Record<PropertyKey, never>; Returns: {
               "nilai": number,"skor": number,"total_bobot": number,"ujian_id": string
+            }[]
+                           },
+"pembayaran_saya":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "id": string,"jumlah": number,"keterangan": string,"status": Database["public"]['Enums']["status_pembayaran"],"tanggal": string
             }[]
                            },
 "peran_saya":
