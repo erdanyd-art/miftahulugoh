@@ -10,7 +10,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "db:reset": "supabase db reset && docker restart supabase_kong_miftah-al-lughah"
+    "db:reset": "supabase db reset && docker restart supabase_kong_miftah-al-lughah",
+    "cadangan": "bash scripts/cadangan.sh"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
