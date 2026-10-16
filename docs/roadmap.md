@@ -233,6 +233,6 @@ Mulai setelah Fase 1 terpasang. Tiap sprint = satu cabang/PR, dengan migrasi + R
 
 **Sprint 10 — Menyusun ujian (selesai 2026-10-16).** `ujian` (judul, kelas, jendela mulai–selesai, durasi), `soal` (pilihan ganda/isian, bobot, urutan, teks Arab RTL), `soal_kunci` (tanpa kebijakan baca untuk peserta), `audio_ujian` (bucket Storage privat, mp3/m4a ≤ 10 MB, satu audio untuk beberapa soal).
 
-**Sprint 11 — Mengerjakan.** `mulai_ujian()` membuat `percobaan_ujian` dengan `batas_selesai = least(mulai + durasi, ujian.selesai)`; `simpan_jawaban()` menolak setelah batas (database). Simpan otomatis per soal, timer dari server, satu percobaan per peserta. Audio lewat tautan bertanda tangan berumur pendek yang hanya dibuat selama percobaan aktif.
+**Sprint 11 — Mengerjakan (selesai 2026-10-16).** `mulai_ujian()` membuat `percobaan_ujian` dengan `batas_selesai = least(mulai + durasi, ujian.selesai)`; `simpan_jawaban()` menolak setelah batas (database). Simpan otomatis per soal, timer dari server, satu percobaan per peserta. Audio lewat tautan bertanda tangan berumur pendek yang hanya dibuat selama percobaan aktif.
 
 **Sprint 12 — Penilaian.** Pilihan ganda dinilai di fungsi database; tutor/admin memeriksa isian; admin "Umumkan nilai"; nilai terbaca peserta (miliknya), tutor (kelasnya), admin (semua); ekspor CSV.
