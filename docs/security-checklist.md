@@ -12,16 +12,16 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 
 | # | Butir | Sprint | Status |
 |---|---|---|---|
-| A1 | Pendaftaran publik dimatikan (lokal dan produksi) | 2, 8 | Lulus (lokal) — `[auth].enable_signup=false`; `POST /auth/v1/signup` → 422 `signup_disabled`. Produksi: Sprint 8 |
+| A1 | Pendaftaran publik dimatikan (lokal dan produksi) | 2, 8 | Lulus — lokal `enable_signup=false`; produksi `disable_signup=true` (Management API, 2026-10-16) |
 | A2 | Tidak ada kata sandi bawaan atau bersama; pengguna menetapkan kata sandi sendiri lewat undangan/reset | 3 | Lulus — admin mengundang lewat email; pengguna membuat sandi sendiri via tautan (E2E `pengguna.spec.ts`); tidak ada sandi bawaan |
 | A3 | Hash kata sandi lama dari Google Sheets tidak dimigrasi | 1 | Lulus — tidak ada impor data maupun hash dari Sheets (schema.md §12) |
-| A4 | Kebijakan kata sandi minimum (panjang ≥ 10) diatur di Supabase Auth | 2, 8 | Lulus (lokal) — `minimum_password_length=10` + Zod `skemaAturSandi`. Produksi: Sprint 8 |
-| A5 | URL pengalihan (redirect) Auth hanya mengizinkan domain sendiri dan localhost untuk pengembangan | 8 | Ditunda (produksi, Sprint 8) — lokal: `site_url` + `additional_redirect_urls` hanya localhost/127.0.0.1. Pemilik: Erdany. Tinjau: Sprint 8 |
+| A4 | Kebijakan kata sandi minimum (panjang ≥ 10) diatur di Supabase Auth | 2, 8 | Lulus — lokal `minimum_password_length=10`; produksi `password_min_length=10` (2026-10-16) + Zod |
+| A5 | URL pengalihan (redirect) Auth hanya mengizinkan domain sendiri dan localhost untuk pengembangan | 8 | Lulus — produksi `site_url=https://miftahulugohh.vercel.app`, `uri_allow_list=https://miftahulugohh.vercel.app/**` (2026-10-16); lokal hanya localhost. Ganti ke domain sendiri bila domain dipasang |
 | A6 | Pengguna nonaktif tidak bisa masuk dan sesi yang sedang berjalan kehilangan akses (diuji) | 2, 3 | Lulus — E2E: tutor nonaktif ditolak saat masuk; admin menonaktifkan tutor yang sedang login → navigasi berikutnya ditolak; login diblokir (ban Auth); aktif lagi memulihkan |
 | A7 | Akun Auth tanpa baris `profiles` aktif tidak punya akses apa pun (diuji) | 2 | Lulus — E2E "akun tanpa profil tidak bisa masuk"; RLS memeriksa `profiles` aktif |
 | A8 | Login memakai sesi cookie aman (`@supabase/ssr`); tidak menyimpan token di `localStorage` secara manual | 2 | Lulus — `@supabase/ssr` (cookie); tidak ada `localStorage` di kode |
 | A9 | Pesan galat login tidak membocorkan apakah email terdaftar | 2 | Lulus — E2E: pesan sama untuk sandi salah dan email tak terdaftar; lupa sandi selalu pesan sama |
-| A10 | (Disarankan) Autentikasi dua faktor TOTP untuk akun admin | 8 | Ditunda (disarankan, Sprint 8) — perlu keputusan pemilik lembaga; TOTP belum diaktifkan. Pemilik: Erdany. Tinjau: Sprint 8 |
+| A10 | (Disarankan) Autentikasi dua faktor TOTP untuk akun admin | 8 | Ditunda (disarankan) — TOTP sudah tersedia di Supabase produksi, tetapi aplikasi belum punya alur daftar/verifikasi TOTP. Keputusan: Erdany + pemilik lembaga. Tinjau: setelah UAT |
 
 ## B. Otorisasi dan RLS
 
@@ -47,9 +47,9 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 | C1 | `service_role` hanya ada di variabel lingkungan server; tidak berawalan `NEXT_PUBLIC_`; tidak ada di bundel klien (cari di `.next/static`) | 3 | Lulus — kunci hanya di `lib/supabase/admin.ts` (`server-only`); build 2026-10-15: nilai kunci & nama `SERVICE_ROLE` = 0 berkas di `.next/static` |
 | C2 | `.env*` di `.gitignore`; hanya `.env.example` tanpa nilai asli yang di-commit | 0 | Lulus — `.env*` + `!.env.example` di `.gitignore`; `git check-ignore .env.local` cocok |
 | C3 | Pemindaian rahasia pada riwayat Git (misalnya `gitleaks`) bersih | 7 | Lulus (Sprint 7) — gitleaks (Docker) atas 15 commit: "no leaks found"; pemindaian manual kunci/JWT: 0 |
-| C4 | Variabel lingkungan produksi diisi di Vercel, bukan di repositori | 8 | Ditunda (Sprint 8) — belum ada proyek Vercel. Pemilik: Erdany |
+| C4 | Variabel lingkungan produksi diisi di Vercel, bukan di repositori | 8 | Lulus — variabel diisi di Vercel (aplikasi produksi berjalan); repositori hanya berisi `.env.example` (`git ls-files`, 2026-10-16) |
 | C5 | Kunci dan kata sandi tidak muncul di log, galat yang tampil ke pengguna, atau pesan commit | 7 | Lulus (Sprint 7) — 0 `console.*` di kode; galat ke pengguna memakai pesan tetap berbahasa Indonesia (tanpa `error.message` mentah); 0 kunci di pesan commit |
-| C6 | Proyek Supabase produksi terpisah dari pengembangan; seed fiktif tidak dijalankan di produksi | 8 | Ditunda (Sprint 8) — belum ada proyek produksi; `seed.sql` diberi peringatan "JANGAN dijalankan di produksi" |
+| C6 | Proyek Supabase produksi terpisah dari pengembangan; seed fiktif tidak dijalankan di produksi | 8 | Lulus — produksi `neqvbfwccaxlaauzjmmm` terpisah dari lokal; 0 akun `@contoh.test` di produksi (query 2026-10-16) |
 
 ## D. Validasi input dan aplikasi web
 
@@ -63,7 +63,7 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 | D6 | Tautan Meet hanya menerima `https://` (constraint database + validasi form); dibuka dengan `rel="noopener noreferrer"` | 4 | Lulus — constraint `^https://` di database + Zod `skemaMeet` + E2E (http:// ditolak); tautan dibuka `target=_blank rel="noopener noreferrer"` |
 | D7 | Header keamanan di `next.config`: CSP, `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`/`frame-ancestors`, HSTS di produksi | 7, 8 | Lulus (lokal, Sprint 7) — `next.config.ts`: CSP (frame-ancestors none, object-src none, form-action self), nosniff, Referrer-Policy, X-Frame-Options DENY, Permissions-Policy; diuji E2E. HSTS & upgrade-insecure-requests hanya `VERCEL_ENV=production` → verifikasi Sprint 8. Catatan: script-src memakai `unsafe-inline` (tanpa nonce) — diterima karena tanpa dangerouslySetInnerHTML |
 | D8 | Server action/route yang mengubah data hanya menerima metode dan asal yang semestinya (perlindungan CSRF bawaan tidak dimatikan) | 3+ | Lulus (Sprint 2) — server action Next.js bawaan (POST + cek Origin), tidak dimatikan |
-| D9 | Pembatasan percobaan masuk (rate limit) aktif: periksa pengaturan bawaan Supabase Auth dan sesuaikan | 8 | Ditunda (Sprint 8) — lokal memakai batas bawaan Supabase (`[auth.rate_limit]`); periksa & sesuaikan di proyek produksi |
+| D9 | Pembatasan percobaan masuk (rate limit) aktif: periksa pengaturan bawaan Supabase Auth dan sesuaikan | 8 | Lulus — batas bawaan Supabase aktif di produksi: email 30/jam, verify 30, OTP 30, token refresh 150 per 5 menit per IP; rotasi refresh token aktif; pendaftaran & anonim mati (2026-10-16). Cukup untuk lembaga kecil |
 | D10 | Galat tak terduga menampilkan pesan umum ke pengguna; rincian hanya di log server | 7 | Lulus (Sprint 7) — `app/error.tsx` & `app/global-error.tsx` menampilkan pesan umum + kode referensi; Next menyembunyikan rincian galat server di produksi |
 
 ## E. Data, audit, dan cadangan
@@ -74,7 +74,7 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 | E2 | `audit_log` tidak bisa diubah atau dihapus pengguna aplikasi (diuji) | 1 | Lulus (Supabase lokal) — UPDATE `audit_log` ditolak |
 | E3 | Halaman Audit hanya untuk admin | 7 | Lulus (Sprint 7) — `/audit` memanggil `wajibPeran("admin")` + RLS `audit_log_baca`; E2E tutor → /tidak-berwenang |
 | E4 | Soft delete dihormati di semua query, rekap, saldo honor, dan ekspor | 6 | Lulus (Sprint 6) — setiap query kas/pembayaran menyaring `dihapus_pada is null` (daftar, rekap, ekspor, dashboard); `saldo_honor()` juga; E2E: baris dihapus tidak muncul di daftar maupun CSV |
-| E5 | Cadangan terjadwal aktif dan **satu latihan pemulihan berhasil**; langkahnya tertulis di `docs/operasional.md` | 7, 8 | Sebagian — latihan pemulihan lokal berhasil (Sprint 7, `docs/operasional.md` §1.2 & §4); cadangan terjadwal + latihan di produksi: Sprint 8 |
+| E5 | Cadangan terjadwal aktif dan **satu latihan pemulihan berhasil**; langkahnya tertulis di `docs/operasional.md` | 7, 8 | Lulus — `npm run cadangan` (data public+auth, di luar repo); latihan pemulihan cadangan produksi ke database uji 2026-10-16: 13/13 tabel sama, saldo kas sama (`docs/operasional.md` §1.3, §4). Jadwal: mingguan oleh Erdany |
 | E6 | Data fiktif dan data nyata tidak bercampur; data nyata tidak masuk repositori, tangkapan layar, atau fixture tes | semua | Lulus (Sprint 7) — seed/tes hanya domain `contoh.test`/`uji.test`; tidak ada data nyata atau tangkapan layar di repositori (repositori publik) |
 | E7 | `peserta.catatan` terlihat tutor kelas terkait: keputusan tertulis (dibiarkan dengan pedoman "jangan isi hal sensitif", atau dipisah ke tabel khusus admin) | 4 | Keputusan (Sprint 4, perlu dikonfirmasi pemilik lembaga): catatan dibiarkan di `peserta` dengan pedoman tertulis di form "jangan isi hal sensitif"; UI tutor tidak menampilkan catatan. Tinjau ulang sebelum data nyata masuk (Sprint 8) |
 
@@ -86,18 +86,18 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 | F2 | Pembaruan dependensi otomatis (Dependabot atau setara) aktif | 0 | Lulus — Dependabot aktif: PR otomatis `actions/checkout`, `actions/setup-node`, npm (2026-10-15) |
 | F3 | Dependensi baru dicatat dan dikonfirmasi sebelum dipasang | semua | Lulus (Sprint 0–1) — dependensi tercantum di rencana Sprint 0 dan disetujui |
 | F4 | CI menjalankan lint, typecheck, tes unit, dan tes database pada setiap PR | 0+ | Lulus — CI (lint, typecheck, unit, build, `supabase test db`, E2E) hijau di PR #7 (2026-10-15) |
-| F5 | Domain memakai HTTPS penuh; HTTP dialihkan ke HTTPS | 8 | Ditunda (Sprint 8) — domain belum disambungkan |
-| F6 | Tertulis siapa pemilik akun GitHub, Supabase, Vercel, dan domain, serta cara pemulihan aksesnya | 8 | Ditunda (Sprint 8) — ditulis di `docs/operasional.md` §3 saat serah terima |
-| F7 | Log Vercel/Supabase dapat diakses dan ada penanggung jawab yang memeriksanya | 8 | Ditunda (Sprint 8) — `docs/operasional.md` §3 |
+| F5 | Domain memakai HTTPS penuh; HTTP dialihkan ke HTTPS | 8 | Sebagian — `miftahulugohh.vercel.app`: HTTP → 308 ke HTTPS, HSTS `max-age=63072000; preload` (2026-10-16). Domain sendiri belum ada; periksa ulang saat dipasang |
+| F6 | Tertulis siapa pemilik akun GitHub, Supabase, Vercel, dan domain, serta cara pemulihan aksesnya | 8 | Lulus — `docs/operasional.md` §3 |
+| F7 | Log Vercel/Supabase dapat diakses dan ada penanggung jawab yang memeriksanya | 8 | Lulus — `docs/operasional.md` §3 (Erdany memeriksa log mingguan) |
 
 ## G. Penerimaan sebelum data nyata masuk
 
-Status per Sprint 7 (2026-10-15). **Data nyata belum boleh masuk**: butir produksi masih Ditunda.
+Status per 2026-10-16 (produksi). Data nyata boleh masuk; tersisa A10 (TOTP, disarankan) dan domain sendiri (F5).
 
-- [ ] A1, A2, A6, A7 — A2, A6, A7 Lulus; A1 Lulus lokal, produksi Sprint 8
+- [x] A1, A2, A6, A7 — Lulus (A1 juga di produksi)
 - [x] B1 sampai B12 — semua Lulus (diuji di Supabase lokal dan CI)
-- [ ] C1, C2, C4, C6 — C1, C2 Lulus; C4, C6 Sprint 8
-- [ ] E1, E5 — E1 Lulus; E5 lokal Lulus, produksi Sprint 8
-- [ ] F5 — Sprint 8
+- [x] C1, C2, C4, C6 — Lulus
+- [x] E1, E5 — Lulus (latihan pemulihan cadangan produksi 2026-10-16)
+- [ ] F5 — HTTPS di vercel.app Lulus; domain sendiri belum
 
 Butir yang Ditunda wajib punya alasan tertulis, pemilik keputusan, dan tanggal tinjau ulang.
