@@ -26,3 +26,8 @@ export function formatJam(jam: string): string {
 }
 
 export const DAFTAR_HARI = [1, 2, 3, 4, 5, 6, 7] as const;
+
+export function formatUkuran(byte: number): string {
+  if (byte < 1024 * 1024) return `${Math.max(1, Math.round(byte / 1024))} KB`;
+  return `${(byte / (1024 * 1024)).toFixed(1).replace(".", ",")} MB`;
+}

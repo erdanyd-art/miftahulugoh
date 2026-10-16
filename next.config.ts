@@ -6,14 +6,23 @@ const produksiVercel = process.env.VERCEL_ENV === "production";
 // CSP tanpa nonce (pola "Without Nonces" di dokumentasi Next): halaman statis tetap bisa diprerender.
 // script-src masih mengizinkan inline script milik Next; risikonya ditekan karena tidak ada
 // dangerouslySetInnerHTML dan semua teks pengguna di-escape React (security-checklist D4, D7).
-// Browser tidak menghubungi Supabase langsung (semua lewat server), jadi connect-src cukup 'self'.
+// Browser hanya menghubungi Supabase untuk dua hal (sisanya lewat server): mengunggah audio ujian lewat
+// tautan unggah sekali pakai (connect-src) dan memutar audio lewat tautan bertanda tangan (media-src).
+const supabase = (() => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").origin;
+  } catch {
+    return "";
+  }
+})();
 const csp = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${pengembangan ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' blob: data:",
   "font-src 'self'",
-  `connect-src 'self'${pengembangan ? " ws: wss:" : ""}`,
+  `media-src 'self' ${supabase}`.trim(),
+  `connect-src 'self' ${supabase}${pengembangan ? " ws: wss:" : ""}`.trim(),
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

@@ -53,6 +53,8 @@ Skrip `scripts/cadangan.sh` menjalankan `supabase db dump --linked --data-only -
 Folder ini **di luar repositori** (repo publik). Berisi data pribadi peserta dan hash kata sandi: jangan dibagikan;
 salin juga ke penyimpanan terenkripsi lain (mis. diska eksternal) agar tidak hilang bila laptop rusak.
 Struktur database tidak perlu dicadangkan: ada di `supabase/migrations/`.
+**Berkas audio ujian (Storage) TIDAK ikut** `npm run cadangan` (hanya data database). Simpan berkas audio asli di
+folder lembaga (mis. Google Drive) agar bisa diunggah ulang bila proyek perlu dipulihkan.
 
 **Memulihkan** (ke proyek Supabase baru atau database uji):
 
@@ -71,6 +73,7 @@ Struktur database tidak perlu dicadangkan: ada di `supabase/migrations/`.
 - **Menambah tutor/admin:** menu **Pengguna → Tambah pengguna**. Pengguna menerima email undangan (dari erdanyd@gmail.com, cek Spam) dan membuat kata sandi sendiri.
 - **Pengguna lupa kata sandi:** pengguna klik **Lupa kata sandi?** di halaman masuk, atau admin membuka pengguna lalu **Kirim tautan buat kata sandi**.
 - **Akun ujian peserta (Fase 2):** **Peserta → (nama) → Akun ujian**, isi username (huruf kecil/angka/titik), **Buat akun**. Catat username dan kata sandi awal yang tampil (hanya sekali) lalu berikan ke peserta; peserta wajib menggantinya saat masuk. Peserta masuk di halaman yang sama dengan staf, mengetik username (bukan email). Peserta lupa sandi: **Atur ulang kata sandi** di kartu yang sama (peserta tidak punya email). Peserta berhenti: **Nonaktifkan akun**.
+- **Menyusun ujian (Fase 2):** menu **Ujian → Buat ujian** (judul, kelas, waktu dibuka–ditutup, durasi). Di halaman ujian: unggah audio (MP3/M4A ≤ 10 MB) bila perlu, **Tambah soal** (pilihan ganda: isi pilihan dan tandai kunci; isian: acuan jawaban untuk pemeriksa), lalu **Terbitkan ujian**. Draf tidak terlihat peserta. Audio yang masih dipakai soal tidak bisa dihapus.
 - **Tutor berhenti:** **Pengguna → (nama) → Nonaktifkan akun**. Akses langsung terputus; riwayat absensi dan honor tetap utuh. Jangan menghapus akun di dasbor Supabase.
 - **Mengganti kata sandi sendiri (semua peran):** klik avatar/nama di kanan atas → **Akun saya** → isi kata sandi lama dan baru. Lupa kata sandi lama: **Lupa kata sandi?** di halaman masuk.
 - **Zona waktu lembaga:** menu **Pengaturan**. Zona salah membuat tutor gagal absen.
