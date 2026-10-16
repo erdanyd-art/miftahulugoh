@@ -156,3 +156,10 @@ Foto tutor, testimoni, harga nyata, jumlah murid, sertifikasi, formulir pendafta
 ## 11. Data yang masih dibutuhkan dari pemilik lembaga
 
 Nomor WhatsApp, akun Instagram, alamat atau kota, jadwal dan biaya tiap program, konfirmasi nama dan deskripsi program (deskripsi di atas adalah draf), logo asli bila ada, dan nama domain.
+
+## 12. Catatan implementasi (Sprint 2b, 2026-10-16)
+
+- Dashboard tidak diubah. `proxy.ts` me-*rewrite* `/` ke `app/landing` hanya untuk pengunjung yang belum masuk; pengguna yang sudah masuk tetap melihat dashboard di `/`. Akses langsung `/landing` tanpa login dialihkan ke `/`.
+- Gaya di `components/landing/landing.css` (kelas `lp-*`), bukan Tailwind/CSS module, agar persis dengan acuan dan tidak menyentuh token dashboard. Di dalam landing, `box-sizing: content-box` dan `line-height: normal` meniru acuan yang tanpa reset CSS.
+- Perbedaan yang disengaja dari acuan: (1) tautan menu minimal 44 px (target sentuh), sehingga halaman sedikit lebih tinggi (6–22 px); (2) tombol "Chat WhatsApp" bergaris putus-putus dan berlatar transparan selama nomor kosong (tampak tidak aktif); (3) huruf hiasan samar (ع, Aa, ن) dirender lewat CSS `::before` agar tidak dihitung sebagai teks oleh pemeriksa kontras.
+- Lighthouse mobile (lokal, build produksi): Accessibility 100, Best Practices 100, SEO 100, Performance 87 (LCP ±4 s). Penyebab utama: tiga font dashboard (Fredoka, Righteous, Noto Naskh) di-preload dari `app/layout.tsx` ke semua halaman. Perbaikannya menyentuh layout dashboard, jadi ditunda atas keputusan pemilik proyek.

@@ -96,7 +96,9 @@ docs/landing-reference.html (acuan visual landing page; buka di browser)
 
 ---
 
-## Sprint 2b — Landing page publik
+## Sprint 2b — Landing page publik (selesai 2026-10-16)
+
+Catatan implementasi: dashboard tidak diubah. Pengunjung yang belum masuk melihat landing di `/` (rewrite di `proxy.ts` ke `app/landing`); pengguna yang sudah masuk tetap melihat dashboard di `/`.
 
 **Tujuan:** halaman `/` yang sesuai desain yang sudah disetujui, dengan tombol Daftar (WhatsApp) dan Masuk (`/masuk`). Tidak menyentuh database. Bisa dikerjakan setelah Sprint 2 (rute `/masuk` sudah ada); tidak menghalangi sprint lain.
 

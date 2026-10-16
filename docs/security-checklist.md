@@ -98,12 +98,12 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 
 | # | Butir | Sprint | Status |
 |---|---|---|---|
-| G1 | Halaman `/` tidak membaca database dan tidak memuat kunci atau rahasia apa pun (periksa bundel klien) | 2b | ☐ |
-| G2 | Font di-*host* sendiri lewat `next/font`; tidak ada permintaan ke Google atau pihak ketiga saat runtime; CSP disesuaikan | 2b, 7 | ☐ |
-| G3 | Tautan eksternal (WhatsApp, Instagram) memakai `rel="noopener noreferrer"`; nomor dan akun hanya dari satu berkas konfigurasi konten | 2b | ☐ |
-| G4 | Tombol "Masuk" hanya tautan ke `/masuk`; tidak ada formulir login atau data pengguna di landing page | 2b | ☐ |
-| G5 | Hanya `/` yang diindeks; `/masuk` dan seluruh halaman dashboard `noindex`; `sitemap.ts` hanya memuat `/` | 2b | ☐ |
-| G6 | Tidak ada nomor, harga, testimoni, atau data contoh yang tampak asli; placeholder jelas terlihat sebagai placeholder | 2b, 8 | ☐ |
+| G1 | Halaman `/` tidak membaca database dan tidak memuat kunci atau rahasia apa pun (periksa bundel klien) | 2b | Lulus — `/landing` diprerender statis (○ di `next build`); HTML tanpa URL Supabase; kunci `service_role` tidak ada di `.next/static` (grep 0 berkas) |
+| G2 | Font di-*host* sendiri lewat `next/font`; tidak ada permintaan ke Google atau pihak ketiga saat runtime; CSP disesuaikan | 2b, 7 | Lulus — E2E `landing.spec.ts` (semua permintaan ke domain sendiri); CSP `font-src 'self'` tidak perlu diubah; tanpa galat konsol/CSP (`kualitas.spec.ts`) |
+| G3 | Tautan eksternal (WhatsApp, Instagram) memakai `rel="noopener noreferrer"`; nomor dan akun hanya dari satu berkas konfigurasi konten | 2b | Lulus — `components/landing/seksi.test.tsx` (keadaan terisi: 3 tautan luar, semuanya `target=_blank` + `rel`); isi hanya dari `lib/site-content.ts` |
+| G4 | Tombol "Masuk" hanya tautan ke `/masuk`; tidak ada formulir login atau data pengguna di landing page | 2b | Lulus — E2E `landing.spec.ts` (tanpa `<form>`, klik Masuk membuka `/masuk`) |
+| G5 | Hanya `/` yang diindeks; `/masuk` dan seluruh halaman dashboard `noindex`; `sitemap.ts` hanya memuat `/` | 2b | Lulus — header `X-Robots-Tag: noindex, nofollow` untuk semua jalur selain `/` (`next.config.ts`); E2E memeriksa header, `robots.txt`, dan satu `<loc>` di sitemap |
+| G6 | Tidak ada nomor, harga, testimoni, atau data contoh yang tampak asli; placeholder jelas terlihat sebagai placeholder | 2b, 8 | Lulus (2026-10-16) — `lib/site-content.ts` kosong; placeholder bergaris putus-putus (E2E + tes unit). Periksa ulang saat data asli diisi |
 
 ## H. Penerimaan sebelum data nyata masuk
 
@@ -114,6 +114,6 @@ Status per 2026-10-16 (produksi). Data nyata boleh masuk; tersisa A10 (TOTP, dis
 - [x] C1, C2, C4, C6 — Lulus
 - [x] E1, E5 — Lulus (latihan pemulihan cadangan produksi 2026-10-16)
 - [ ] F5 — HTTPS di vercel.app Lulus; domain sendiri belum
-- [ ] G1, G3, G6 — landing page tidak memuat data kontak palsu saat publik (Sprint 2b)
+- [x] G1, G3, G6 — Lulus (Sprint 2b); kontak belum diisi, landing menampilkan placeholder
 
 Butir yang Ditunda wajib punya alasan tertulis, pemilik keputusan, dan tanggal tinjau ulang.

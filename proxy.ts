@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Halaman yang boleh dibuka tanpa login.
-const PUBLIK = ["/masuk", "/lupa-sandi", "/auth/"];
+const PUBLIK = ["/masuk", "/lupa-sandi", "/auth/", "/robots.txt", "/sitemap.xml"];
 
 // Proxy hanya menyegarkan sesi Supabase dan melakukan pengalihan optimistis.
 // Otorisasi sebenarnya ada di lib/auth.ts (server) dan RLS (database).
@@ -56,6 +56,15 @@ export async function proxy(request: NextRequest) {
     response.cookies.getAll().forEach((cookie) => hasil.cookies.set(cookie));
     return hasil;
   };
+
+  // Landing page publik (app/landing) tampil di "/" untuk yang belum masuk; yang sudah masuk tetap
+  // melihat dashboard di "/". Bila token ternyata sudah dicabut, dashboard sendiri mengalihkan ke /masuk.
+  if (!sudahMasuk && pathname === "/") {
+    const hasil = NextResponse.rewrite(new URL("/landing", request.url));
+    response.cookies.getAll().forEach((cookie) => hasil.cookies.set(cookie));
+    return hasil;
+  }
+  if (!sudahMasuk && pathname === "/landing") return alihkan("/");
 
   // Tidak mengalihkan /masuk -> / walau ada token: token bisa sudah dicabut di server (menimbulkan putaran).
   if (!sudahMasuk && !publik) return alihkan("/masuk");

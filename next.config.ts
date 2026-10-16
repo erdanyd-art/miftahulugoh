@@ -45,7 +45,11 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   poweredByHeader: false,
   async headers() {
-    return [{ source: "/(.*)", headers: headerKeamanan }];
+    return [
+      { source: "/(.*)", headers: headerKeamanan },
+      // Hanya landing page (/) yang boleh diindeks mesin pencari (docs/landing-page.md).
+      { source: "/:jalur+", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
+    ];
   },
   turbopack: {
     rules: {

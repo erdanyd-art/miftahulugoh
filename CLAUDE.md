@@ -69,7 +69,7 @@ Docker Desktop di Mac ini mode per pengguna: set `PATH="$HOME/.docker/bin:$PATH"
 
 Nama tampilan: **Lembaga Miftah al-Lughah**. UI berbahasa Indonesia. Teks Arab memakai `dir="rtl"` dan kelas `font-arab` (Noto Naskh Arabic).
 
-**Landing page publik (`/`) memakai gaya visual sendiri yang ceria**, terpisah dari dashboard; ikuti `docs/landing-page.md`, jangan menerapkan gaya itu ke dashboard dan sebaliknya. Bagian di bawah ini berlaku untuk **dashboard**.
+**Landing page publik (`/`) memakai gaya visual sendiri yang ceria**, terpisah dari dashboard; ikuti `docs/landing-page.md`, jangan menerapkan gaya itu ke dashboard dan sebaliknya. Halaman di `app/landing/` (pengunjung belum masuk di `/` di-rewrite ke sana oleh `proxy.ts`; yang sudah masuk tetap ke dashboard), komponen di `components/landing/`, gaya di `components/landing/landing.css` (kelas berawalan `lp-`, bukan CSS module: aturan Turbopack `*.css` di `next.config.ts` mematikan CSS module), isi kontak/jadwal/biaya di `lib/site-content.ts`. Bagian di bawah ini berlaku untuk **dashboard**.
 
 **Font:** isi = Fredoka (`font-sans`, bulat dan mudah dibaca); judul h1–h3, judul kartu, angka besar, nama lembaga = Righteous (`font-judul`, hanya satu ketebalan, jangan pakai `font-bold`/`font-semibold` untuknya). Dimuat lewat `next/font` di `app/layout.tsx`.
 

@@ -86,6 +86,7 @@ Aturan:
 - Gaya visual sendiri (ceria, kertas berkotak, ilustrasi SVG buatan sendiri), terpisah dari gaya dashboard. Spesifikasi lengkap: `docs/landing-page.md`; acuan visual: `docs/landing-reference.html`.
 - Kontak, jadwal, dan biaya per program disimpan di satu berkas konfigurasi konten; selama kosong, ditampilkan sebagai placeholder.
 - Hanya `/` yang boleh diindeks mesin pencari.
+- Landing tampil di `/` untuk pengunjung yang belum masuk; pengguna yang sudah masuk tetap melihat dashboard di `/` (dashboard tidak berubah).
 
 ## 6. Fase 2 — Portal peserta dan ujian CBT
 
