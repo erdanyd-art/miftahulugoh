@@ -18,6 +18,10 @@ export type StatusAksi = { galat?: string; pesan?: string } | undefined;
 // Lama blokir login untuk akun nonaktif (Auth). Akses data sudah putus lewat profiles.aktif + RLS.
 const BLOKIR_SELAMANYA = "876000h";
 
+// Penyebab tersering: SMTP sendiri belum diatur (pengirim bawaan Supabase hanya ke anggota tim) atau batas kirim per jam.
+const GALAT_EMAIL =
+  "Email gagal dikirim. Pastikan SMTP sudah diatur di Supabase (Authentication → Emails), lalu coba lagi beberapa menit kemudian.";
+
 export async function tambahPengguna(_: StatusAksi, formData: FormData): Promise<StatusAksi> {
   await wajibPeran("admin");
   const hasil = skemaPenggunaBaru.safeParse({
@@ -33,7 +37,8 @@ export async function tambahPengguna(_: StatusAksi, formData: FormData): Promise
   const { data, error } = await admin.auth.admin.inviteUserByEmail(email, { redirectTo: `${asal}/atur-sandi` });
   if (error || !data.user) {
     if (error?.code === "email_exists") return { galat: "Email ini sudah terdaftar." };
-    return { galat: "Undangan gagal dikirim. Coba lagi." };
+    console.error("undangan gagal", error?.code, error?.message); // tampil di log Vercel; tanpa data rahasia
+    return { galat: GALAT_EMAIL };
   }
 
   // Profil ditulis dengan sesi admin (RLS + audit mencatat admin sebagai pelaku).
@@ -98,7 +103,10 @@ export async function kirimTautanSandi(id: string): Promise<StatusAksi> {
   const { url, anonKey } = envSupabase();
   const anon = createClient(url, anonKey, { auth: { persistSession: false, autoRefreshToken: false } });
   const { error: galatKirim } = await anon.auth.resetPasswordForEmail(data.user.email);
-  if (galatKirim) return { galat: "Tautan gagal dikirim. Tunggu sebentar lalu coba lagi." };
+  if (galatKirim) {
+    console.error("tautan sandi gagal", galatKirim.code, galatKirim.message);
+    return { galat: GALAT_EMAIL };
+  }
   return { pesan: `Tautan untuk membuat kata sandi dikirim ke ${data.user.email}.` };
 }
 
