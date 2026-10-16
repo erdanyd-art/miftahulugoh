@@ -5,7 +5,14 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { penggunaWajib } from "@/lib/auth";
 import { buatKlienServer, envSupabase } from "@/lib/supabase/server";
-import { PANJANG_SANDI_MIN, skemaAturSandi, skemaGantiSandi, skemaLupaSandi, skemaMasuk } from "@/lib/validasi/auth";
+import {
+  DOMAIN_PESERTA,
+  PANJANG_SANDI_MIN,
+  skemaAturSandi,
+  skemaGantiSandi,
+  skemaLupaSandi,
+  skemaMasuk,
+} from "@/lib/validasi/auth";
 
 // email dikembalikan agar isian tidak kosong lagi setelah form dikirim (React mereset form).
 export type StatusForm = { galat?: string; pesan?: string; email?: string } | undefined;
@@ -13,7 +20,7 @@ export type StatusForm = { galat?: string; pesan?: string; email?: string } | un
 export async function masuk(_: StatusForm, formData: FormData): Promise<StatusForm> {
   const hasil = skemaMasuk.safeParse({ email: formData.get("email"), kataSandi: formData.get("kataSandi") });
   const email = String(formData.get("email") ?? "");
-  if (!hasil.success) return { galat: "Isi email dan kata sandi dengan benar.", email };
+  if (!hasil.success) return { galat: "Isi email/username dan kata sandi dengan benar.", email };
 
   const supabase = await buatKlienServer();
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -21,7 +28,7 @@ export async function masuk(_: StatusForm, formData: FormData): Promise<StatusFo
     password: hasil.data.kataSandi,
   });
   // Pesan sama untuk email tak terdaftar dan kata sandi salah (tidak membocorkan email terdaftar).
-  if (error || !data.user) return { galat: "Email atau kata sandi salah.", email };
+  if (error || !data.user) return { galat: "Email/username atau kata sandi salah.", email };
 
   const { data: profil } = await supabase
     .from("profiles")
@@ -50,6 +57,10 @@ export async function lupaSandi(_: StatusForm, formData: FormData): Promise<Stat
 
   // Alamat tujuan divalidasi Supabase terhadap daftar URL pengalihan yang diizinkan.
   const asal = (await headers()).get("origin") ?? "http://localhost:3000";
+  // Akun peserta tidak punya email sungguhan: tidak dikirimi apa pun (sandi direset admin).
+  if (hasil.data.email.endsWith(`@${DOMAIN_PESERTA}`)) {
+    return { pesan: "Jika email terdaftar, tautan untuk mengatur ulang kata sandi sudah dikirim." };
+  }
   const supabase = await buatKlienServer();
   await supabase.auth.resetPasswordForEmail(hasil.data.email, {
     redirectTo: `${asal}/auth/callback?next=/atur-sandi`,
@@ -79,7 +90,7 @@ export async function aturSandi(_: StatusForm, formData: FormData): Promise<Stat
 // Ganti kata sandi sendiri saat sudah masuk (tanpa email). Kata sandi lama diperiksa dulu
 // lewat klien tanpa sesi, agar sesi yang tertinggal terbuka tidak cukup untuk mengganti sandi.
 export async function gantiSandi(_: StatusForm, formData: FormData): Promise<StatusForm> {
-  await penggunaWajib();
+  const pengguna = await penggunaWajib();
   const hasil = skemaGantiSandi.safeParse({
     sandiLama: formData.get("sandiLama"),
     kataSandi: formData.get("kataSandi"),
@@ -106,6 +117,11 @@ export async function gantiSandi(_: StatusForm, formData: FormData): Promise<Sta
     if (error.code === "same_password") return { galat: "Kata sandi baru harus berbeda dari yang lama." };
     if (error.code === "weak_password") return { galat: "Kata sandi terlalu lemah. Pakai yang lebih panjang." };
     return { galat: "Kata sandi gagal disimpan. Coba lagi." };
+  }
+  // Kata sandi awal dari admin sudah diganti: buka akses ke dashboard.
+  if (pengguna.wajibGantiSandi) {
+    await supabase.rpc("selesai_ganti_sandi");
+    redirect("/");
   }
   return { pesan: "Kata sandi berhasil diganti. Pakai kata sandi baru saat masuk berikutnya." };
 }

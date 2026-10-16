@@ -1,6 +1,8 @@
 import "server-only";
-import { penggunaWajib, wajibPeran } from "@/lib/auth";
+import { penggunaStaf, wajibPeran } from "@/lib/auth";
+import { klienAdmin } from "@/lib/supabase/admin";
 import { buatKlienServer } from "@/lib/supabase/server";
+import { usernameDariEmail } from "@/lib/validasi/auth";
 
 // Semua bacaan memakai sesi pengguna, jadi RLS yang membatasi: admin melihat semua,
 // tutor hanya jadwal/kelas/peserta yang ia ampu.
@@ -23,7 +25,7 @@ export async function ambilPeserta(id: string) {
   const supabase = await buatKlienServer();
   const { data } = await supabase
     .from("peserta")
-    .select("id, nama, aktif, catatan, kelas_peserta(kelas(id, nama, aktif))")
+    .select("id, nama, aktif, catatan, user_id, kelas_peserta(kelas(id, nama, aktif))")
     .eq("id", id)
     .maybeSingle();
   if (!data) return null;
@@ -96,7 +98,7 @@ export async function pilihanForm() {
 // ===== Tutor: hanya miliknya (dibatasi RLS) =====
 
 export async function jadwalSaya() {
-  const pengguna = await penggunaWajib();
+  const pengguna = await penggunaStaf();
   const supabase = await buatKlienServer();
   const { data, error } = await supabase
     .from("jadwal")
@@ -109,7 +111,7 @@ export async function jadwalSaya() {
 }
 
 export async function kelasSaya() {
-  await penggunaWajib();
+  await penggunaStaf();
   const supabase = await buatKlienServer();
   // Catatan peserta sengaja tidak diambil untuk tampilan tutor (security-checklist E7).
   const { data, error } = await supabase
@@ -126,4 +128,23 @@ export async function kelasSaya() {
       .flatMap((kp) => (kp.peserta ? [kp.peserta] : []))
       .sort((a, b) => a.nama.localeCompare(b.nama, "id")),
   }));
+}
+
+// Akun login peserta (Fase 2): username dari email sintetis di Auth, status dari profiles.
+export async function ambilAkunPeserta(userId: string) {
+  await wajibPeran("admin");
+  const supabase = await buatKlienServer();
+  const { data: profil } = await supabase
+    .from("profiles")
+    .select("aktif, wajib_ganti_sandi")
+    .eq("id", userId)
+    .maybeSingle();
+  const { data } = await klienAdmin().auth.admin.getUserById(userId);
+  const email = data.user?.email ?? "";
+  return {
+    id: userId,
+    username: usernameDariEmail(email) ?? email,
+    aktif: profil?.aktif ?? false,
+    wajibGantiSandi: profil?.wajib_ganti_sandi ?? false,
+  };
 }

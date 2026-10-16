@@ -28,10 +28,11 @@ const HALAMAN_ADMIN = [
 ];
 const HALAMAN_TUTOR = ["/", "/jadwal-saya", "/kelas-saya", "/absensi", "/honor-saya", "/akun"];
 const HALAMAN_PUBLIK = ["/masuk", "/lupa-sandi"];
+const HALAMAN_PESERTA = ["/", "/akun"];
 
 async function masuk(page: Page, email: string) {
   await page.goto("/masuk");
-  await page.getByLabel("Email").fill(email);
+  await page.getByLabel("Email atau username").fill(email);
   await page.getByLabel("Kata sandi", { exact: true }).fill(SANDI);
   await page.getByRole("button", { name: "Masuk" }).click();
   await expect(page).not.toHaveURL(/\/masuk/);
@@ -80,6 +81,11 @@ test.describe("aksesibilitas, CSP, dan tampilan ponsel", () => {
   test("halaman tutor", async ({ page }) => {
     await masuk(page, "tutor1@contoh.test");
     for (const jalur of HALAMAN_TUTOR) await periksa(page, jalur);
+  });
+
+  test("halaman peserta", async ({ page }) => {
+    await masuk(page, "murid.contoh");
+    for (const jalur of HALAMAN_PESERTA) await periksa(page, jalur);
   });
 });
 

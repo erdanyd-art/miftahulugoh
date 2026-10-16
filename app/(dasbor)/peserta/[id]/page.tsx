@@ -5,10 +5,11 @@ import { Suspense } from "react";
 import { z } from "zod";
 import { PesanStatus } from "@/components/form";
 import { Kartu, Memuat, PESAN_UMUM, TautanKembali } from "@/components/halaman";
+import { AkunPeserta, FormBuatAkunPeserta } from "@/components/master/akun-peserta";
 import { FormPeserta } from "@/components/master/form-master";
 import { Chip } from "@/components/tabel";
 import { simpanPeserta } from "@/lib/aksi-master";
-import { ambilPeserta } from "@/lib/data/master";
+import { ambilAkunPeserta, ambilPeserta } from "@/lib/data/master";
 import { param } from "@/lib/tabel";
 
 export const metadata: Metadata = { title: "Ubah peserta" };
@@ -36,6 +37,7 @@ async function Isi({
   const peserta = await ambilPeserta(id);
   if (!peserta) notFound();
   const pesan = PESAN_UMUM[param(await searchParams, "pesan")];
+  const akun = peserta.user_id ? await ambilAkunPeserta(peserta.user_id) : null;
 
   return (
     <>
@@ -66,6 +68,9 @@ async function Isi({
             </ul>
           )}
           <p className="mt-4 text-xs text-muted-foreground">Anggota kelas diatur dari halaman kelas.</p>
+        </Kartu>
+        <Kartu judul="Akun ujian" className="xl:col-span-3">
+          {akun ? <AkunPeserta pesertaId={peserta.id} akun={akun} /> : <FormBuatAkunPeserta pesertaId={peserta.id} />}
         </Kartu>
       </div>
     </>

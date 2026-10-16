@@ -5,7 +5,7 @@ import { TabelSesi } from "@/components/absensi/tabel-sesi";
 import { KolomIsian, KolomPilihan } from "@/components/form";
 import { Kartu, KepalaHalaman, Memuat } from "@/components/halaman";
 import { FormFilter } from "@/components/tabel";
-import { penggunaWajib } from "@/lib/auth";
+import { penggunaStaf } from "@/lib/auth";
 import { daftarSesi, jadwalHariIni } from "@/lib/data/absensi";
 import { param, type ParamUrl } from "@/lib/tabel";
 import { bulanValid } from "@/lib/waktu";
@@ -24,7 +24,7 @@ export default function HalamanAbsensi({ searchParams }: PageProps<"/absensi">) 
 }
 
 async function Isi({ searchParams }: { searchParams: Promise<ParamUrl> }) {
-  const pengguna = await penggunaWajib();
+  const pengguna = await penggunaStaf();
   const admin = pengguna.peran === "admin";
   const sp = await searchParams;
   const { jadwal, waktu } = await jadwalHariIni();

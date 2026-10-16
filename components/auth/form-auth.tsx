@@ -45,7 +45,15 @@ export function FormMasuk() {
   return (
     <form action={aksi} className="flex flex-col gap-4">
       <PesanStatus galat={status?.galat} />
-      <KolomIsian label="Email" name="email" type="email" autoComplete="email" defaultValue={status?.email} required />
+      <KolomIsian
+        label="Email atau username"
+        name="email"
+        type="text"
+        autoCapitalize="none"
+        autoComplete="username"
+        defaultValue={status?.email}
+        required
+      />
       <KolomSandi label="Kata sandi" name="kataSandi" autoComplete="current-password" required />
       <Link href="/lupa-sandi" className={`${kelasTautan} w-fit`}>
         Lupa kata sandi?

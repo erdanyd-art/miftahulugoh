@@ -4,7 +4,7 @@ import { keluar } from "@/lib/aksi-auth";
 import type { Peran } from "@/lib/nav";
 import { MobileNav } from "./mobile-nav";
 
-const labelPeran: Record<Peran, string> = { admin: "Admin", tutor: "Tutor" };
+const labelPeran: Record<Peran, string> = { admin: "Admin", tutor: "Tutor", peserta: "Peserta" };
 
 export function Header({ peran, nama }: { peran: Peran; nama: string }) {
   const inisial = nama

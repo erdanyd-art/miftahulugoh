@@ -70,6 +70,7 @@ Struktur database tidak perlu dicadangkan: ada di `supabase/migrations/`.
 - **Memasukkan banyak siswa sekaligus:** menu **Peserta → Impor CSV**. Unduh templat, isi di Excel/Google Sheets, simpan sebagai CSV, unggah, periksa pratinjau, lalu impor. Berkas CSV berisi data siswa: jangan disimpan di repositori.
 - **Menambah tutor/admin:** menu **Pengguna → Tambah pengguna**. Pengguna menerima email undangan (dari erdanyd@gmail.com, cek Spam) dan membuat kata sandi sendiri.
 - **Pengguna lupa kata sandi:** pengguna klik **Lupa kata sandi?** di halaman masuk, atau admin membuka pengguna lalu **Kirim tautan buat kata sandi**.
+- **Akun ujian peserta (Fase 2):** **Peserta → (nama) → Akun ujian**, isi username (huruf kecil/angka/titik), **Buat akun**. Catat username dan kata sandi awal yang tampil (hanya sekali) lalu berikan ke peserta; peserta wajib menggantinya saat masuk. Peserta masuk di halaman yang sama dengan staf, mengetik username (bukan email). Peserta lupa sandi: **Atur ulang kata sandi** di kartu yang sama (peserta tidak punya email). Peserta berhenti: **Nonaktifkan akun**.
 - **Tutor berhenti:** **Pengguna → (nama) → Nonaktifkan akun**. Akses langsung terputus; riwayat absensi dan honor tetap utuh. Jangan menghapus akun di dasbor Supabase.
 - **Mengganti kata sandi sendiri (semua peran):** klik avatar/nama di kanan atas → **Akun saya** → isi kata sandi lama dan baru. Lupa kata sandi lama: **Lupa kata sandi?** di halaman masuk.
 - **Zona waktu lembaga:** menu **Pengaturan**. Zona salah membuat tutor gagal absen.

@@ -8,7 +8,7 @@ import { KolomIsian } from "@/components/form";
 import { Kartu, Memuat, TautanKembali } from "@/components/halaman";
 import { Chip } from "@/components/tabel";
 import { simpanAbsensi } from "@/lib/aksi-absensi";
-import { penggunaWajib } from "@/lib/auth";
+import { penggunaStaf } from "@/lib/auth";
 import { dataFormAbsen, waktuLembaga } from "@/lib/data/absensi";
 import { formatJam, formatRupiah, namaHari } from "@/lib/format";
 import { param } from "@/lib/tabel";
@@ -34,7 +34,7 @@ async function Isi({
   params: Promise<{ jadwalId: string }>;
   searchParams: PageProps<"/absensi/isi/[jadwalId]">["searchParams"];
 }) {
-  const pengguna = await penggunaWajib();
+  const pengguna = await penggunaStaf();
   const admin = pengguna.peran === "admin";
   const { jadwalId } = await params;
   if (!z.guid().safeParse(jadwalId).success) notFound();

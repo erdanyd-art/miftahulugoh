@@ -17,7 +17,11 @@ export type BarisPengguna = {
 export async function daftarPengguna(): Promise<BarisPengguna[]> {
   await wajibPeran("admin");
   const supabase = await buatKlienServer();
-  const { data: profil, error } = await supabase.from("profiles").select("id, nama, peran, aktif, dibuat_pada");
+  // Akun peserta dikelola dari halaman Peserta, bukan Pengguna.
+  const { data: profil, error } = await supabase
+    .from("profiles")
+    .select("id, nama, peran, aktif, dibuat_pada")
+    .neq("peran", "peserta");
   if (error) throw new Error("Gagal memuat pengguna");
 
   // Skala lembaga kecil: satu halaman Auth (maks. 1000 akun) cukup.
@@ -41,6 +45,7 @@ export async function ambilPengguna(id: string): Promise<BarisPengguna | null> {
     .from("profiles")
     .select("id, nama, peran, aktif, dibuat_pada")
     .eq("id", id)
+    .neq("peran", "peserta")
     .maybeSingle();
   if (!p) return null;
 

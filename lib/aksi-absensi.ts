@@ -2,7 +2,7 @@
 
 import { refresh } from "next/cache";
 import { z } from "zod";
-import { penggunaWajib, wajibPeran } from "@/lib/auth";
+import { penggunaStaf, wajibPeran } from "@/lib/auth";
 import { formatRupiah } from "@/lib/format";
 import { pesanGalatAbsensi } from "@/lib/pesan-galat";
 import { buatKlienServer } from "@/lib/supabase/server";
@@ -17,7 +17,7 @@ const skemaSimpan = z.object({
 
 // Honor dan jendela waktu TIDAK dihitung di sini: semuanya oleh fungsi database simpan_absensi().
 export async function simpanAbsensi(jadwalId: string, _: StatusAksi, formData: FormData): Promise<StatusAksi> {
-  await penggunaWajib();
+  await penggunaStaf();
   const hasil = skemaSimpan.safeParse({
     jadwalId,
     tanggal: formData.get("tanggal"),

@@ -7,7 +7,7 @@ import { FormKoreksiHonor, TombolKunci } from "@/components/absensi/form-absensi
 import { Kartu, Memuat, TautanKembali } from "@/components/halaman";
 import { Chip } from "@/components/tabel";
 import { koreksiHonor } from "@/lib/aksi-absensi";
-import { penggunaWajib } from "@/lib/auth";
+import { penggunaStaf } from "@/lib/auth";
 import { ambilSesi, waktuLembaga } from "@/lib/data/absensi";
 import { formatJam, formatRupiah } from "@/lib/format";
 import { formatTanggal } from "@/lib/waktu";
@@ -26,7 +26,7 @@ export default function HalamanSesi({ params }: PageProps<"/absensi/sesi/[id]">)
 }
 
 async function Isi({ params }: { params: Promise<{ id: string }> }) {
-  const pengguna = await penggunaWajib();
+  const pengguna = await penggunaStaf();
   const admin = pengguna.peran === "admin";
   const { id } = await params;
   if (!z.guid().safeParse(id).success) notFound();

@@ -1,6 +1,6 @@
 # PRD — Dashboard Lembaga Miftah al-Lughah
 
-Versi: 0.7 (draft untuk disetujui) · Tanggal: 2026-10-15
+Versi: 0.8 (draft untuk disetujui) · Tanggal: 2026-10-15
 Penulis: Erdany (dengan bantuan Claude sebagai arsitek)
 
 > Dokumen ini adalah sumber kebenaran kebutuhan produk. Claude Code wajib membacanya sebelum mengerjakan tugas apa pun, dan tidak boleh menambah fitur di luar bagian yang ditandai "Fase 1".
@@ -192,6 +192,7 @@ Prinsip:
 
 ## Riwayat perubahan
 
+- v0.8: Sprint 9 — akun peserta (username + sandi awal acak, wajib ganti saat masuk pertama, reset oleh admin). UAT Fase 1 selesai (2026-10-16).
 - v0.7: rencana ujian CBT dengan soal audio dan pengumuman nilai (D14).
 - v0.6: pembayaran Lunas otomatis masuk kas (D13, menggantikan D4).
 - v0.5: impor peserta dari CSV (D10); fungsi database `impor_peserta`. Keputusan Fase 2: ujian CBT setelah Sprint 8 (D2), login peserta username + ganti sandi pertama (D11), tahap pertama ujian saja (D12).

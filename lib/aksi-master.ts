@@ -3,7 +3,7 @@
 import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { penggunaWajib, wajibPeran } from "@/lib/auth";
+import { penggunaStaf, wajibPeran } from "@/lib/auth";
 import { buatKlienServer } from "@/lib/supabase/server";
 import { skemaJadwal, skemaKelas, skemaMeet, skemaPeserta } from "@/lib/validasi/master";
 
@@ -148,7 +148,7 @@ export async function simpanJadwal(id: string | null, _: StatusAksi, formData: F
 
 // Tutor (jadwal miliknya) dan admin. Penulisan lewat fungsi database ubah_meet(), bukan UPDATE langsung.
 export async function ubahMeet(jadwalId: string, _: StatusAksi, formData: FormData): Promise<StatusAksi> {
-  await penggunaWajib();
+  await penggunaStaf();
   if (!idValid(jadwalId)) return { galat: "Jadwal tidak ditemukan." };
   const hasil = skemaMeet.safeParse(formData.get("meetUrl") ?? "");
   if (!hasil.success) return { galat: "Tautan Meet harus diawali https:// (atau kosongkan)." };

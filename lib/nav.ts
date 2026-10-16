@@ -10,12 +10,13 @@ import {
   School,
   Settings,
   UserCog,
+  UserRound,
   Users,
   type LucideIcon,
 } from "lucide-react";
 
 export type NavItem = { label: string; href: string; icon: LucideIcon };
-export type Peran = "admin" | "tutor";
+export type Peran = "admin" | "tutor" | "peserta";
 
 // Menu per peran (CLAUDE.md). Ini hanya tampilan: hak akses ditegakkan di database dan server.
 export const menuAdmin: NavItem[] = [
@@ -40,4 +41,10 @@ export const menuTutor: NavItem[] = [
   { label: "Honor Saya", href: "/honor-saya", icon: HandCoins },
 ];
 
-export const menuPerPeran: Record<Peran, NavItem[]> = { admin: menuAdmin, tutor: menuTutor };
+// Peserta (Fase 2): ujian ditambahkan di Sprint 11.
+export const menuPeserta: NavItem[] = [
+  { label: "Beranda", href: "/", icon: LayoutDashboard },
+  { label: "Akun saya", href: "/akun", icon: UserRound },
+];
+
+export const menuPerPeran: Record<Peran, NavItem[]> = { admin: menuAdmin, tutor: menuTutor, peserta: menuPeserta };

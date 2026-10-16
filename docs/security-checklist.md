@@ -39,6 +39,8 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 | B10 | Tidak ada tabel baru tanpa RLS, kebijakan, dan tes pada PR yang sama | semua | Lulus — migrasi 0006 tanpa tabel baru; tes struktural `00_struktur_rls` gagal otomatis bila ada tabel tanpa RLS/kebijakan |
 | B11 | Akses tanpa login (anon) ditolak di semua tabel dan fungsi (diuji) | 1 | Lulus (Supabase lokal) — tes anon + tes struktural fungsi |
 | B12 | Percobaan eskalasi (tutor mengubah perannya sendiri, mengubah honor jadwal, menulis kas) gagal (diuji) | 1 | Lulus (Supabase lokal) — ubah peran, honor jadwal, tulis kas gagal |
+| B13 | (Fase 2) Peserta hanya membaca profil dan data pesertanya sendiri; tidak bisa memakai fungsi staf; peran peserta tidak bisa diubah ke/dari staf (diuji) | 9 | Lulus (Sprint 9) — `06_akun_peserta.test.sql` (22 tes); celah `simpan_absensi`/`ubah_meet` ("bukan tutor = admin") ditutup sebelum peran ditambahkan; E2E `akun-peserta.spec.ts` |
+| B14 | (Fase 2) Kata sandi awal peserta acak per akun, tampil sekali, tidak disimpan/dicatat; wajib diganti saat masuk pertama | 9 | Lulus (Sprint 9) — `lib/aksi-akun-peserta.ts` (`crypto.randomInt`), `/ganti-sandi` dipaksa dari layout. Batasan: peserta yang paham API bisa memanggil `selesai_ganti_sandi()` tanpa mengganti sandi; dampaknya hanya pada akunnya sendiri |
 
 ## C. Rahasia dan konfigurasi
 
