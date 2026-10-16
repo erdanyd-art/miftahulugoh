@@ -96,6 +96,14 @@ async function Isi({
                 Soal terkunci karena sudah ada peserta yang mulai. Kunci jawaban dan bobot tetap bisa dikoreksi.
               </p>
             )}
+            {ujian.terbit && (
+              <Link
+                href={`/ujian/${ujian.id}/hasil`}
+                className="w-fit rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-accent-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              >
+                Hasil &amp; periksa isian
+              </Link>
+            )}
             <TombolTerbit id={ujian.id} terbit={ujian.terbit} />
             <hr />
             <TombolHapusUjian id={ujian.id} />

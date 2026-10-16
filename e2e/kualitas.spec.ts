@@ -28,7 +28,7 @@ const HALAMAN_ADMIN = [
   "/ujian/baru",
   "/akun",
 ];
-const HALAMAN_TUTOR = ["/", "/jadwal-saya", "/kelas-saya", "/absensi", "/honor-saya", "/akun"];
+const HALAMAN_TUTOR = ["/", "/jadwal-saya", "/kelas-saya", "/absensi", "/honor-saya", "/periksa-ujian", "/akun"];
 const HALAMAN_PUBLIK = ["/", "/masuk", "/lupa-sandi"];
 const HALAMAN_PESERTA = ["/", "/akun"];
 

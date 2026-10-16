@@ -2,6 +2,7 @@ import {
   BookOpen,
   CalendarDays,
   ClipboardCheck,
+  FileCheck,
   HandCoins,
   History,
   Landmark,
@@ -41,6 +42,7 @@ export const menuTutor: NavItem[] = [
   { label: "Kelas Saya", href: "/kelas-saya", icon: BookOpen },
   { label: "Absensi", href: "/absensi", icon: ClipboardCheck },
   { label: "Honor Saya", href: "/honor-saya", icon: HandCoins },
+  { label: "Periksa Ujian", href: "/periksa-ujian", icon: FileCheck },
 ];
 
 // Peserta (Fase 2): ujian ditambahkan di Sprint 11.

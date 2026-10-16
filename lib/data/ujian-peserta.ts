@@ -34,14 +34,16 @@ function statusDari(u: BarisUjianSaya): StatusUjianSaya {
 export async function daftarUjianSaya() {
   await wajibPeran("peserta");
   const supabase = await buatKlienServer();
-  const [{ data, error }, { data: atur }] = await Promise.all([
+  const [{ data, error }, { data: atur }, { data: nilai }] = await Promise.all([
     supabase.rpc("ujian_saya"),
     supabase.from("pengaturan").select("zona_waktu").single(),
+    supabase.rpc("nilai_saya"), // hanya ujian yang sudah diumumkan admin
   ]);
   if (error) throw new Error("Gagal memuat ujian");
+  const nilaiPer = new Map((nilai ?? []).map((n) => [n.ujian_id, n]));
   return {
     zona: atur?.zona_waktu ?? "Asia/Makassar",
-    ujian: (data as BarisUjianSaya[]).map((u) => ({ ...u, status: statusDari(u) })),
+    ujian: (data as BarisUjianSaya[]).map((u) => ({ ...u, status: statusDari(u), nilai: nilaiPer.get(u.id) ?? null })),
   };
 }
 

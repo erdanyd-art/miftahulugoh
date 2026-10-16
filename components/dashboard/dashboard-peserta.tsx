@@ -42,6 +42,7 @@ export async function DashboardPeserta({ nama }: { nama: string }) {
                         {u.judul}
                       </span>
                       <Chip warna={s.warna}>{s.label}</Chip>
+                      {u.nilai && <Chip warna="hijau">Nilai {String(u.nilai.nilai ?? 0).replace(".", ",")}</Chip>}
                     </div>
                     <span className="text-sm text-muted-foreground">
                       {u.kelas} · {formatWaktu(u.mulai, zona)} – {formatWaktu(u.selesai, zona)} · {u.durasi_menit} menit
