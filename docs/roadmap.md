@@ -1,8 +1,8 @@
 # docs/roadmap.md — Roadmap Implementasi Fase 1
 
-Versi: 0.1 · Tanggal: 2026-10-14 · Acuan: PRD.md v0.4, docs/schema.md, CLAUDE.md, docs/security-checklist.md
+Versi: 0.1 · Tanggal: 2026-10-14 · Acuan: PRD.md v0.4 (Sprint 2b: v0.10), docs/schema.md, CLAUDE.md, docs/security-checklist.md
 
-Delapan sprint kecil (Sprint 0–8). Satu sprint = satu cabang Git = satu Pull Request. Jangan mulai sprint berikutnya sebelum sprint sebelumnya memenuhi "Kriteria selesai" dan disetujui.
+Delapan sprint kecil (Sprint 0–8), ditambah Sprint 2b untuk landing page. Satu sprint = satu cabang Git = satu Pull Request. Jangan mulai sprint berikutnya sebelum sprint sebelumnya memenuhi "Kriteria selesai" dan disetujui.
 
 ## Cara memakai dengan Claude Code
 
@@ -15,6 +15,8 @@ docs/schema.md
 docs/roadmap.md             (berkas ini)
 docs/security-checklist.md
 docs/uji_rls.sql            (bahan tes RLS; diubah menjadi pgTAP di Sprint 1)
+docs/landing-page.md        (spesifikasi landing page; Sprint 2b)
+docs/landing-reference.html (acuan visual landing page; buka di browser)
 ```
 
 **Prompt pembuka sesi (tempel di Claude Code sekali di awal):**
@@ -91,6 +93,25 @@ docs/uji_rls.sql            (bahan tes RLS; diubah menjadi pgTAP di Sprint 1)
 **Kriteria selesai:** admin dan tutor seed bisa masuk dan melihat menu masing-masing; tutor yang mengetik URL halaman admin ditolak; pengguna nonaktif tidak bisa masuk; E2E dasar (login tiga kondisi) lulus.
 
 **Prompt:** "Kerjakan Sprint 2 dari docs/roadmap.md. Peran harus berasal dari database. Jangan mengandalkan menyembunyikan menu sebagai pengaman."
+
+---
+
+## Sprint 2b — Landing page publik
+
+**Tujuan:** halaman `/` yang sesuai desain yang sudah disetujui, dengan tombol Daftar (WhatsApp) dan Masuk (`/masuk`). Tidak menyentuh database. Bisa dikerjakan setelah Sprint 2 (rute `/masuk` sudah ada); tidak menghalangi sprint lain.
+
+**Tugas**
+1. Baca `docs/landing-page.md`; buka `docs/landing-reference.html` di browser sebagai acuan visual. Buat rencana komponen dulu.
+2. Token warna, radius, dan font sebagai tema (bukan hex di komponen); font lewat `next/font` (Bricolage Grotesque dan Amiri), di-*host* sendiri.
+3. Komponen di `components/landing/` (Server Component, tanpa JavaScript klien); ilustrasi SVG di `components/landing/art/`; teks sesuai spesifikasi.
+4. `lib/site-content.ts` untuk kontak, jadwal, dan biaya: kosong → placeholder bergaris putus-putus; terisi → nilai asli dan tautan `wa.me`.
+5. Metadata SEO, `robots.ts`, `sitemap.ts` (hanya `/`); `/masuk` dan halaman dashboard `noindex`.
+6. Tangkapan layar Playwright di 360, 390, 768, 1024, dan 1440 px; bandingkan dengan acuan dan laporkan perbedaan.
+7. Ukur Lighthouse mobile dan kontras warna.
+
+**Kriteria selesai:** lihat bagian 9 `docs/landing-page.md`; butir "G. Halaman publik" di `docs/security-checklist.md` terisi dengan bukti; lint, typecheck, dan tes hijau.
+
+**Prompt:** "Kerjakan Sprint 2b dari docs/roadmap.md. Baca docs/landing-page.md dan buka docs/landing-reference.html sebagai acuan visual. Buat rencana dulu dan tunggu persetujuan saya. Bandingkan hasil dengan acuan lewat tangkapan layar di 360, 390, 768, 1024, dan 1440 px. Jangan mengarang nomor kontak, harga, atau testimoni; biarkan placeholder."
 
 ---
 
