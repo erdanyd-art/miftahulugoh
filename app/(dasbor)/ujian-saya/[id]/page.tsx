@@ -81,11 +81,20 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
           {ujian.status === "terjadwal" && (
             <p className="text-sm">Ujian belum dibuka. Kembali lagi pada {formatWaktu(ujian.mulai, zona)}.</p>
           )}
-          {ujian.status === "selesai" && (
-            <p className="rounded-2xl bg-status-lunas p-4 text-sm text-status-lunas-foreground">
-              Ujian selesai dan jawaban Anda sudah tersimpan. Nilai akan tampil setelah diumumkan admin.
-            </p>
-          )}
+          {ujian.status === "selesai" &&
+            (ujian.nilai ? (
+              <div className="flex flex-col items-start gap-1 rounded-2xl bg-pastel-kuning p-5">
+                <span className="text-sm text-pastel-muted">Nilai Anda</span>
+                <span className="font-judul text-5xl">{String(ujian.nilai.nilai ?? 0).replace(".", ",")}</span>
+                <span className="text-sm text-pastel-muted">
+                  Skor {ujian.nilai.skor} dari {ujian.nilai.total_bobot}
+                </span>
+              </div>
+            ) : (
+              <p className="rounded-2xl bg-status-lunas p-4 text-sm text-status-lunas-foreground">
+                Ujian selesai dan jawaban Anda sudah tersimpan. Nilai akan tampil setelah diumumkan admin.
+              </p>
+            ))}
           {ujian.status === "terlewat" && <p className="text-sm">Ujian sudah ditutup dan Anda tidak mengerjakannya.</p>}
         </div>
       </Kartu>
