@@ -88,6 +88,14 @@ async function Isi({
                 ? "Ujian sudah terbit. Peserta kelas ini bisa mengerjakannya selama ujian dibuka."
                 : "Masih draf: peserta belum melihat ujian ini. Terbitkan setelah soal lengkap."}
             </p>
+            <p className="text-sm">
+              Peserta mulai: <strong>{ujian.percobaan.mulai}</strong> · selesai: <strong>{ujian.percobaan.selesai}</strong>
+            </p>
+            {ujian.percobaan.mulai > 0 && (
+              <p className="rounded-xl bg-status-menunggu px-3 py-2 text-xs text-status-menunggu-foreground">
+                Soal terkunci karena sudah ada peserta yang mulai. Kunci jawaban dan bobot tetap bisa dikoreksi.
+              </p>
+            )}
             <TombolTerbit id={ujian.id} terbit={ujian.terbit} />
             <hr />
             <TombolHapusUjian id={ujian.id} />

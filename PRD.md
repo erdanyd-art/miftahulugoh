@@ -1,6 +1,6 @@
 # PRD — Dashboard Lembaga Miftah al-Lughah
 
-Versi: 0.10 (draft untuk disetujui) · Tanggal: 2026-10-16
+Versi: 0.11 (draft untuk disetujui) · Tanggal: 2026-10-16
 Penulis: Erdany (dengan bantuan Claude sebagai arsitek)
 
 > Dokumen ini adalah sumber kebenaran kebutuhan produk. Claude Code wajib membacanya sebelum mengerjakan tugas apa pun, dan tidak boleh menambah fitur di luar bagian yang ditandai "Fase 1".
@@ -200,6 +200,7 @@ Prinsip:
 
 ## Riwayat perubahan
 
+- v0.11: Sprint 11 — peserta mengerjakan ujian (mulai dalam jendela, timer server, simpan otomatis, satu percobaan, selesai otomatis saat waktu habis; toleransi jaringan 15 detik untuk jawaban terakhir).
 - v0.10: Sprint 2b — bagian 5.8 halaman publik (landing page) beserta `docs/landing-page.md` dan `docs/landing-reference.html`.
 - v0.9: Sprint 10 — admin menyusun ujian (soal pilihan ganda/isian, bobot, audio di Storage privat, terbit/draf).
 - v0.8: Sprint 9 — akun peserta (username + sandi awal acak, wajib ganti saat masuk pertama, reset oleh admin). UAT Fase 1 selesai (2026-10-16).

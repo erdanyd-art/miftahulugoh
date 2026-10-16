@@ -32,7 +32,7 @@ export async function ambilUjian(id: string) {
     supabase
       .from("ujian")
       .select(
-        "id, judul, keterangan, kelas_id, mulai, selesai, durasi_menit, terbit, kelas(nama), soal(id, urutan, jenis, pertanyaan, opsi, audio_id, bobot, dibuat_pada, soal_kunci(jawaban_benar, kunci_isian)), audio_ujian(id, judul, path, ukuran, dibuat_pada)",
+        "id, judul, keterangan, kelas_id, mulai, selesai, durasi_menit, terbit, kelas(nama), soal(id, urutan, jenis, pertanyaan, opsi, audio_id, bobot, dibuat_pada, soal_kunci(jawaban_benar, kunci_isian)), audio_ujian(id, judul, path, ukuran, dibuat_pada), percobaan_ujian(selesai_pada, batas_selesai)",
       )
       .eq("id", id)
       .maybeSingle(),
@@ -49,9 +49,16 @@ export async function ambilUjian(id: string) {
     .sort((a, b) => a.urutan - b.urutan || a.dibuat_pada.localeCompare(b.dibuat_pada))
     .map((s) => ({ ...s, kunci: s.soal_kunci }));
 
+  const kini = Date.now();
+  const percobaan = {
+    mulai: ujian.percobaan_ujian.length,
+    selesai: ujian.percobaan_ujian.filter((p) => p.selesai_pada || Date.parse(p.batas_selesai) <= kini).length,
+  };
+
   return {
     ...ujian,
     zona,
+    percobaan,
     soal,
     audio: audio.map((a) => ({
       ...a,
