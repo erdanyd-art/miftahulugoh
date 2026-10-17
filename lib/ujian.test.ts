@@ -12,7 +12,14 @@ describe("waktu ujian di zona lembaga", () => {
 });
 
 describe("validasi ujian dan soal", () => {
-  const ujian = { judul: "UTS", keterangan: "", kelasId: "20000000-0000-0000-0000-000000000001", durasiMenit: "60" };
+  const ujian = {
+    judul: "UTS",
+    keterangan: "",
+    kelasId: "20000000-0000-0000-0000-000000000001",
+    durasiMenit: "60",
+    acakSoal: false,
+    acakOpsi: true,
+  };
   it("selesai harus setelah mulai", () => {
     expect(skemaUjian.safeParse({ ...ujian, mulai: "2026-11-01T08:00", selesai: "2026-11-01T07:00" }).success).toBe(false);
     expect(skemaUjian.safeParse({ ...ujian, mulai: "2026-11-01T08:00", selesai: "2026-11-01T09:00" }).success).toBe(true);

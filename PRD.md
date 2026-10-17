@@ -1,6 +1,6 @@
 # PRD — Dashboard Lembaga Miftah al-Lughah
 
-Versi: 0.14 (draft untuk disetujui) · Tanggal: 2026-10-16
+Versi: 0.15 (draft untuk disetujui) · Tanggal: 2026-10-16
 Penulis: Erdany (dengan bantuan Claude sebagai arsitek)
 
 > Dokumen ini adalah sumber kebenaran kebutuhan produk. Claude Code wajib membacanya sebelum mengerjakan tugas apa pun, dan tidak boleh menambah fitur di luar bagian yang ditandai "Fase 1".
@@ -170,6 +170,7 @@ Prinsip:
 | D13 | Pembayaran peserta berstatus **Lunas otomatis masuk kas** (kategori "Pembayaran Peserta", disinkron trigger database; tidak bisa dicatat/diubah manual di Kas) | Diputuskan Erdany, 2026-10-15 |
 | D14 | Ujian CBT: soal boleh berisi **audio** (satu audio dapat dipakai beberapa soal), putar bebas selama ujian, **nilai tampil setelah diumumkan admin**, belum ada jawaban rekaman suara | Diputuskan Erdany, 2026-10-15 |
 | D15 | Admin dapat **mengimpor soal ujian dari CSV** (pratinjau dulu, atomik, aturan sama dengan form soal) | Diminta Erdany, 2026-10-16 |
+| D16 | Sprint 14: **duplikat ujian** dan **acak urutan soal/pilihan** per ujian (di luar PRD awal, disetujui) | Disetujui Erdany, 2026-10-17 |
 | D12 | Fase 2 tahap pertama: **ujian saja** (daftar ujian, mengerjakan, nilai). Portal peserta lain (jadwal, Meet, riwayat pembayaran; bagian 6.1) menyusul | Diputuskan Erdany, 2026-10-15 |
 
 ## 10. Pertanyaan yang masih terbuka
@@ -201,6 +202,7 @@ Prinsip:
 
 ## Riwayat perubahan
 
+- v0.15: Sprint 14 (D16) — duplikat ujian (soal, kunci, bobot, audio menjadi draf baru) dan opsi acak urutan soal/pilihan per peserta (deterministik per percobaan; jawaban disimpan dengan indeks asli).
 - v0.14: impor soal ujian dari CSV (D15): templat, pratinjau per baris, atomik, kolom pg/isian/kunci/acuan/bobot/audio.
 - v0.13: Sprint 13 — portal peserta (6.1): jadwal kelas yang diikuti dengan tombol Google Meet (kelas hari ini di Beranda) dan riwayat pembayaran sendiri (baca saja).
 - v0.12: Sprint 12 — penilaian: pilihan ganda otomatis dari kunci (koreksi kunci langsung berlaku), isian dinilai admin/tutor pengampu (0..bobot, diaudit), nilai = skor/total bobot × 100, pengumuman admin setelah ujian ditutup, peserta melihat nilai sendiri tanpa kunci per soal, ekspor CSV. Fase 2 tahap pertama (D12) selesai.

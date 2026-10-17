@@ -407,14 +407,14 @@ isOneToOne: true
                   ]
                 },"ujian": {
                   Row: {
-                    "dibuat_pada": string,"diubah_pada": string,"diumumkan_pada": string | null,"durasi_menit": number,"id": string,"judul": string,"kelas_id": string,"keterangan": string | null,"mulai": string,"selesai": string,"terbit": boolean
+                    "acak_opsi": boolean,"acak_soal": boolean,"dibuat_pada": string,"diubah_pada": string,"diumumkan_pada": string | null,"durasi_menit": number,"id": string,"judul": string,"kelas_id": string,"keterangan": string | null,"mulai": string,"selesai": string,"terbit": boolean
                   }
                   ComputedFields: never
                   Insert: {
-                    "dibuat_pada"?: string,"diubah_pada"?: string,"diumumkan_pada"?: string | null,"durasi_menit": number,"id"?: string,"judul": string,"kelas_id": string,"keterangan"?: string | null,"mulai": string,"selesai": string,"terbit"?: boolean
+                    "acak_opsi"?: boolean,"acak_soal"?: boolean,"dibuat_pada"?: string,"diubah_pada"?: string,"diumumkan_pada"?: string | null,"durasi_menit": number,"id"?: string,"judul": string,"kelas_id": string,"keterangan"?: string | null,"mulai": string,"selesai": string,"terbit"?: boolean
                   }
                   Update: {
-                    "dibuat_pada"?: string,"diubah_pada"?: string,"diumumkan_pada"?: string | null,"durasi_menit"?: number,"id"?: string,"judul"?: string,"kelas_id"?: string,"keterangan"?: string | null,"mulai"?: string,"selesai"?: string,"terbit"?: boolean
+                    "acak_opsi"?: boolean,"acak_soal"?: boolean,"dibuat_pada"?: string,"diubah_pada"?: string,"diumumkan_pada"?: string | null,"durasi_menit"?: number,"id"?: string,"judul"?: string,"kelas_id"?: string,"keterangan"?: string | null,"mulai"?: string,"selesai"?: string,"terbit"?: boolean
                   }
                   Relationships: [
                     {
@@ -527,7 +527,7 @@ isOneToOne: false
                            },
 "ujian_saya":
 { Args: Record<PropertyKey, never>; Returns: {
-              "batas_selesai": string,"durasi_menit": number,"id": string,"judul": string,"jumlah_soal": number,"kelas": string,"keterangan": string,"mulai": string,"percobaan_id": string,"sekarang": string,"selesai": string,"selesai_pada": string
+              "acak_opsi": boolean,"acak_soal": boolean,"batas_selesai": string,"durasi_menit": number,"id": string,"judul": string,"jumlah_soal": number,"kelas": string,"keterangan": string,"mulai": string,"percobaan_id": string,"sekarang": string,"selesai": string,"selesai_pada": string
             }[]
                            }
           }
