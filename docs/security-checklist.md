@@ -46,6 +46,7 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 | B17 | (Fase 2) Waktu ujian ditegakkan database: mulai hanya dalam jendela, batas = least(mulai + durasi, tutup), jawaban setelah selesai/batas (+15 dtk) ditolak, satu percobaan per peserta; soal/audio hanya terbaca selama percobaan aktif; peserta lain/kelas lain tidak bisa membaca atau menulis (diuji) | 11 | Lulus (Sprint 11) — `08_mengerjakan_ujian.test.sql` (33 tes); E2E `mengerjakan-ujian.spec.ts` termasuk waktu habis otomatis |
 | B18 | (Fase 2) Penilaian: hanya admin/tutor pengampu membaca hasil & menilai isian (0..bobot, setelah peserta selesai, diaudit); peserta tidak bisa menulis skor; nilai terlihat peserta hanya miliknya dan hanya setelah diumumkan (pengumuman hanya setelah ujian ditutup); kunci per soal tidak ditampilkan ke peserta (diuji) | 12 | Lulus (Sprint 12) — `09_penilaian.test.sql` (25 tes); E2E `penilaian.spec.ts` |
 | B19 | (Fase 2) Portal peserta: jadwal & pembayaran hanya milik peserta itu (aktif), tanpa pembayaran terhapus; tabel `jadwal`/`pembayaran` tetap tertutup; tautan Meet dibuka `rel="noopener noreferrer"` (diuji) | 13 | Lulus (Sprint 13) — `10_portal_peserta.test.sql` (10 tes); E2E `portal-peserta.spec.ts` |
+| B20 | Lembar jawaban per peserta (berisi kunci) hanya untuk admin/tutor pengampu; tutor lain, peserta, dan percobaan tak dikenal ditolak tanpa bocoran (diuji) | 14 | Lulus — `13_jawaban_percobaan.test.sql` (7 tes); E2E `penilaian.spec.ts` |
 
 ## C. Rahasia dan konfigurasi
 

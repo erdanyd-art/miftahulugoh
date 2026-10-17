@@ -120,7 +120,25 @@ test("penilaian: PG otomatis, tutor pengampu menilai isian, admin mengumumkan, p
   await tutor.getByRole("button", { name: "Simpan" }).click();
   await expect(tutor.getByRole("status").filter({ hasText: "Tersimpan." })).toBeVisible();
   await expect(tutor.getByRole("listitem").filter({ hasText: "Peserta Lima" }).first()).toContainText("100");
+
+  // Lembar jawaban satu peserta (tutor pengampu)
+  await tutor.getByRole("link", { name: "Peserta Lima" }).click();
+  await expect(tutor.getByRole("heading", { name: "Jawaban Peserta Lima" })).toBeVisible();
+  const soalPg = tutor.getByRole("listitem").filter({ hasText: "Pilih: book artinya?" });
+  await expect(soalPg).toContainText("Benar");
+  await expect(soalPg.getByRole("listitem").filter({ hasText: "Buku" })).toContainText("← dipilih");
+  await expect(tutor.getByRole("listitem").filter({ hasText: "Terjemahkan: school" }).first()).toContainText("Skor 3/3");
+  await expect(tutor.getByText("skor sementara 5 dari 5")).toBeVisible();
+  const urlJawaban = new URL(tutor.url()).pathname.split("/").pop();
   await ctxT.close();
+
+  // Tutor lain tidak bisa membuka lembar jawaban itu
+  const ctxL = await browser.newContext();
+  const lain = await ctxL.newPage();
+  await masuk(lain, "tutor1@contoh.test");
+  await lain.goto(`/periksa-ujian/${halamanAdmin.split("/").pop()}/${urlJawaban}`);
+  await expect(lain.getByRole("heading", { name: "Jawaban Peserta Lima" })).toHaveCount(0);
+  await ctxL.close();
 
   // ===== admin menutup ujian, mengumumkan; peserta melihat nilai =====
   await page.goto(halamanAdmin);
@@ -135,6 +153,10 @@ test("penilaian: PG otomatis, tutor pengampu menilai isian, admin mengumumkan, p
   page.once("dialog", (d) => d.accept());
   await page.getByRole("button", { name: "Umumkan nilai" }).click();
   await expect(page.getByRole("status").filter({ hasText: "Nilai diumumkan" })).toBeVisible();
+
+  await page.goto(`${halamanAdmin}/hasil/${urlJawaban}`);
+  await expect(page.getByRole("heading", { name: "Jawaban Peserta Lima" })).toBeVisible();
+  await expect(page.getByText("(kunci jawaban)").locator("..")).toContainText("Buku");
 
   const csv = await (await page.request.get(`/ekspor/nilai?ujian=${halamanAdmin.split("/").pop()}`)).text();
   expect(csv).toContain("Peserta Lima,Selesai,2,3,0,5,100");

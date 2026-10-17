@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Kartu } from "@/components/halaman";
 import { Chip } from "@/components/tabel";
 import { FormSkorIsian, TombolUmumkan } from "@/components/ujian/form-penilaian";
@@ -30,7 +31,7 @@ export function HasilUjian({ data, admin }: { data: DataHasil; admin: boolean })
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         <Kartu judul="Nilai peserta" className="xl:col-span-2">
           <p className="mb-3 text-sm text-muted-foreground">
-            {mengerjakan.length} dari {hasil.length} peserta mengerjakan. Nilai = skor / total bobot ({hasil[0]?.total_bobot ?? 0})
+            {mengerjakan.length} dari {hasil.length} peserta mengerjakan. Klik nama peserta untuk melihat jawabannya. Nilai = skor / total bobot ({hasil[0]?.total_bobot ?? 0})
             × 100. Pilihan ganda dinilai otomatis.
           </p>
           <div className="hidden grid-cols-[3fr_1fr_1fr_1fr_1fr] gap-3 border-b pb-2 text-xs text-muted-foreground md:grid">
@@ -46,7 +47,17 @@ export function HasilUjian({ data, admin }: { data: DataHasil; admin: boolean })
                 key={h.peserta_id}
                 className="grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 py-3 text-sm md:grid-cols-[3fr_1fr_1fr_1fr_1fr] md:items-center"
               >
-                <span className="font-medium">{h.nama}</span>
+                {h.percobaan_id ? (
+                  <Link
+                    href={`${admin ? `/ujian/${info.id}/hasil` : `/periksa-ujian/${info.id}`}/${h.percobaan_id}`}
+                    className="font-medium text-accent hover:underline"
+                    title="Lihat jawaban"
+                  >
+                    {h.nama}
+                  </Link>
+                ) : (
+                  <span className="font-medium">{h.nama}</span>
+                )}
                 <span className="col-start-1 row-start-2 text-xs text-muted-foreground md:col-start-auto md:row-start-auto md:text-sm md:text-foreground">
                   <span className="md:hidden">PG </span>
                   {h.percobaan_id ? h.skor_pg : "—"}
