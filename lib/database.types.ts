@@ -461,6 +461,11 @@ isOneToOne: false
               "hari": number,"jadwal_id": string,"jam_mulai": string,"jam_selesai": string,"kelas": string,"meet_url": string,"tutor": string
             }[]
                            },
+"jawaban_percobaan":
+{ Args: { "p_percobaan_id": string }; Returns: {
+              "acuan": string,"benar": boolean,"bobot": number,"isian": string,"jawaban_benar": number,"jawaban_id": string,"jenis": Database["public"]['Enums']["jenis_soal"],"mulai_pada": string,"nomor": number,"opsi": (string)[],"pertanyaan": string,"peserta": string,"pilihan": number,"selesai_pada": string,"skor": number,"skor_isian": number,"soal_id": string,"ujian_id": string
+            }[]
+                           },
 "koreksi_honor":
 { Args: { "p_honor": number,"p_sesi_id": string }; Returns: undefined
                            },

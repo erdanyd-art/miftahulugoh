@@ -50,3 +50,15 @@ export async function ambilHasil(ujianId: string) {
 }
 
 export type DataHasil = NonNullable<Awaited<ReturnType<typeof ambilHasil>>>;
+
+// Semua jawaban satu peserta (admin / tutor pengampu; diperiksa fungsi database).
+export async function ambilJawabanPercobaan(percobaanId: string) {
+  await penggunaStaf();
+  const supabase = await buatKlienServer();
+  const [{ data, error }, z] = await Promise.all([
+    supabase.rpc("jawaban_percobaan", { p_percobaan_id: percobaanId }),
+    zona(supabase),
+  ]);
+  if (error || !data?.length) return null;
+  return { zona: z, soal: data, info: data[0] };
+}
