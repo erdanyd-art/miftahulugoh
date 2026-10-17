@@ -36,7 +36,7 @@ type Soal = {
   nomor: number;
   jenis: "pilihan_ganda" | "isian";
   pertanyaan: string;
-  opsi: string[] | null;
+  opsi: { asli: number; teks: string }[];
   audio: { judul: string; url: string | null } | null;
 };
 type Nilai = number | string | null;
@@ -239,24 +239,24 @@ export function Kerjakan({
           {s.jenis === "pilihan_ganda" ? (
             <fieldset className="flex flex-col gap-2">
               <legend className="sr-only">Pilihan jawaban soal {s.nomor}</legend>
-              {(s.opsi ?? []).map((o, i) => (
+              {s.opsi.map((o, i) => (
                 <label
-                  key={i}
+                  key={o.asli}
                   className={cn(
                     "flex cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3",
-                    jawaban[s.id] === i && "border-primary bg-pastel-biru",
+                    jawaban[s.id] === o.asli && "border-primary bg-pastel-biru",
                   )}
                 >
                   <input
                     type="radio"
                     name={`soal-${s.id}`}
-                    checked={jawaban[s.id] === i}
-                    onChange={() => ubah(s.id, i, true)}
+                    checked={jawaban[s.id] === o.asli}
+                    onChange={() => ubah(s.id, o.asli, true)}
                     className="size-5 shrink-0 accent-primary"
                   />
                   <span className="font-semibold">{HURUF_OPSI[i]}.</span>
-                  <span dir="auto" className={cn("flex-1", kelasArab(o))}>
-                    {o}
+                  <span dir="auto" className={cn("flex-1", kelasArab(o.teks))}>
+                    {o.teks}
                   </span>
                 </label>
               ))}

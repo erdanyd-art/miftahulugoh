@@ -15,6 +15,8 @@ export const skemaUjian = z
     mulai: waktuLokal,
     selesai: waktuLokal,
     durasiMenit: z.coerce.number().int().min(1).max(600),
+    acakSoal: z.boolean(),
+    acakOpsi: z.boolean(),
   })
   .refine((d) => d.selesai > d.mulai, { path: ["selesai"] });
 

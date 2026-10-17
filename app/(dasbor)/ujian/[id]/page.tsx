@@ -78,6 +78,8 @@ async function Isi({
               mulai: isoKeLokal(ujian.mulai, ujian.zona),
               selesai: isoKeLokal(ujian.selesai, ujian.zona),
               durasiMenit: ujian.durasi_menit,
+              acakSoal: ujian.acak_soal,
+              acakOpsi: ujian.acak_opsi,
             }}
           />
         </Kartu>
@@ -105,6 +107,12 @@ async function Isi({
               </Link>
             )}
             <TombolTerbit id={ujian.id} terbit={ujian.terbit} />
+            <Link
+              href={`/ujian/${ujian.id}/duplikat`}
+              className="w-fit rounded-full border px-5 py-2.5 text-sm font-medium hover:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            >
+              Duplikat ujian
+            </Link>
             <hr />
             <TombolHapusUjian id={ujian.id} />
           </div>

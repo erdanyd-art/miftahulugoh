@@ -238,3 +238,5 @@ Mulai setelah Fase 1 terpasang. Tiap sprint = satu cabang/PR, dengan migrasi + R
 **Sprint 12 — Penilaian (selesai 2026-10-16).** Pilihan ganda dinilai di fungsi database; tutor/admin memeriksa isian; admin "Umumkan nilai"; nilai terbaca peserta (miliknya), tutor (kelasnya), admin (semua); ekspor CSV.
 
 **Sprint 13 — Portal peserta (selesai 2026-10-16; PRD 6.1).** Menu peserta Jadwal Kelas (tombol Google Meet, kelas hari ini juga di Beranda) dan Pembayaran Saya (baca saja), lewat fungsi `jadwal_kelas_saya()` dan `pembayaran_saya()`.
+
+**Sprint 14 — Duplikat & acak (selesai 2026-10-17; D16).** Duplikat ujian menyalin soal, kunci, bobot, dan berkas audio (Storage copy) menjadi draf; dibatalkan bersih bila gagal. Acak urutan soal/pilihan per ujian, deterministik per percobaan (`lib/acak.ts`), jawaban tetap indeks pilihan asli sehingga penilaian tidak berubah.

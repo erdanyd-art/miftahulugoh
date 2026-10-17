@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useActionState, useState, useTransition, type FormEvent } from "react";
-import { KolomIsian, KolomPilihan, KolomTeksPanjang, PesanStatus } from "@/components/form";
+import { KolomCentang, KolomIsian, KolomPilihan, KolomTeksPanjang, PesanStatus } from "@/components/form";
 import { useFormAksi } from "@/components/use-form-aksi";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,10 +24,21 @@ export function FormUjian({
   aksi,
   kelas,
   awal,
+  labelTombol = "Simpan",
 }: {
   aksi: Aksi;
   kelas: Pilihan[];
-  awal?: { judul: string; keterangan: string | null; kelasId: string; mulai: string; selesai: string; durasiMenit: number };
+  awal?: {
+    judul: string;
+    keterangan: string | null;
+    kelasId: string;
+    mulai: string;
+    selesai: string;
+    durasiMenit: number;
+    acakSoal: boolean;
+    acakOpsi: boolean;
+  };
+  labelTombol?: string;
 }) {
   const { status, onSubmit, sedang } = useFormAksi(aksi);
   return (
@@ -65,12 +76,17 @@ export function FormUjian({
         maxLength={2000}
         dir="auto"
       />
+      <fieldset className="flex flex-col gap-2">
+        <legend className="mb-1 text-sm font-medium">Pengacakan (mengurangi menyontek)</legend>
+        <KolomCentang label="Acak urutan soal untuk tiap peserta" name="acakSoal" defaultChecked={awal?.acakSoal} />
+        <KolomCentang label="Acak urutan pilihan jawaban" name="acakOpsi" defaultChecked={awal?.acakOpsi} />
+      </fieldset>
       <p className="text-xs text-muted-foreground">
         Waktu memakai zona waktu lembaga. Peserta bisa mulai selama ujian dibuka; batas waktunya durasi atau saat ujian
         ditutup, mana yang lebih dulu.
       </p>
       <Button type="submit" disabled={sedang} className={`${kelasTombol} w-fit`}>
-        {sedang ? "Menyimpan..." : "Simpan"}
+        {sedang ? "Menyimpan..." : labelTombol}
       </Button>
     </form>
   );

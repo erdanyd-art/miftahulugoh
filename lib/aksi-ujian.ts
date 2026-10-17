@@ -33,6 +33,8 @@ export async function simpanUjian(id: string | null, _: StatusAksi, formData: Fo
     mulai: formData.get("mulai"),
     selesai: formData.get("selesai"),
     durasiMenit: formData.get("durasiMenit"),
+    acakSoal: formData.get("acakSoal") === "on",
+    acakOpsi: formData.get("acakOpsi") === "on",
   });
   if (!hasil.success) {
     return { galat: "Periksa isian: judul, kelas, waktu mulai/selesai (selesai setelah mulai), durasi 1–600 menit." };
@@ -47,6 +49,8 @@ export async function simpanUjian(id: string | null, _: StatusAksi, formData: Fo
     mulai: lokalKeIso(d.mulai, z_),
     selesai: lokalKeIso(d.selesai, z_),
     durasi_menit: d.durasiMenit,
+    acak_soal: d.acakSoal,
+    acak_opsi: d.acakOpsi,
   };
 
   if (id === null) {
@@ -210,4 +214,94 @@ export async function hapusAudio(ujianId: string, audioId: string): Promise<Stat
   await supabase.storage.from(BUCKET_AUDIO).remove(data.map((a) => a.path));
   refresh();
   return { pesan: "Audio dihapus." };
+}
+
+// ===== Duplikat =====
+// Salin ujian (soal, kunci, bobot, audio) menjadi draf baru dengan judul/kelas/waktu dari form.
+// Soal + kunci disimpan atomik lewat impor_soal(); bila ada langkah gagal, salinan dan berkasnya dihapus lagi.
+export async function duplikatUjian(sumberId: string, _: StatusAksi, formData: FormData): Promise<StatusAksi> {
+  await wajibPeran("admin");
+  if (!idValid(sumberId)) return { galat: "Ujian tidak ditemukan." };
+  const hasil = skemaUjian.safeParse({
+    judul: formData.get("judul"),
+    keterangan: formData.get("keterangan") ?? "",
+    kelasId: formData.get("kelasId"),
+    mulai: formData.get("mulai"),
+    selesai: formData.get("selesai"),
+    durasiMenit: formData.get("durasiMenit"),
+    acakSoal: formData.get("acakSoal") === "on",
+    acakOpsi: formData.get("acakOpsi") === "on",
+  });
+  if (!hasil.success) {
+    return { galat: "Periksa isian: judul, kelas, waktu mulai/selesai (selesai setelah mulai), durasi 1–600 menit." };
+  }
+  const d = hasil.data;
+  const supabase = await buatKlienServer();
+  const { data: sumber } = await supabase
+    .from("ujian")
+    .select("id, soal(urutan, jenis, pertanyaan, opsi, audio_id, bobot, soal_kunci(jawaban_benar, kunci_isian)), audio_ujian(id, judul, path, ukuran)")
+    .eq("id", sumberId)
+    .maybeSingle();
+  if (!sumber) return { galat: "Ujian tidak ditemukan." };
+  if (sumber.soal.length > 300) return { galat: "Ujian dengan lebih dari 300 soal tidak bisa diduplikat." };
+
+  const z_ = await zona(supabase);
+  const { data: baru, error } = await supabase
+    .from("ujian")
+    .insert({
+      judul: d.judul,
+      keterangan: d.keterangan,
+      kelas_id: d.kelasId,
+      mulai: lokalKeIso(d.mulai, z_),
+      selesai: lokalKeIso(d.selesai, z_),
+      durasi_menit: d.durasiMenit,
+      acak_soal: d.acakSoal,
+      acak_opsi: d.acakOpsi,
+    })
+    .select("id")
+    .single();
+  if (error) return { galat: "Salinan gagal dibuat." };
+
+  const berkasBaru: string[] = [];
+  const batal = async (pesan: string): Promise<StatusAksi> => {
+    if (berkasBaru.length) await supabase.storage.from(BUCKET_AUDIO).remove(berkasBaru);
+    await supabase.from("ujian").delete().eq("id", baru.id);
+    return { galat: pesan };
+  };
+
+  // Audio: salin berkas ke folder ujian baru, lalu catat barisnya.
+  const petaAudio = new Map<string, string>();
+  for (const a of sumber.audio_ujian) {
+    const path = `${baru.id}/${randomUUID()}.${a.path.split(".").pop()}`;
+    const { error: galatSalin } = await supabase.storage.from(BUCKET_AUDIO).copy(a.path, path);
+    if (galatSalin) return batal("Audio gagal disalin. Coba lagi.");
+    berkasBaru.push(path);
+    const { data: barisAudio, error: galatAudio } = await supabase
+      .from("audio_ujian")
+      .insert({ ujian_id: baru.id, judul: a.judul, path, ukuran: a.ukuran })
+      .select("id")
+      .single();
+    if (galatAudio) return batal("Audio gagal disalin. Coba lagi.");
+    petaAudio.set(a.id, barisAudio.id);
+  }
+
+  if (sumber.soal.length) {
+    const { error: galatSoal } = await supabase.rpc("impor_soal", {
+      p_ujian_id: baru.id,
+      p_baris: [...sumber.soal]
+        .sort((a, b) => a.urutan - b.urutan)
+        .map((s) => ({
+          urutan: s.urutan,
+          jenis: s.jenis,
+          pertanyaan: s.pertanyaan,
+          opsi: s.opsi,
+          audio_id: s.audio_id ? (petaAudio.get(s.audio_id) ?? null) : null,
+          bobot: s.bobot,
+          jawaban_benar: s.soal_kunci?.jawaban_benar ?? null,
+          kunci_isian: s.soal_kunci?.kunci_isian ?? null,
+        })),
+    });
+    if (galatSoal) return batal("Soal gagal disalin. Coba lagi.");
+  }
+  redirect(`/ujian/${baru.id}?pesan=disalin`);
 }
