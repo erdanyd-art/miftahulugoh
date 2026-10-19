@@ -42,6 +42,12 @@ test("pengunjung melihat landing page di / dan tombol Masuk membuka /masuk", asy
     await expect(a).toHaveAttribute("rel", "noopener noreferrer");
   }
   await expect(page.locator("#daftar").getByRole("link", { name: "Daftar Sekarang" })).not.toHaveAttribute("aria-disabled", "true");
+  // Teks tombol harus terlihat: warna teks berbeda dari latar
+  const warna = await page
+    .locator("#daftar")
+    .getByRole("link", { name: "Daftar Sekarang" })
+    .evaluate((el) => [getComputedStyle(el).color, getComputedStyle(el).backgroundColor]);
+  expect(warna[0]).not.toBe(warna[1]);
 
   // Placeholder selama kontak lain dan jadwal belum diisi
   await expect(page.getByText("[@AKUN INSTAGRAM]")).toBeVisible();

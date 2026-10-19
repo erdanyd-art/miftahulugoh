@@ -638,6 +638,17 @@
   font-weight: 800;
   font-size: 18px;
 }
+/* Lebih spesifik dari ".lp-halaman a { color: inherit }" agar teks putih di atas navy */
+.lp-halaman .lp-tombol-wa {
+  color: var(--white);
+}
+.lp-tombol-utama,
+.lp-tombol-wa {
+  white-space: nowrap;
+}
+.lp-halaman .lp-tombol-wa-kosong {
+  color: var(--navy);
+}
 .lp-tombol-wa .lp-panah-bulat {
   background: var(--accent);
   color: var(--navy);
