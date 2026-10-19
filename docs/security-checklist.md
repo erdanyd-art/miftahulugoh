@@ -107,7 +107,7 @@ Prinsip dasar: **keamanan ada di database dan server, bukan di antarmuka.** Meny
 | G3 | Tautan eksternal (WhatsApp, Instagram) memakai `rel="noopener noreferrer"`; nomor dan akun hanya dari satu berkas konfigurasi konten | 2b | Lulus — `components/landing/seksi.test.tsx` (keadaan terisi: 3 tautan luar, semuanya `target=_blank` + `rel`); isi hanya dari `lib/site-content.ts` |
 | G4 | Tombol "Masuk" hanya tautan ke `/masuk`; tidak ada formulir login atau data pengguna di landing page | 2b | Lulus — E2E `landing.spec.ts` (tanpa `<form>`, klik Masuk membuka `/masuk`) |
 | G5 | Hanya `/` yang diindeks; `/masuk` dan seluruh halaman dashboard `noindex`; `sitemap.ts` hanya memuat `/` | 2b | Lulus — header `X-Robots-Tag: noindex, nofollow` untuk semua jalur selain `/` (`next.config.ts`); E2E memeriksa header, `robots.txt`, dan satu `<loc>` di sitemap |
-| G6 | Tidak ada nomor, harga, testimoni, atau data contoh yang tampak asli; placeholder jelas terlihat sebagai placeholder | 2b, 8 | Lulus (2026-10-19) — harga, peserta, dan teks kelas dari brosur resmi (`docs/referensi-brosur.jpg`; 54 teks/angka dicek cocok); kontak dan jadwal masih kosong → placeholder bergaris putus-putus (E2E + tes unit). Periksa ulang saat kontak diisi |
+| G6 | Tidak ada nomor, harga, testimoni, atau data contoh yang tampak asli; placeholder jelas terlihat sebagai placeholder | 2b, 8 | Lulus (2026-10-19) — harga, peserta, dan teks kelas dari brosur resmi (`docs/referensi-brosur.jpg`; 54 teks/angka dicek cocok); nomor WhatsApp lembaga diisi pemilik (2026-10-19, tautan `wa.me` + `rel="noopener noreferrer"` diuji E2E); Instagram, alamat, dan jadwal masih placeholder bergaris putus-putus |
 
 ## H. Penerimaan sebelum data nyata masuk
 

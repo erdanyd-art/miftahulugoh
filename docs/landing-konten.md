@@ -110,7 +110,7 @@ Brosur memakai logo lembaga (buku terbuka berornamen). **Jangan menggambar ulang
 4. **Bahasa Inggris dan Nahwu Shorof tidak ditawarkan.** Landing page hanya untuk Program Bahasa Arab.
 
 **Masih terbuka (tetap placeholder / TODO, jangan ditebak):**
-- Nomor WhatsApp, akun Instagram, alamat/kota.
+- ~~Nomor WhatsApp~~ diisi 2026-10-19 (0878-6355-4350, di `lib/site-content.ts` sebagai `6287863554350`). Akun Instagram, alamat/kota masih terbuka.
 - Berkas logo asli (SVG atau PNG transparan).
 - Jadwal hari dan jam per kelas (tidak ada di brosur).
 - Kepanjangan "ABY" dan izin menuliskannya lengkap (kemungkinan al-'Arabiyyah bayna yadayk).

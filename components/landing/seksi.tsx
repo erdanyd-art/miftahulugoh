@@ -1,7 +1,14 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { formatRupiah } from "@/lib/format";
-import { siteContent, tautanInstagram, tautanWhatsApp, type KontenSitus, type KunciKelas } from "@/lib/site-content";
+import {
+  siteContent,
+  tampilanWhatsApp,
+  tautanInstagram,
+  tautanWhatsApp,
+  type KontenSitus,
+  type KunciKelas,
+} from "@/lib/site-content";
 import {
   IkonBaca,
   IkonBicara,
@@ -234,7 +241,7 @@ export function Daftar({ konten = siteContent }: { konten?: KontenSitus }) {
             <span className="lp-kontak-label">WhatsApp</span>
             {wa ? (
               <a href={wa} className="lp-kontak-nilai" {...luar}>
-                +{konten.waNumber.trim()}
+                {tampilanWhatsApp(konten.waNumber)}
               </a>
             ) : (
               <span className="lp-kontak-nilai lp-pil-kosong">[NOMOR WHATSAPP]</span>

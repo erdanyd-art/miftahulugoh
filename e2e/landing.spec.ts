@@ -31,13 +31,22 @@ test("pengunjung melihat landing page di / dan tombol Masuk membuka /masuk", asy
   await expect(kartu.nth(2)).toContainText(/Rp\s275\.000\s*\/bulan \(Per Tingkat\)/);
   await expect(page.getByText("*Harga untuk 1 tingkat")).toBeVisible();
 
-  // Placeholder selama kontak dan jadwal belum diisi
-  await expect(page.getByText("[NOMOR WHATSAPP]")).toBeVisible();
+  // WhatsApp lembaga terisi: semua tombol daftar membuka wa.me dengan aman
+  await expect(page.getByText("+62 878-6355-4350")).toBeVisible();
+  await expect(page.getByText("[NOMOR WHATSAPP]")).toHaveCount(0);
+  const tautanWa = page.locator('a[href^="https://wa.me/"]');
+  await expect(tautanWa).toHaveCount(3);
+  for (const a of await tautanWa.all()) {
+    await expect(a).toHaveAttribute("href", /^https:\/\/wa\.me\/6287863554350\?text=Assalamu/);
+    await expect(a).toHaveAttribute("target", "_blank");
+    await expect(a).toHaveAttribute("rel", "noopener noreferrer");
+  }
+  await expect(page.locator("#daftar").getByRole("link", { name: "Daftar Sekarang" })).not.toHaveAttribute("aria-disabled", "true");
+
+  // Placeholder selama kontak lain dan jadwal belum diisi
   await expect(page.getByText("[@AKUN INSTAGRAM]")).toBeVisible();
   await expect(page.getByText("[ALAMAT / KOTA]")).toBeVisible();
   await expect(page.getByText("[HARI & JAM]")).toHaveCount(3);
-  await expect(page.locator("#daftar").getByRole("link", { name: "Daftar Sekarang" })).toHaveAttribute("href", "#daftar");
-  await expect(page.locator('a[href*="wa.me"]')).toHaveCount(0);
 
   // Empat maharah: teks Arab benar dan kanan-ke-kiri
   for (const arab of ["الاستماع", "الكلام", "القراءة", "الكتابة"]) {

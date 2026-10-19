@@ -26,7 +26,7 @@ export type KontenSitus = {
 };
 
 export const siteContent: KontenSitus = {
-  waNumber: "", // hanya angka dengan kode negara, mis. 62812...
+  waNumber: "6287863554350", // hanya angka dengan kode negara (0878... ditulis 62878...)
   waMessage: "Assalamu'alaikum, saya ingin mendaftar di Lembaga Miftah al-Lughah.",
   instagram: "", // tanpa @
   address: "",
@@ -74,6 +74,15 @@ export function tautanWhatsApp(nomor: string, pesan: string): string | null {
   const angka = nomor.trim();
   if (!/^\d{8,15}$/.test(angka)) return null;
   return `https://wa.me/${angka}?text=${encodeURIComponent(pesan)}`;
+}
+
+// Nomor WhatsApp untuk ditampilkan: 6287863554350 -> +62 878-6355-4350.
+export function tampilanWhatsApp(nomor: string): string {
+  const angka = nomor.trim();
+  if (!angka.startsWith("62")) return `+${angka}`;
+  const sisa = angka.slice(2);
+  const kelompok = [sisa.slice(0, 3), ...(sisa.slice(3).match(/.{1,4}/g) ?? [])];
+  return `+62 ${kelompok.join("-")}`;
 }
 
 // Tautan Instagram, atau null bila akun belum diisi. "@" di depan diabaikan.
