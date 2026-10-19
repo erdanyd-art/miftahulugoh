@@ -32,7 +32,7 @@ export async function ambilUjian(id: string) {
     supabase
       .from("ujian")
       .select(
-        "id, judul, keterangan, kelas_id, mulai, selesai, durasi_menit, terbit, kelas(nama), soal(id, urutan, jenis, pertanyaan, opsi, audio_id, bobot, dibuat_pada, soal_kunci(jawaban_benar, kunci_isian)), audio_ujian(id, judul, path, ukuran, dibuat_pada), percobaan_ujian(selesai_pada, batas_selesai)",
+        "id, judul, keterangan, kelas_id, mulai, selesai, durasi_menit, terbit, acak_soal, acak_opsi, kelas(nama), soal(id, urutan, jenis, pertanyaan, opsi, audio_id, bobot, dibuat_pada, soal_kunci(jawaban_benar, kunci_isian)), audio_ujian(id, judul, path, ukuran, dibuat_pada), percobaan_ujian(selesai_pada, batas_selesai)",
       )
       .eq("id", id)
       .maybeSingle(),

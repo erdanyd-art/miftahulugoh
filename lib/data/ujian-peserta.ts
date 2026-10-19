@@ -1,5 +1,6 @@
 import "server-only";
 import { wajibPeran } from "@/lib/auth";
+import { urutAcak } from "@/lib/acak";
 import { BUCKET_AUDIO } from "@/lib/data/ujian";
 import { buatKlienServer } from "@/lib/supabase/server";
 
@@ -18,6 +19,8 @@ type BarisUjianSaya = {
   batas_selesai: string | null;
   selesai_pada: string | null;
   sekarang: string;
+  acak_soal: boolean;
+  acak_opsi: boolean;
 };
 
 // Status dihitung dari jam DATABASE (kolom "sekarang"), bukan jam perangkat. Penegakan tetap di fungsi database.
@@ -34,14 +37,16 @@ function statusDari(u: BarisUjianSaya): StatusUjianSaya {
 export async function daftarUjianSaya() {
   await wajibPeran("peserta");
   const supabase = await buatKlienServer();
-  const [{ data, error }, { data: atur }] = await Promise.all([
+  const [{ data, error }, { data: atur }, { data: nilai }] = await Promise.all([
     supabase.rpc("ujian_saya"),
     supabase.from("pengaturan").select("zona_waktu").single(),
+    supabase.rpc("nilai_saya"), // hanya ujian yang sudah diumumkan admin
   ]);
   if (error) throw new Error("Gagal memuat ujian");
+  const nilaiPer = new Map((nilai ?? []).map((n) => [n.ujian_id, n]));
   return {
     zona: atur?.zona_waktu ?? "Asia/Makassar",
-    ujian: (data as BarisUjianSaya[]).map((u) => ({ ...u, status: statusDari(u) })),
+    ujian: (data as BarisUjianSaya[]).map((u) => ({ ...u, status: statusDari(u), nilai: nilaiPer.get(u.id) ?? null })),
   };
 }
 
@@ -81,14 +86,18 @@ export async function ambilUjianSaya(ujianId: string) {
     pengerjaan: {
       percobaanId: u.percobaan_id,
       sisaMs,
-      soal: (soal.data ?? []).map((s) => ({
-        id: s.id,
-        nomor: s.urutan,
-        jenis: s.jenis,
-        pertanyaan: s.pertanyaan,
-        opsi: s.opsi,
-        audio: s.audio_id ? (audioPer.get(s.audio_id) ?? null) : null,
-      })),
+      // Acak (bila diaktifkan) tetap per percobaan. Pilihan membawa indeks ASLI-nya: itulah yang disimpan sebagai jawaban.
+      soal: (u.acak_soal ? urutAcak(u.percobaan_id, soal.data ?? []) : (soal.data ?? [])).map((s, posisi) => {
+        const opsi = (s.opsi ?? []).map((teks, asli) => ({ asli, teks }));
+        return {
+          id: s.id,
+          nomor: posisi + 1,
+          jenis: s.jenis,
+          pertanyaan: s.pertanyaan,
+          opsi: u.acak_opsi ? urutAcak(`${u.percobaan_id}:${s.id}`, opsi) : opsi,
+          audio: s.audio_id ? (audioPer.get(s.audio_id) ?? null) : null,
+        };
+      }),
       jawaban: Object.fromEntries(
         (jawaban.data ?? []).map((j) => [j.soal_id, j.pilihan ?? j.isian ?? null] as const),
       ) as Record<string, number | string | null>,

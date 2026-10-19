@@ -111,17 +111,23 @@ isOneToOne: false
                   ]
                 },"jawaban": {
                   Row: {
-                    "disimpan_pada": string,"id": string,"isian": string | null,"percobaan_id": string,"pilihan": number | null,"soal_id": string
+                    "diperiksa_oleh": string | null,"diperiksa_pada": string | null,"disimpan_pada": string,"id": string,"isian": string | null,"percobaan_id": string,"pilihan": number | null,"skor_isian": number | null,"soal_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "disimpan_pada"?: string,"id"?: string,"isian"?: string | null,"percobaan_id": string,"pilihan"?: number | null,"soal_id": string
+                    "diperiksa_oleh"?: string | null,"diperiksa_pada"?: string | null,"disimpan_pada"?: string,"id"?: string,"isian"?: string | null,"percobaan_id": string,"pilihan"?: number | null,"skor_isian"?: number | null,"soal_id": string
                   }
                   Update: {
-                    "disimpan_pada"?: string,"id"?: string,"isian"?: string | null,"percobaan_id"?: string,"pilihan"?: number | null,"soal_id"?: string
+                    "diperiksa_oleh"?: string | null,"diperiksa_pada"?: string | null,"disimpan_pada"?: string,"id"?: string,"isian"?: string | null,"percobaan_id"?: string,"pilihan"?: number | null,"skor_isian"?: number | null,"soal_id"?: string
                   }
                   Relationships: [
                     {
+      foreignKeyName: "jawaban_diperiksa_oleh_fkey"
+      columns: ["diperiksa_oleh"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "jawaban_percobaan_id_fkey"
       columns: ["percobaan_id"]
 isOneToOne: false
@@ -401,14 +407,14 @@ isOneToOne: true
                   ]
                 },"ujian": {
                   Row: {
-                    "dibuat_pada": string,"diubah_pada": string,"durasi_menit": number,"id": string,"judul": string,"kelas_id": string,"keterangan": string | null,"mulai": string,"selesai": string,"terbit": boolean
+                    "acak_opsi": boolean,"acak_soal": boolean,"dibuat_pada": string,"diubah_pada": string,"diumumkan_pada": string | null,"durasi_menit": number,"id": string,"judul": string,"kelas_id": string,"keterangan": string | null,"mulai": string,"selesai": string,"terbit": boolean
                   }
                   ComputedFields: never
                   Insert: {
-                    "dibuat_pada"?: string,"diubah_pada"?: string,"durasi_menit": number,"id"?: string,"judul": string,"kelas_id": string,"keterangan"?: string | null,"mulai": string,"selesai": string,"terbit"?: boolean
+                    "acak_opsi"?: boolean,"acak_soal"?: boolean,"dibuat_pada"?: string,"diubah_pada"?: string,"diumumkan_pada"?: string | null,"durasi_menit": number,"id"?: string,"judul": string,"kelas_id": string,"keterangan"?: string | null,"mulai": string,"selesai": string,"terbit"?: boolean
                   }
                   Update: {
-                    "dibuat_pada"?: string,"diubah_pada"?: string,"durasi_menit"?: number,"id"?: string,"judul"?: string,"kelas_id"?: string,"keterangan"?: string | null,"mulai"?: string,"selesai"?: string,"terbit"?: boolean
+                    "acak_opsi"?: boolean,"acak_soal"?: boolean,"dibuat_pada"?: string,"diubah_pada"?: string,"diumumkan_pada"?: string | null,"durasi_menit"?: number,"id"?: string,"judul"?: string,"kelas_id"?: string,"keterangan"?: string | null,"mulai"?: string,"selesai"?: string,"terbit"?: boolean
                   }
                   Relationships: [
                     {
@@ -425,14 +431,40 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            "hubungkan_akun_peserta":
+            "boleh_periksa":
+{ Args: { "p_ujian_id": string }; Returns: boolean
+                           },
+"hasil_ujian":
+{ Args: { "p_ujian_id": string }; Returns: {
+              "isian_belum": number,"mulai_pada": string,"nama": string,"nilai": number,"percobaan_id": string,"peserta_id": string,"selesai_pada": string,"skor_isian": number,"skor_pg": number,"total_bobot": number
+            }[]
+                           },
+"hubungkan_akun_peserta":
 { Args: { "p_peserta_id": string,"p_user_id": string }; Returns: undefined
                            },
 "impor_peserta":
 { Args: { "p_baris": Json }; Returns: number
                            },
+"impor_soal":
+{ Args: { "p_baris": Json,"p_ujian_id": string }; Returns: number
+                           },
 "is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
+                           },
+"isian_ujian":
+{ Args: { "p_ujian_id": string }; Returns: {
+              "acuan": string,"bobot": number,"isian": string,"jawaban_id": string,"nomor": number,"pertanyaan": string,"peserta": string,"skor_isian": number,"soal_id": string
+            }[]
+                           },
+"jadwal_kelas_saya":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "hari": number,"jadwal_id": string,"jam_mulai": string,"jam_selesai": string,"kelas": string,"meet_url": string,"tutor": string
+            }[]
+                           },
+"jawaban_percobaan":
+{ Args: { "p_percobaan_id": string }; Returns: {
+              "acuan": string,"benar": boolean,"bobot": number,"isian": string,"jawaban_benar": number,"jawaban_id": string,"jenis": Database["public"]['Enums']["jenis_soal"],"mulai_pada": string,"nomor": number,"opsi": (string)[],"pertanyaan": string,"peserta": string,"pilihan": number,"selesai_pada": string,"skor": number,"skor_isian": number,"soal_id": string,"ujian_id": string
+            }[]
                            },
 "koreksi_honor":
 { Args: { "p_honor": number,"p_sesi_id": string }; Returns: undefined
@@ -442,6 +474,19 @@ isOneToOne: false
                            },
 "mulai_ujian":
 { Args: { "p_ujian_id": string }; Returns: string
+                           },
+"nilai_isian":
+{ Args: { "p_jawaban_id": string,"p_skor": number }; Returns: undefined
+                           },
+"nilai_saya":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "nilai": number,"skor": number,"total_bobot": number,"ujian_id": string
+            }[]
+                           },
+"pembayaran_saya":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "id": string,"jumlah": number,"keterangan": string,"status": Database["public"]['Enums']["status_pembayaran"],"tanggal": string
+            }[]
                            },
 "peran_saya":
 { Args: Record<PropertyKey, never>; Returns: Database["public"]['Enums']["peran_pengguna"]
@@ -469,15 +514,25 @@ isOneToOne: false
 "simpan_soal":
 { Args: { "p_audio_id": string,"p_bobot": number,"p_jawaban_benar": number,"p_jenis": Database["public"]['Enums']["jenis_soal"],"p_kunci_isian": string,"p_opsi": (string)[],"p_pertanyaan": string,"p_soal_id": string,"p_ujian_id": string,"p_urutan": number }; Returns: string
                            },
+"skor_percobaan":
+{ Args: { "p_percobaan_id": string }; Returns: {
+              "isian_belum": number,"skor_isian": number,"skor_pg": number
+            }[]
+                           },
 "toleransi_jawaban":
 { Args: Record<PropertyKey, never>; Returns: string
                            },
 "ubah_meet":
 { Args: { "p_jadwal_id": string,"p_url": string }; Returns: undefined
                            },
+"ujian_diperiksa":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "diumumkan_pada": string,"durasi_menit": number,"id": string,"isian_belum": number,"judul": string,"kelas": string,"mulai": string,"peserta_mulai": number,"sekarang": string,"selesai": string
+            }[]
+                           },
 "ujian_saya":
 { Args: Record<PropertyKey, never>; Returns: {
-              "batas_selesai": string,"durasi_menit": number,"id": string,"judul": string,"jumlah_soal": number,"kelas": string,"keterangan": string,"mulai": string,"percobaan_id": string,"sekarang": string,"selesai": string,"selesai_pada": string
+              "acak_opsi": boolean,"acak_soal": boolean,"batas_selesai": string,"durasi_menit": number,"id": string,"judul": string,"jumlah_soal": number,"kelas": string,"keterangan": string,"mulai": string,"percobaan_id": string,"sekarang": string,"selesai": string,"selesai_pada": string
             }[]
                            }
           }

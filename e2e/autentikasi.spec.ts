@@ -117,3 +117,20 @@ test("pengguna mengganti kata sandi sendiri dari halaman Akun saya", async ({ pa
   await ganti(baru, SANDI);
   await expect(page.getByText("Kata sandi berhasil diganti")).toBeVisible();
 });
+
+test("keluar saat server lambat: pop-up 'Sedang keluar...' tampil, lalu kembali ke halaman masuk", async ({ page }) => {
+  await masuk(page, "admin@contoh.test");
+  await expect(page).toHaveURL(/\/$/);
+  await page.waitForLoadState("networkidle");
+  // Perlambat permintaan server action (POST) agar status loading terlihat
+  await page.route("**/*", async (route) => {
+    if (route.request().method() === "POST") await new Promise((r) => setTimeout(r, 1500));
+    await route.continue();
+  });
+  await page.getByRole("button", { name: "Keluar" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Sedang keluar..." })).toBeVisible();
+  await expect(page).toHaveURL(/\/masuk$/);
+  await page.unrouteAll({ behavior: "ignoreErrors" });
+  await page.goto("/keuangan");
+  await expect(page).toHaveURL(/\/masuk$/);
+});
