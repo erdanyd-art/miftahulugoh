@@ -1,25 +1,68 @@
-// Isi landing page (/) yang diisi pemilik lembaga. Selama kosong, halaman menampilkan placeholder.
-// Jangan mengisi nomor/akun contoh yang tampak asli (docs/landing-page.md bagian 5).
-export type KunciProgram = "arab" | "inggris" | "nahwu";
+// Isi landing page (/), dari brosur resmi lembaga (docs/landing-konten.md, docs/referensi-brosur.jpg).
+// Yang belum ada di brosur dibiarkan kosong dan tampil sebagai placeholder: jadwal.
+// Jangan mengisi nomor/akun contoh yang tampak asli.
+export type KunciKelas = "reguler" | "semi-privat" | "privat";
+
+export type Kelas = {
+  key: KunciKelas;
+  nama: string;
+  peserta: string;
+  harga: number; // rupiah, bilangan bulat
+  satuan: string; // persis seperti brosur
+  deskripsi: string;
+  cocokUntuk: string;
+  jadwal: string; // belum ada di brosur: kosong = placeholder [HARI & JAM]
+};
 
 export type KontenSitus = {
   waNumber: string;
   waMessage: string;
-  instagram: string;
-  address: string;
-  programs: { key: KunciProgram; jadwal: string; biaya: string }[];
+  kelas: Kelas[];
+  pertemuanPerBulan: number;
+  durasiMenit: number;
+  jumlahTingkat: number;
 };
 
 export const siteContent: KontenSitus = {
-  waNumber: "", // hanya angka dengan kode negara, mis. 62812...
+  waNumber: "6287863554350", // hanya angka dengan kode negara (0878... ditulis 62878...)
   waMessage: "Assalamu'alaikum, saya ingin mendaftar di Lembaga Miftah al-Lughah.",
-  instagram: "", // tanpa @
-  address: "",
-  programs: [
-    { key: "arab", jadwal: "", biaya: "" },
-    { key: "inggris", jadwal: "", biaya: "" },
-    { key: "nahwu", jadwal: "", biaya: "" },
+  kelas: [
+    {
+      key: "reguler",
+      nama: "Reguler",
+      peserta: "5–7 peserta per kelas",
+      harga: 100000,
+      satuan: "/peserta/bulan",
+      deskripsi: "Belajar bersama dalam kelompok kecil dengan suasana yang interaktif, suportif, dan kondusif.",
+      cocokUntuk: "Peserta yang menginginkan pembelajaran terstruktur dengan biaya terjangkau.",
+      jadwal: "",
+    },
+    {
+      key: "semi-privat",
+      nama: "Semi Privat",
+      peserta: "2 peserta per kelas",
+      harga: 175000,
+      satuan: "/peserta/bulan",
+      deskripsi:
+        "Pendampingan lebih intensif dengan jumlah peserta terbatas untuk interaksi yang lebih maksimal bersama pengajar.",
+      cocokUntuk: "Peserta yang menginginkan pendampingan lebih intensif dengan biaya yang tetap.",
+      jadwal: "",
+    },
+    {
+      key: "privat",
+      nama: "Privat",
+      peserta: "1 peserta per kelas",
+      harga: 275000,
+      satuan: "/bulan (Per Tingkat)",
+      deskripsi:
+        "Pembelajaran eksklusif dengan pendekatan personal, disesuaikan sepenuhnya dengan kemampuan dan target belajar Anda.",
+      cocokUntuk: "Peserta yang menginginkan pembelajaran fokus dan pendampingan yang lebih.",
+      jadwal: "",
+    },
   ],
+  pertemuanPerBulan: 12,
+  durasiMenit: 60,
+  jumlahTingkat: 8,
 };
 
 // Tautan WhatsApp, atau null bila nomor belum diisi / bukan angka yang wajar.
@@ -29,11 +72,13 @@ export function tautanWhatsApp(nomor: string, pesan: string): string | null {
   return `https://wa.me/${angka}?text=${encodeURIComponent(pesan)}`;
 }
 
-// Tautan Instagram, atau null bila akun belum diisi. "@" di depan diabaikan.
-export function tautanInstagram(akun: string): string | null {
-  const nama = akun.trim().replace(/^@/, "");
-  if (!/^[A-Za-z0-9._]{1,30}$/.test(nama)) return null;
-  return `https://www.instagram.com/${nama}/`;
+// Nomor WhatsApp untuk ditampilkan: 6287863554350 -> +62 878-6355-4350.
+export function tampilanWhatsApp(nomor: string): string {
+  const angka = nomor.trim();
+  if (!angka.startsWith("62")) return `+${angka}`;
+  const sisa = angka.slice(2);
+  const kelompok = [sisa.slice(0, 3), ...(sisa.slice(3).match(/.{1,4}/g) ?? [])];
+  return `+62 ${kelompok.join("-")}`;
 }
 
 // URL situs untuk metadata, robots, dan sitemap. NEXT_PUBLIC_SITE_URL diisi setelah domain sendiri dipasang;

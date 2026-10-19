@@ -1,6 +1,6 @@
 # PRD — Dashboard Lembaga Miftah al-Lughah
 
-Versi: 0.16 (draft untuk disetujui) · Tanggal: 2026-10-16
+Versi: 0.17 (draft untuk disetujui) · Tanggal: 2026-10-19
 Penulis: Erdany (dengan bantuan Claude sebagai arsitek)
 
 > Dokumen ini adalah sumber kebenaran kebutuhan produk. Claude Code wajib membacanya sebelum mengerjakan tugas apa pun, dan tidak boleh menambah fitur di luar bagian yang ditandai "Fase 1".
@@ -81,8 +81,8 @@ Aturan:
 - Log audit untuk tindakan penting (ubah/hapus pembayaran, kas, honor, kunci sesi, ubah pengguna): siapa, kapan, apa.
 
 ### 5.8 Halaman publik (landing page)
-- Rute `/` berupa halaman statis yang memperkenalkan lembaga dan tiga program (Bahasa Arab Dasar, Bahasa Inggris Percakapan, Nahwu Shorof), dengan tombol **Daftar** (membuka WhatsApp lembaga; tidak ada formulir pendaftaran) dan **Masuk** (tautan ke halaman masuk `/masuk`).
-- Tidak membaca database, tidak memakai kunci apa pun, tanpa login. Tanpa testimoni, harga, atau klaim yang tidak disediakan pemilik lembaga.
+- Rute `/` berupa halaman statis yang memperkenalkan **Program Bahasa Arab** (Kitab ABY 1–8, 8 tingkat) dengan tiga jenis kelas (Reguler, Semi Privat, Privat), kurikulum, 4 maharah, dan fasilitas, dengan tombol **Daftar** (membuka WhatsApp lembaga; tidak ada formulir pendaftaran) dan **Masuk** (tautan ke halaman masuk `/masuk`).
+- Tidak membaca database, tidak memakai kunci apa pun, tanpa login. Isi (termasuk harga per tingkat) hanya dari brosur resmi lembaga (`docs/landing-konten.md`, `docs/referensi-brosur.jpg`); tanpa testimoni atau klaim lain.
 - Gaya visual sendiri (ceria, kertas berkotak, ilustrasi SVG buatan sendiri), terpisah dari gaya dashboard. Spesifikasi lengkap: `docs/landing-page.md`; acuan visual: `docs/landing-reference.html`.
 - Kontak, jadwal, dan biaya per program disimpan di satu berkas konfigurasi konten; selama kosong, ditampilkan sebagai placeholder.
 - Hanya `/` yang boleh diindeks mesin pencari.
@@ -203,6 +203,7 @@ Prinsip:
 
 ## Riwayat perubahan
 
+- v0.17: landing page memakai isi brosur resmi (2026-10-19): satu Program Bahasa Arab (Kitab ABY 1–8) dengan tiga jenis kelas dan harga per tingkat; Bahasa Inggris dan Nahwu Shorof tidak ditawarkan di landing. Spesifikasi isi: `docs/landing-konten.md`.
 - v0.16: lembar jawaban per peserta untuk admin/tutor pengampu (jawaban, kunci, benar/salah, nilai isian di tempat). Peserta tetap tidak melihat kunci (D17).
 - v0.15: Sprint 14 (D16) — duplikat ujian (soal, kunci, bobot, audio menjadi draf baru) dan opsi acak urutan soal/pilihan per peserta (deterministik per percobaan; jawaban disimpan dengan indeks asli).
 - v0.14: impor soal ujian dari CSV (D15): templat, pratinjau per baris, atomik, kolom pg/isian/kunci/acuan/bobot/audio.

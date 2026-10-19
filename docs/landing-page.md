@@ -2,13 +2,15 @@
 
 Versi: 0.1 · Tanggal: 2026-10-16 · Mengacu pada PRD.md v0.10 (bagian 5.8) dan CLAUDE.md
 
+> **Isi (teks dan struktur program) di berkas ini sudah digantikan `docs/landing-konten.md` (2026-10-19, dari brosur resmi).** Bagian visual, aksesibilitas, SEO, implementasi, dan gerak 3D di berkas ini tetap berlaku.
+
 ## 1. Tujuan dan lingkup
 
 Halaman publik di rute `/` yang memperkenalkan Lembaga Miftah al-Lughah dan tiga programnya, dengan dua tombol utama:
 - **Daftar**: membuka WhatsApp lembaga (pendaftaran lewat WhatsApp, tidak ada formulir).
 - **Masuk**: tautan ke `/masuk` untuk admin dan tutor.
 
-Halaman ini **statis**: tidak membaca database, tidak memakai kunci apa pun, tidak butuh login. Tidak ada blog, multi-halaman, formulir, testimoni, atau animasi pada versi ini.
+Halaman ini **statis**: tidak membaca database, tidak memakai kunci apa pun, tidak butuh login. Tidak ada blog, multi-halaman, formulir, atau testimoni. Gerak 3D ditambahkan atas permintaan pemilik proyek (2026-10-16), lihat bagian 13.
 
 ## 2. Sumber kebenaran visual
 
@@ -128,7 +130,7 @@ Elemen lain (kisi, pil putus-putus, huruf besar samar di kartu) cukup dengan CSS
 - Teks Arab memakai `lang="ar" dir="rtl"`; seluruh dokumen `lang="id"`.
 - Hiasan (adegan, pita, huruf samar, ikon) `aria-hidden="true"`; tombol hanya berupa `<a>` atau `<button>` sungguhan; fokus keyboard terlihat jelas (kontur 3px navy).
 - Kontras: navy di atas limau dan krem sangat tinggi; teks putih di atas `#4A5BEA` kira-kira 5:1; teks `#0E1E5B` di atas `#C9CFFF` memadai. **Ukur ulang dengan alat kontras** dan perbaiki bila di bawah 4,5:1 (3:1 untuk teks besar).
-- Tidak ada animasi pada versi ini.
+- Gerak 3D (bagian 13) dimatikan seluruhnya untuk `prefers-reduced-motion: reduce`.
 
 ## 8. Catatan implementasi Next.js
 
@@ -151,7 +153,7 @@ Elemen lain (kisi, pil putus-putus, huruf besar samar di kartu) cukup dengan CSS
 
 ## 10. Sengaja belum ada
 
-Foto tutor, testimoni, harga nyata, jumlah murid, sertifikasi, formulir pendaftaran, blog, versi bahasa lain, dan animasi. **Jangan mengarang** angka, testimoni, atau klaim kualifikasi; tambahkan hanya bila pemilik lembaga menyediakan datanya.
+Foto tutor, testimoni, harga nyata, jumlah murid, sertifikasi, formulir pendaftaran, blog, dan versi bahasa lain. **Jangan mengarang** angka, testimoni, atau klaim kualifikasi; tambahkan hanya bila pemilik lembaga menyediakan datanya.
 
 ## 11. Data yang masih dibutuhkan dari pemilik lembaga
 
@@ -163,3 +165,13 @@ Nomor WhatsApp, akun Instagram, alamat atau kota, jadwal dan biaya tiap program,
 - Gaya di `components/landing/landing.css` (kelas `lp-*`), bukan Tailwind/CSS module, agar persis dengan acuan dan tidak menyentuh token dashboard. Di dalam landing, `box-sizing: content-box` dan `line-height: normal` meniru acuan yang tanpa reset CSS.
 - Perbedaan yang disengaja dari acuan: (1) tautan menu minimal 44 px (target sentuh), sehingga halaman sedikit lebih tinggi (6–22 px); (2) tombol "Chat WhatsApp" bergaris putus-putus dan berlatar transparan selama nomor kosong (tampak tidak aktif); (3) huruf hiasan samar (ع, Aa, ن) dirender lewat CSS `::before` agar tidak dihitung sebagai teks oleh pemeriksa kontras.
 - Lighthouse mobile (lokal, build produksi): Accessibility 100, Best Practices 100, SEO 100, Performance 87 (LCP ±4 s). Penyebab utama: tiga font dashboard (Fredoka, Righteous, Noto Naskh) di-preload dari `app/layout.tsx` ke semua halaman. Perbaikannya menyentuh layout dashboard, jadi ditunda atas keputusan pemilik proyek.
+
+## 13. Gerak 3D (2026-10-16, permintaan pemilik proyek)
+
+Tanpa pustaka tambahan: CSS (`components/landing/landing.css`, bagian "GERAK 3D") dan satu komponen klien kecil `components/landing/gerak.tsx`.
+- **Adegan hero = panggung 3D:** kisi diam di belakang; lapisan depan bergoyang pelan, objek punya kedalaman (`lp-z-*`) sehingga terasa parallax. Kunci melayang lalu berputar pada porosnya (membuka gembok), ubin huruf berputar balik bergantian, balon bicara melayang, bintang berkelip, lingkaran putus-putus berputar.
+- **Kursor:** adegan dan kartu (`data-tilt`, nilai = derajat maksimum) miring mengikuti kursor; hanya mouse/pen. Di ponsel gerak tetap ada lewat animasi otomatis dan scroll.
+- **Scroll:** kartu fakta, program, langkah, dan blok pendaftaran berputar masuk saat muncul (CSS scroll-driven `animation-timeline: view()`; browser yang belum mendukung menampilkan kartu diam).
+- **Lainnya:** pita berjalan terus, "KUNCI" sesekali bergoyang, tombol timbul (terangkat saat disorot, tertekan saat diklik), kartu terangkat dengan bayangan tegas saat disorot.
+- Hanya `transform`/`translate`/`rotate`/`scale` (tanpa `opacity`): tata letak (CLS 0) dan kontras tidak berubah. Lighthouse mobile tetap Performance 86–87, Accessibility 100.
+- Diuji E2E: animasi berjalan, kursor mengisi `--rx/--ry`, dan nol animasi saat `reducedMotion: reduce`.
