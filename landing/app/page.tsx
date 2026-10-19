@@ -1,18 +1,11 @@
 import type { Metadata } from "next";
-import { Amiri, Bricolage_Grotesque } from "next/font/google";
-import { Band } from "@/components/landing/art";
-import { Hero, Nav } from "@/components/landing/hero";
-import { CaraBelajar, Daftar, Footer, Kurikulum, Program } from "@/components/landing/seksi";
-import { Gerak } from "@/components/landing/gerak";
-import "@/components/landing/landing.css";
+import { Band } from "@/components/art";
+import { Hero, Nav } from "@/components/hero";
+import { CaraBelajar, Daftar, Footer, Kurikulum, Program } from "@/components/seksi";
+import { Gerak } from "@/components/gerak";
 import { siteContent, tautanWhatsApp, urlSitus } from "@/lib/site-content";
 
-// Landing page publik. Ditampilkan di "/" untuk pengunjung yang belum masuk (rewrite di proxy.ts);
-// pengguna yang sudah masuk tetap melihat dashboard di "/". Statis: tanpa database, tanpa kunci.
-// Font di-host sendiri saat build (next/font), tanpa permintaan ke Google saat runtime.
-const bricolage = Bricolage_Grotesque({ subsets: ["latin"], axes: ["opsz"], variable: "--font-bricolage" });
-// Amiri hanya untuk hiasan/label Arab: tidak di-preload agar teks utama (LCP) tampil lebih cepat.
-const amiri = Amiri({ subsets: ["arabic"], weight: ["400", "700"], variable: "--font-amiri", preload: false });
+// Landing page publik (situs terpisah dari dashboard). Statis: tanpa database, tanpa kunci.
 
 const JUDUL = "Lembaga Miftah al-Lughah — Kursus Bahasa Arab Online (Kitab ABY 1–8)";
 const DESKRIPSI =
@@ -36,7 +29,7 @@ export const metadata: Metadata = {
 export default function HalamanLanding() {
   const tautanDaftar = tautanWhatsApp(siteContent.waNumber, siteContent.waMessage);
   return (
-    <div className={`${bricolage.variable} ${amiri.variable} lp-halaman`}>
+    <div className="lp-halaman">
       <Nav />
       <main>
         <Hero tautanDaftar={tautanDaftar} />

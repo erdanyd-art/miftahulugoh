@@ -28,6 +28,7 @@ Docker Desktop di Mac ini mode per pengguna: set `PATH="$HOME/.docker/bin:$PATH"
 - `npx supabase start` / `stop` / `status` (butuh Docker berjalan)
 - `npx supabase migration new <nama>` · `npm run db:reset` (lokal; = `supabase db reset` + restart Kong, karena setelah reset template email lokal 404) · `npx supabase test db` (tes pgTAP di `supabase/tests/`)
 - `npx supabase gen types typescript --local > lib/database.types.ts`
+- Landing page (folder `landing/`, port 3002): `cd landing && npm run dev` · `npm run lint` · `npm run typecheck` · `npm test` · `npm run test:e2e`
 
 ## Aturan kerja
 
@@ -69,7 +70,7 @@ Docker Desktop di Mac ini mode per pengguna: set `PATH="$HOME/.docker/bin:$PATH"
 
 Nama tampilan: **Lembaga Miftah al-Lughah**. UI berbahasa Indonesia. Teks Arab memakai `dir="rtl"` dan kelas `font-arab` (Noto Naskh Arabic).
 
-**Landing page publik (`/`) memakai gaya visual sendiri yang ceria**, terpisah dari dashboard; ikuti `docs/landing-page.md`, jangan menerapkan gaya itu ke dashboard dan sebaliknya. Halaman di `app/landing/` (pengunjung belum masuk di `/` di-rewrite ke sana oleh `proxy.ts`; yang sudah masuk tetap ke dashboard), komponen di `components/landing/`, gaya di `components/landing/landing.css` (kelas berawalan `lp-`, bukan CSS module: aturan Turbopack `*.css` di `next.config.ts` mematikan CSS module), isi kontak/jadwal/biaya di `lib/site-content.ts`, gerak 3D di bagian akhir `landing.css` + `components/landing/gerak.tsx` (hanya transform, mati untuk `prefers-reduced-motion`). Bagian di bawah ini berlaku untuk **dashboard**.
+**Landing page publik adalah situs terpisah** di folder `landing/` (aplikasi Next.js sendiri, proyek Vercel sendiri, tanpa Tailwind, tanpa Supabase). Dashboard tidak memuat landing apa pun dan seluruhnya `noindex`. Landing memakai gaya visual sendiri yang ceria; ikuti `docs/landing-page.md` (visual) dan `docs/landing-konten.md` (isi). Jangan menerapkan gaya itu ke dashboard dan sebaliknya. Di `landing/`: halaman `app/page.tsx`, gaya `app/landing.css` (kelas `lp-`), komponen `components/`, gerak 3D `components/gerak.tsx` + akhir `landing.css`, isi (harga, kelas, WhatsApp) `lib/site-content.ts`. Tombol "Masuk" = tautan ke `/masuk` dashboard (`NEXT_PUBLIC_DASHBOARD_URL`). Bagian di bawah ini berlaku untuk **dashboard**.
 
 **Font:** isi = Fredoka (`font-sans`, bulat dan mudah dibaca); judul h1–h3, judul kartu, angka besar, nama lembaga = Righteous (`font-judul`, hanya satu ketebalan, jangan pakai `font-bold`/`font-semibold` untuknya). Dimuat lewat `next/font` di `app/layout.tsx`.
 
@@ -118,7 +119,8 @@ supabase/templates/    template email undangan & atur ulang sandi (token_hash ->
 e2e/                   tes Playwright
 supabase/migrations/   migrasi dan kebijakan RLS
 supabase/tests/        tes RLS (pgTAP)
-docs/                  schema.md, roadmap.md, security-checklist.md, uji_rls.sql, landing-page.md
+docs/                  schema.md, roadmap.md, security-checklist.md, uji_rls.sql, landing-page.md, landing-konten.md
+landing/               landing page publik: aplikasi Next.js terpisah (proyek Vercel sendiri, Root Directory `landing`)
 ```
 
 ## Konvensi

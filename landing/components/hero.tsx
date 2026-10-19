@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { siteContent, type KontenSitus } from "@/lib/site-content";
+import { siteContent, urlMasuk, type KontenSitus } from "@/lib/site-content";
 import {
   IkonJam,
   IkonKalender,
@@ -31,9 +31,9 @@ export function Nav() {
         <a href="#program">Program</a>
         <a href="#kurikulum">Kurikulum</a>
         <a href="#daftar">Daftar</a>
-        <Link href="/masuk" className="lp-masuk">
+        <a href={urlMasuk()} className="lp-masuk">
           Masuk
-        </Link>
+        </a>
       </nav>
     </header>
   );

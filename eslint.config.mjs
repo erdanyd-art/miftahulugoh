@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Landing page publik: aplikasi terpisah dengan konfigurasinya sendiri
+    "landing/**",
   ]),
 ]);
 

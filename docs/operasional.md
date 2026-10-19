@@ -91,6 +91,7 @@ folder lembaga (mis. Google Drive) agar bisa diunggah ulang bila proyek perlu di
 | GitHub | repo `erdanyd-art/miftahulugoh` (publik) | Erdany | Aktifkan 2FA GitHub; simpan kode cadangan |
 | Supabase | proyek `neqvbfwccaxlaauzjmmm` (Singapura, paket gratis) | Erdany | Login Supabase dengan akun GitHub/email Erdany; aktifkan 2FA |
 | Vercel | proyek `miftahulugohh`, tim `erdanyd-4045's projects` (Hobby), tersambung ke repo di atas | Erdany | Login dengan akun GitHub; variabel lingkungan hanya di Vercel |
+| Vercel (landing page) | proyek kedua dari repo yang sama, **Root Directory `landing`**, framework Next.js, tanpa variabel rahasia (opsional `NEXT_PUBLIC_DASHBOARD_URL`, `NEXT_PUBLIC_SITE_URL`) | Erdany | Hanya ter-*build* bila `landing/` berubah (`landing/vercel.json`). Isi harga/WhatsApp: `landing/lib/site-content.ts` |
 | Email pengirim (SMTP) | Gmail `erdanyd@gmail.com`, Sandi Aplikasi "Miftah Supabase" | Erdany | Bila Sandi Aplikasi dicabut/diganti, perbarui di Supabase → Authentication → Emails → SMTP. Tanpa SMTP, undangan & atur ulang sandi gagal |
 | Domain | belum ada (memakai `miftahulugohh.vercel.app`) | — | Saat dipasang: perbarui Site URL & Redirect URL Supabase |
 

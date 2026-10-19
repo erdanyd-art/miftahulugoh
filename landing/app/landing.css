@@ -1,8 +1,8 @@
-/* Landing page publik (/). Semua kelas berawalan lp- dan hanya dimuat oleh app/landing/page.tsx,
-   jadi tidak bentrok dengan dashboard. Gaya terpisah dari dashboard (docs/landing-page.md); nilai dari
-   docs/landing-reference.html. Warna hanya di token di bawah: ganti di sini untuk opsi aksen lain
+/* Landing page publik (situs terpisah dari dashboard, folder landing/). Kelas berawalan lp-.
+   Gaya mengikuti docs/landing-page.md dan docs/landing-reference.html; isi dari docs/landing-konten.md.
+   Warna hanya di token di bawah: ganti di sini untuk opsi aksen lain
    (accent #FFD84D / #FF9BC2 / #7FE3D0; primary #5B4BDB / #0B7A75). */
-.lp-halaman {
+:root {
   --navy: #0e1e5b;
   --primary: #4a5bea;
   --accent: #d7f75b;
@@ -16,33 +16,24 @@
 
   --radius-pil: 999px;
   --lebar-isi: 1200px;
+}
 
+body {
+  margin: 0;
+  background: var(--cream);
+}
+
+.lp-halaman {
   width: 100%;
   min-height: 100vh;
   overflow-x: clip;
   color: var(--navy);
   font-family: var(--font-bricolage), system-ui, sans-serif;
-  line-height: normal;
-  -webkit-font-smoothing: auto;
-  -moz-osx-font-smoothing: auto;
   background-color: var(--cream);
   background-image:
     linear-gradient(var(--grid) 1.5px, transparent 1.5px),
     linear-gradient(90deg, var(--grid) 1.5px, transparent 1.5px);
   background-size: 44px 44px;
-}
-
-/* Samakan dengan acuan (tanpa reset CSS): content-box dan tinggi baris "normal". Preflight Tailwind
-   (border-box, line-height 1.5) ada di @layer base, jadi aturan tak berlapis ini menang. */
-.lp-halaman,
-.lp-halaman *,
-.lp-halaman *::before,
-.lp-halaman *::after {
-  box-sizing: content-box;
-}
-.lp-halaman svg {
-  display: inline;
-  vertical-align: baseline;
 }
 
 .lp-halaman a {
@@ -58,12 +49,9 @@
   border-radius: 12px;
 }
 
-/* Judul: timpa gaya judul dashboard (Righteous) dari globals.css; CSS ini tidak berlapis jadi menang dari @layer base */
 .lp-halaman h1,
 .lp-halaman h2,
 .lp-halaman h3 {
-  font-family: inherit;
-  font-synthesis: weight;
   margin: 0;
 }
 

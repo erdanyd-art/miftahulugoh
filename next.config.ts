@@ -47,8 +47,8 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/(.*)", headers: headerKeamanan },
-      // Hanya landing page (/) yang boleh diindeks mesin pencari (docs/landing-page.md).
-      { source: "/:jalur+", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
+      // Dashboard tidak untuk mesin pencari; landing page publik adalah situs terpisah (landing/).
+      { source: "/(.*)", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
     ];
   },
   turbopack: {
