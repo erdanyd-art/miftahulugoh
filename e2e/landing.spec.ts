@@ -6,27 +6,55 @@ const LEBAR = [360, 390, 768, 1024, 1440];
 test("pengunjung melihat landing page di / dan tombol Masuk membuka /masuk", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveURL(/\/$/);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Buka\s+kunci\s+bahasa Arab & Inggrismu/i);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Program\s+Miftah\s+al-Lughah/i);
   await expect(page.getByRole("heading", { level: 2 })).toHaveText([
-    "Pilih kelasmu",
+    "Pilih kelas Anda",
+    "Kurikulum & sistem pembelajaran",
     "Tiga langkah, langsung belajar",
-    "Siap masuk kelas?",
+    "Mulai dari sekarang, menuju kemahiran berbahasa Arab!",
   ]);
-  await expect(page.getByRole("heading", { level: 3 })).toHaveCount(6);
+  await expect(page.getByRole("heading", { level: 3 })).toHaveText([
+    "Reguler",
+    "Semi Privat",
+    "Privat",
+    "4 Maharah yang diujikan",
+    "Fasilitas",
+    "Daftar",
+    "Terima jadwal & tautan",
+    "Belajar bersama pengajar",
+  ]);
 
-  // Placeholder selama lib/site-content.ts kosong
+  // Harga dari lib/site-content.ts, diformat rupiah; satuan dan catatan persis brosur
+  const kartu = page.locator("#program article");
+  await expect(kartu.nth(0)).toContainText(/Rp\s100\.000\s*\/peserta\/bulan/);
+  await expect(kartu.nth(1)).toContainText(/Rp\s175\.000\s*\/peserta\/bulan/);
+  await expect(kartu.nth(2)).toContainText(/Rp\s275\.000\s*\/bulan \(Per Tingkat\)/);
+  await expect(page.getByText("*Harga untuk 1 tingkat")).toBeVisible();
+
+  // Placeholder selama kontak dan jadwal belum diisi
   await expect(page.getByText("[NOMOR WHATSAPP]")).toBeVisible();
   await expect(page.getByText("[@AKUN INSTAGRAM]")).toBeVisible();
   await expect(page.getByText("[ALAMAT / KOTA]")).toBeVisible();
   await expect(page.getByText("[HARI & JAM]")).toHaveCount(3);
-  await expect(page.getByText("[BIAYA / BULAN]")).toHaveCount(3);
-  await expect(page.getByRole("link", { name: "Chat WhatsApp" })).toHaveAttribute("href", "#daftar");
+  await expect(page.locator("#daftar").getByRole("link", { name: "Daftar Sekarang" })).toHaveAttribute("href", "#daftar");
   await expect(page.locator('a[href*="wa.me"]')).toHaveCount(0);
 
-  // Teks Arab yang dibaca pembaca layar (label program) memakai lang/dir yang benar
-  const label = page.getByText("العربية", { exact: true });
-  await expect(label).toHaveAttribute("dir", "rtl");
-  await expect(label).toHaveAttribute("lang", "ar");
+  // Empat maharah: teks Arab benar dan kanan-ke-kiri
+  for (const arab of ["الاستماع", "الكلام", "القراءة", "الكتابة"]) {
+    const el = page.getByText(arab, { exact: true });
+    await expect(el).toHaveAttribute("dir", "rtl");
+    await expect(el).toHaveAttribute("lang", "ar");
+  }
+  // Baris "Pendampingan" di brosur kosong, jadi tidak ditampilkan
+  await expect(page.locator("#kurikulum dt")).toHaveText(["Materi", "Pertemuan", "Durasi", "Ujian"]);
+
+  // Hanya Program Bahasa Arab: tanpa Inggris/Nahwu di teks, judul, deskripsi, maupun pita
+  const semuaTeks = await page.evaluate(
+    () =>
+      `${document.body.textContent} ${document.title} ${document.querySelector('meta[name="description"]')?.getAttribute("content")}`,
+  );
+  expect(semuaTeks).not.toMatch(/inggris|english|nahwu|نحو/i);
+  expect(semuaTeks).not.toMatch(/portal belajar/i);
 
   // Tidak ada formulir di landing page
   await expect(page.locator("form")).toHaveCount(0);
@@ -37,9 +65,10 @@ test("pengunjung melihat landing page di / dan tombol Masuk membuka /masuk", asy
 });
 
 test("landing page hanya memuat sumber dari domain sendiri (font di-host sendiri)", async ({ page }) => {
+  const asal = new URL(test.info().project.use.baseURL ?? "http://localhost:3000").origin;
   const luar: string[] = [];
   page.on("request", (r) => {
-    if (!r.url().startsWith("http://localhost:3000")) luar.push(r.url());
+    if (!r.url().startsWith(asal)) luar.push(r.url());
   });
   await page.goto("/");
   await page.waitForLoadState("networkidle");

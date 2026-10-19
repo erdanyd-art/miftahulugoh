@@ -499,42 +499,15 @@
   line-height: 1;
   font-weight: 700;
   font-size: 220px;
+  right: 18px;
   color: var(--navy-samar);
   pointer-events: none;
 }
-.lp-hiasan-huruf::before {
-  content: attr(data-huruf);
-}
-.lp-hiasan-arab {
-  right: 14px;
-}
-.lp-hiasan-nun {
-  right: 18px;
-}
-.lp-hiasan-aa {
-  right: 22px;
-  bottom: -40px;
-  font-size: 230px;
-  font-weight: 800;
+.lp-latar-biru .lp-hiasan-huruf {
   color: var(--putih-samar);
 }
-.lp-label-program {
-  align-self: flex-start;
-  background: var(--white);
-  color: var(--navy);
-  border: 2.5px dashed var(--navy);
-  border-radius: var(--radius-pil);
-}
-.lp-label-arab {
-  padding: 2px 18px 6px;
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 1.4;
-}
-.lp-label-latin {
-  padding: 6px 18px;
-  font-size: 16px;
-  font-weight: 700;
+.lp-hiasan-huruf::before {
+  content: attr(data-huruf);
 }
 .lp-judul-program {
   font-size: 30px;
@@ -647,17 +620,11 @@
   gap: 20px;
 }
 .lp-judul-daftar {
-  font-size: clamp(36px, 5.6vw, 68px);
+  font-size: clamp(30px, 4.4vw, 54px);
   line-height: 1.02;
   font-weight: 800;
   letter-spacing: -0.025em;
   text-transform: uppercase;
-}
-.lp-paragraf-daftar {
-  margin: 0;
-  font-size: 19px;
-  line-height: 1.55;
-  max-width: 460px;
 }
 .lp-tombol-wa {
   display: inline-flex;
@@ -738,6 +705,218 @@
 }
 .lp-halaman .lp-footer a:focus-visible {
   outline-color: var(--white);
+}
+
+/* ============ ISI BROSUR ============ */
+/* "al-Lughah" jangan terpotong di tanda hubung */
+.lp-tanpa-putus {
+  white-space: nowrap;
+}
+.lp-logo-teks {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.lp-logo-sub {
+  font-size: 13px;
+  font-weight: 600;
+}
+.lp-miring-kiri-kecil {
+  transform: rotate(-1.5deg);
+}
+.lp-slogan {
+  margin: 0;
+  align-self: flex-start;
+  background: var(--accent);
+  border: 3px dashed var(--navy);
+  border-radius: 22px;
+  padding: 10px 20px;
+  font-size: clamp(20px, 2.6vw, 28px);
+  line-height: 1.2;
+  font-weight: 800;
+  transform: rotate(-1.5deg);
+}
+.lp-balon-ajakan {
+  display: block;
+  font-size: 22px;
+  line-height: 1.15;
+  text-align: center;
+}
+
+/* Kartu jenis kelas */
+.lp-kelas-kepala {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.lp-kelas-ikon {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-pil);
+  background: var(--navy);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lp-kelas-peserta {
+  margin: 2px 0 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.lp-harga {
+  margin: 4px 0 0;
+  align-self: flex-start;
+  background: var(--white);
+  color: var(--navy);
+  border: 2.5px solid var(--navy);
+  border-radius: 22px;
+  padding: 10px 18px;
+  display: flex;
+  flex-direction: column;
+}
+.lp-harga-angka {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.lp-harga-satuan {
+  font-size: 14px;
+  font-weight: 600;
+}
+.lp-cocok {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 14px;
+  border-top: 2px dashed currentColor;
+}
+.lp-cocok-label {
+  align-self: flex-start;
+  background: var(--navy);
+  color: var(--accent);
+  border-radius: var(--radius-pil);
+  padding: 3px 12px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.lp-catatan-harga {
+  margin: 18px 0 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* Kurikulum, 4 maharah, fasilitas */
+.lp-kurikulum-baris {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.lp-kurikulum-kartu {
+  flex: 1 1 300px;
+  min-width: 0;
+  border-radius: 32px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.lp-judul-blok {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.lp-ikon-kecil {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--navy);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lp-sistem {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.lp-sistem-baris {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  column-gap: 14px;
+  row-gap: 2px;
+  align-items: center;
+}
+.lp-sistem-baris .lp-ikon-kecil {
+  grid-row: span 2;
+}
+.lp-sistem-baris dt {
+  font-weight: 800;
+  font-size: 17px;
+}
+.lp-sistem-baris dd {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+}
+.lp-maharah,
+.lp-fasilitas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.lp-maharah {
+  gap: 10px;
+}
+.lp-maharah li {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: transform 0.2s ease;
+}
+.lp-maharah li:hover {
+  transform: translateX(6px) scale(1.02);
+}
+.lp-maharah strong {
+  font-size: 17px;
+}
+.lp-maharah-arab {
+  font-size: 20px;
+  font-weight: 700;
+}
+.lp-maharah-arti {
+  display: block;
+  font-size: 15px;
+}
+.lp-fasilitas {
+  gap: 12px;
+  font-size: 17px;
+  line-height: 1.4;
+}
+.lp-fasilitas li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.lp-centang {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-pil);
+  background: var(--navy);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ============ GERAK 3D ============
@@ -939,11 +1118,13 @@
 /* Kartu 3D: miring mengikuti kursor dan terangkat dengan bayangan tegas */
 .lp-fakta-baris,
 .lp-kartu-baris,
+.lp-kurikulum-baris,
 .lp-langkah-baris {
   perspective: 1200px;
 }
 .lp-fakta,
 .lp-program,
+.lp-kurikulum-kartu,
 .lp-langkah {
   transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(0) rotate(var(--miring, 0deg));
   transition:
@@ -952,6 +1133,7 @@
 }
 .lp-fakta:hover,
 .lp-program:hover,
+.lp-kurikulum-kartu:hover,
 .lp-langkah:hover {
   transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-8px) rotate(0deg);
   box-shadow: 8px 12px 0 var(--navy);
@@ -976,6 +1158,7 @@
 @supports (animation-timeline: view()) {
   .lp-fakta,
   .lp-program,
+  .lp-kurikulum-kartu,
   .lp-langkah,
   .lp-blok-daftar {
     animation: lp-muncul linear both;
@@ -983,11 +1166,13 @@
     animation-range: entry 0% entry 90%;
   }
   .lp-program:nth-child(2),
+  .lp-kurikulum-kartu:nth-child(2),
   .lp-langkah:nth-child(2),
   .lp-fakta:nth-child(2) {
     animation-range: entry 8% entry 98%;
   }
   .lp-program:nth-child(3),
+  .lp-kurikulum-kartu:nth-child(3),
   .lp-langkah:nth-child(3),
   .lp-fakta:nth-child(3) {
     animation-range: entry 16% cover 30%;
@@ -1032,6 +1217,7 @@
   .lp-adegan-isi,
   .lp-fakta,
   .lp-program,
+  .lp-kurikulum-kartu,
   .lp-langkah {
     --rx: 0deg;
     --ry: 0deg;

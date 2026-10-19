@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
+import { siteContent, type KontenSitus } from "@/lib/site-content";
 import {
-  IkonCentang,
+  IkonJam,
   IkonKalender,
   IkonKunci,
   IkonPanah,
@@ -17,14 +18,18 @@ export function Nav() {
   return (
     <header className="lp-nav">
       <Link href="/" className="lp-logo">
+        {/* TODO logo asli: ganti ikon sementara ini dengan berkas logo lembaga (public/) bila sudah tersedia */}
         <span aria-hidden="true" className="lp-logo-bulat">
           <IkonKunci />
         </span>
-        <span className="lp-logo-nama">Miftah al-Lughah</span>
+        <span className="lp-logo-teks">
+          <span className="lp-logo-nama">Miftah al-Lughah</span>
+          <span className="lp-logo-sub">Program Bahasa Arab</span>
+        </span>
       </Link>
       <nav aria-label="Navigasi utama" className="lp-menu">
         <a href="#program">Program</a>
-        <a href="#cara">Cara belajar</a>
+        <a href="#kurikulum">Kurikulum</a>
         <a href="#daftar">Daftar</a>
         <Link href="/masuk" className="lp-masuk">
           Masuk
@@ -34,23 +39,27 @@ export function Nav() {
   );
 }
 
-export function Hero({ tautanDaftar }: { tautanDaftar: string | null }) {
+export function Hero({ tautanDaftar, konten = siteContent }: { tautanDaftar: string | null; konten?: KontenSitus }) {
   return (
     <section className="lp-hero">
       <div className="lp-hero-baris">
         <div className="lp-hero-teks">
           <div className="lp-stiker-baris">
-            <span className="lp-stiker lp-miring-kiri">Kelas online</span>
-            <span className="lp-stiker lp-stiker-putih lp-miring-kanan">via Google Meet</span>
+            <span className="lp-stiker lp-miring-kiri">Kelas Online</span>
+            <span className="lp-stiker lp-stiker-putih lp-miring-kanan">Kitab ABY 1–{konten.jumlahTingkat}</span>
+            <span className="lp-stiker lp-stiker-putih lp-miring-kiri-kecil">
+              Tersedia {konten.jumlahTingkat} Tingkat Pembelajaran
+            </span>
           </div>
 
           <h1 className="lp-judul-hero">
-            Buka <span className="lp-kunci-pil">kunci</span> bahasa Arab &amp; Inggrismu
+            Program <span className="lp-kunci-pil">Miftah</span> <span className="lp-tanpa-putus">al-Lughah</span>
           </h1>
 
+          <p className="lp-slogan">Belajar Bahasa Arab Menjadi Jauh Lebih Mudah!</p>
+
           <p className="lp-paragraf-hero">
-            Kelas Bahasa Arab, Bahasa Inggris, dan Nahwu Shorof bersama tutor lembaga. Pilih program, terima jadwal,
-            langsung belajar.
+            Dengan metode yang terstruktur, bimbingan pengajar berpengalaman, dan pilihan kelas sesuai kebutuhan Anda.
           </p>
 
           <div className="lp-aksi-baris">
@@ -59,7 +68,7 @@ export function Hero({ tautanDaftar }: { tautanDaftar: string | null }) {
               className="lp-tombol-utama"
               {...(tautanDaftar ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             >
-              Daftar sekarang
+              Daftar Sekarang
               <span aria-hidden="true" className="lp-panah-bulat">
                 <IkonPanah />
               </span>
@@ -78,31 +87,19 @@ export function Hero({ tautanDaftar }: { tautanDaftar: string | null }) {
           <span aria-hidden="true" className="lp-ikon-bulat lp-ikon-limau">
             <IkonVideo />
           </span>
-          <span>
-            <strong>Online via Google Meet</strong>
-            <br />
-            Belajar dari rumah, kapan pun sesuai jadwal.
-          </span>
+          <strong>Online via Google Meet</strong>
         </div>
         <div data-tilt="6" className="lp-fakta lp-latar-periwinkle">
           <span aria-hidden="true" className="lp-ikon-bulat lp-ikon-periwinkle">
             <IkonKalender />
           </span>
-          <span>
-            <strong>Jadwal tetap tiap pekan</strong>
-            <br />
-            Hari dan jam jelas, mudah diatur.
-          </span>
+          <strong>{konten.pertemuanPerBulan} pertemuan per bulan</strong>
         </div>
         <div data-tilt="6" className="lp-fakta lp-latar-putih">
           <span aria-hidden="true" className="lp-ikon-bulat lp-ikon-putih">
-            <IkonCentang />
+            <IkonJam />
           </span>
-          <span>
-            <strong>Kehadiran dicatat tutor</strong>
-            <br />
-            Setiap pertemuan, setiap peserta.
-          </span>
+          <strong>±{konten.durasiMenit} menit per pertemuan</strong>
         </div>
       </div>
     </section>
@@ -137,7 +134,11 @@ function Adegan() {
           </SpeechBubble>
 
           <SpeechBubble warna="limau" ekor="atas" miring={5} style={{ right: "7%", bottom: "8%", ...tunda(1.2) }}>
-            <span className="lp-balon-latin">Hello!</span>
+            <span className="lp-balon-latin lp-balon-ajakan">
+              Ayo Belajar
+              <br />
+              Bahasa Arab!
+            </span>
           </SpeechBubble>
 
           <div className="lp-ubin-kolom">

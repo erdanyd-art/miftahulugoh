@@ -99,17 +99,20 @@ export function LetterTile({
   );
 }
 
-const ISI_PITA: { teks: string; arab?: boolean }[] = [
-  { teks: "Bahasa Arab" },
-  { teks: "English" },
-  { teks: "نحو وصرف", arab: true },
-  { teks: "مفتاح اللغة", arab: true },
-];
+// Teks pita dari docs/landing-konten.md: Bahasa Arab ✦ Kitab ABY ✦ 8 Tingkat ✦ مفتاح اللغة
+function isiPita(jumlahTingkat: number): { teks: string; arab?: boolean }[] {
+  return [
+    { teks: "Bahasa Arab" },
+    { teks: "Kitab ABY" },
+    { teks: `${jumlahTingkat} Tingkat` },
+    { teks: "مفتاح اللغة", arab: true },
+  ];
+}
 
-// Pita miring berjalan: Bahasa Arab ✦ English ✦ نحو وصرف ✦ مفتاح اللغة (✦ digambar sebagai SVG).
+// Pita miring berjalan (✦ digambar sebagai SVG).
 // Urutan diulang 6 kali dan digeser -50% berulang, sehingga sambungannya tak terlihat di layar selebar apa pun.
-export function Band() {
-  const urutan = Array.from({ length: 6 }, () => ISI_PITA).flat();
+export function Band({ jumlahTingkat }: { jumlahTingkat: number }) {
+  const urutan = Array.from({ length: 6 }, () => isiPita(jumlahTingkat)).flat();
   return (
     <div aria-hidden="true" className="lp-pita">
       <div className="lp-pita-jalur">
@@ -182,3 +185,105 @@ export const IkonCentang = () => (
     <path d="M8 12.5l3 3 5-6" />
   </Garis>
 );
+
+export const IkonJam = () => (
+  <Garis ukuran={26} lebar={2}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7v5l3 2" />
+  </Garis>
+);
+
+// Ikon kurikulum dan maharah (garis, 24px)
+export const IkonBuku = () => (
+  <Garis ukuran={24} lebar={2}>
+    <path d="M3 5.5C5.5 4.5 9 4.5 12 6.5c3-2 6.5-2 9-1v13c-2.5-1-6-1-9 1-3-2-6.5-2-9-1z" />
+    <path d="M12 6.5v13" />
+  </Garis>
+);
+
+export const IkonKalenderKecil = () => (
+  <Garis ukuran={24} lebar={2}>
+    <rect x="3" y="5" width="18" height="16" rx="2" />
+    <path d="M3 10h18M8 3v4M16 3v4M8 14h2M14 14h2M8 17.5h2" />
+  </Garis>
+);
+
+export const IkonJamKecil = () => (
+  <Garis ukuran={24} lebar={2}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7v5l3 2" />
+  </Garis>
+);
+
+export const IkonPerisai = () => (
+  <Garis ukuran={24} lebar={2}>
+    <path d="M12 3l8 3v6c0 4.5-3.4 7.8-8 9-4.6-1.2-8-4.5-8-9V6z" />
+    <path d="M8.5 12l2.5 2.5 4.5-5" />
+  </Garis>
+);
+
+export const IkonDengar = () => (
+  <Garis ukuran={26} lebar={2}>
+    <path d="M4 15v-3a8 8 0 0 1 16 0v3" />
+    <rect x="3" y="14" width="4.5" height="7" rx="1.5" />
+    <rect x="16.5" y="14" width="4.5" height="7" rx="1.5" />
+  </Garis>
+);
+
+export const IkonBicara = () => (
+  <Garis ukuran={26} lebar={2}>
+    <path d="M4 5h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z" />
+    <path d="M17 9h3a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1v3l-3.5-3H12" />
+  </Garis>
+);
+
+export const IkonBaca = () => (
+  <Garis ukuran={26} lebar={2}>
+    <path d="M2 6c3-1.5 7-1.5 10 1 3-2.5 7-2.5 10-1v12c-3-1.5-7-1.5-10 1-3-2.5-7-2.5-10-1z" />
+    <path d="M12 7v12" />
+  </Garis>
+);
+
+export const IkonTulis = () => (
+  <Garis ukuran={26} lebar={2}>
+    <path d="M15.5 4.5l4 4L9 19H5v-4z" />
+    <path d="M13 7l4 4M4 21h16" />
+  </Garis>
+);
+
+export const IkonCentangSaja = () => (
+  <Garis ukuran={20} lebar={3}>
+    <path d="M5 12.5l4.5 4.5L19 7.5" />
+  </Garis>
+);
+
+// Ikon orang (isi), untuk jenis kelas: 3 orang (Reguler), 2 orang (Semi Privat), 1 orang (Privat).
+function Orang({ cx, skala = 1 }: { cx: number; skala?: number }) {
+  return (
+    <g transform={`translate(${cx} 0) scale(${skala}) translate(${-cx} 0)`}>
+      <circle cx={cx} cy={9} r={4.6} />
+      <path d={`M${cx - 8} 25a8 8 0 0 1 16 0v1h-16z`} />
+    </g>
+  );
+}
+
+export function IkonOrang({ jumlah }: { jumlah: 1 | 2 | 3 }) {
+  return (
+    <svg aria-hidden="true" width="34" height="28" viewBox="0 0 34 28" fill="currentColor">
+      {jumlah === 1 && <Orang cx={17} skala={1.05} />}
+      {jumlah === 2 && (
+        <>
+          <Orang cx={10.5} />
+          <Orang cx={23.5} />
+        </>
+      )}
+      {jumlah === 3 && (
+        <>
+          <Orang cx={7} skala={0.8} />
+          <Orang cx={27} skala={0.8} />
+          <Orang cx={17} />
+        </>
+      )}
+    </svg>
+  );
+}

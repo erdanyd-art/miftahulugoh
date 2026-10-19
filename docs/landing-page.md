@@ -2,6 +2,8 @@
 
 Versi: 0.1 · Tanggal: 2026-10-16 · Mengacu pada PRD.md v0.10 (bagian 5.8) dan CLAUDE.md
 
+> **Isi (teks dan struktur program) di berkas ini sudah digantikan `docs/landing-konten.md` (2026-10-19, dari brosur resmi).** Bagian visual, aksesibilitas, SEO, implementasi, dan gerak 3D di berkas ini tetap berlaku.
+
 ## 1. Tujuan dan lingkup
 
 Halaman publik di rute `/` yang memperkenalkan Lembaga Miftah al-Lughah dan tiga programnya, dengan dua tombol utama:
