@@ -50,8 +50,8 @@ test("pengunjung melihat landing page di / dan tombol Masuk membuka /masuk", asy
   expect(warna[0]).not.toBe(warna[1]);
 
   // Placeholder selama kontak lain dan jadwal belum diisi
-  await expect(page.getByText("[@AKUN INSTAGRAM]")).toBeVisible();
-  await expect(page.getByText("[ALAMAT / KOTA]")).toBeVisible();
+  // Kolom Instagram dan alamat dihapus atas permintaan pemilik (2026-10-19)
+  await expect(page.locator("#daftar")).not.toContainText(/Instagram|Alamat/);
   await expect(page.getByText("[HARI & JAM]")).toHaveCount(3);
 
   // Empat maharah: teks Arab benar dan kanan-ke-kiri

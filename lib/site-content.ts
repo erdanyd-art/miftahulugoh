@@ -1,5 +1,5 @@
 // Isi landing page (/), dari brosur resmi lembaga (docs/landing-konten.md, docs/referensi-brosur.jpg).
-// Yang belum ada di brosur dibiarkan kosong dan tampil sebagai placeholder: kontak dan jadwal.
+// Yang belum ada di brosur dibiarkan kosong dan tampil sebagai placeholder: jadwal.
 // Jangan mengisi nomor/akun contoh yang tampak asli.
 export type KunciKelas = "reguler" | "semi-privat" | "privat";
 
@@ -17,8 +17,6 @@ export type Kelas = {
 export type KontenSitus = {
   waNumber: string;
   waMessage: string;
-  instagram: string;
-  address: string;
   kelas: Kelas[];
   pertemuanPerBulan: number;
   durasiMenit: number;
@@ -28,8 +26,6 @@ export type KontenSitus = {
 export const siteContent: KontenSitus = {
   waNumber: "6287863554350", // hanya angka dengan kode negara (0878... ditulis 62878...)
   waMessage: "Assalamu'alaikum, saya ingin mendaftar di Lembaga Miftah al-Lughah.",
-  instagram: "", // tanpa @
-  address: "",
   kelas: [
     {
       key: "reguler",
@@ -83,13 +79,6 @@ export function tampilanWhatsApp(nomor: string): string {
   const sisa = angka.slice(2);
   const kelompok = [sisa.slice(0, 3), ...(sisa.slice(3).match(/.{1,4}/g) ?? [])];
   return `+62 ${kelompok.join("-")}`;
-}
-
-// Tautan Instagram, atau null bila akun belum diisi. "@" di depan diabaikan.
-export function tautanInstagram(akun: string): string | null {
-  const nama = akun.trim().replace(/^@/, "");
-  if (!/^[A-Za-z0-9._]{1,30}$/.test(nama)) return null;
-  return `https://www.instagram.com/${nama}/`;
 }
 
 // URL situs untuk metadata, robots, dan sitemap. NEXT_PUBLIC_SITE_URL diisi setelah domain sendiri dipasang;

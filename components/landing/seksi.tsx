@@ -4,7 +4,6 @@ import { formatRupiah } from "@/lib/format";
 import {
   siteContent,
   tampilanWhatsApp,
-  tautanInstagram,
   tautanWhatsApp,
   type KontenSitus,
   type KunciKelas,
@@ -206,7 +205,6 @@ export function CaraBelajar() {
 
 export function Daftar({ konten = siteContent }: { konten?: KontenSitus }) {
   const wa = tautanWhatsApp(konten.waNumber, konten.waMessage);
-  const ig = tautanInstagram(konten.instagram);
   const luar = { target: "_blank", rel: "noopener noreferrer" } as const;
 
   return (
@@ -246,20 +244,6 @@ export function Daftar({ konten = siteContent }: { konten?: KontenSitus }) {
             ) : (
               <span className="lp-kontak-nilai lp-pil-kosong">[NOMOR WHATSAPP]</span>
             )}
-          </div>
-          <div className="lp-kontak">
-            <span className="lp-kontak-label">Instagram</span>
-            {ig ? (
-              <a href={ig} className="lp-kontak-nilai" {...luar}>
-                @{konten.instagram.trim().replace(/^@/, "")}
-              </a>
-            ) : (
-              <span className="lp-kontak-nilai lp-pil-kosong">[@AKUN INSTAGRAM]</span>
-            )}
-          </div>
-          <div className="lp-kontak">
-            <span className="lp-kontak-label">Alamat</span>
-            <Pil nilai={konten.address} placeholder="[ALAMAT / KOTA]" className="lp-kontak-nilai" />
           </div>
         </div>
       </div>
