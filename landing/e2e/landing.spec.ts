@@ -1,9 +1,9 @@
+import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-const SANDI = "dev-lokal-123"; // akun fiktif dari supabase/seed.sql
 const LEBAR = [360, 390, 768, 1024, 1440];
 
-test("pengunjung melihat landing page di / dan tombol Masuk membuka /masuk", async ({ page }) => {
+test("landing page tampil dengan isi brosur, dan tombol Masuk menuju dashboard", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveURL(/\/$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Program\s+Miftah\s+al-Lughah/i);
@@ -74,9 +74,28 @@ test("pengunjung melihat landing page di / dan tombol Masuk membuka /masuk", asy
   // Tidak ada formulir di landing page
   await expect(page.locator("form")).toHaveCount(0);
 
-  await page.getByRole("navigation", { name: "Navigasi utama" }).getByRole("link", { name: "Masuk" }).click();
-  await expect(page).toHaveURL(/\/masuk$/);
-  await expect(page.getByRole("heading", { name: "Masuk" })).toBeVisible();
+  // Dashboard adalah situs terpisah: "Masuk" hanya tautan ke halaman masuknya
+  for (const masuk of [
+    page.getByRole("navigation", { name: "Navigasi utama" }).getByRole("link", { name: "Masuk" }),
+    page.getByRole("link", { name: "Masuk (admin dan tutor)" }),
+  ]) {
+    await expect(masuk).toHaveAttribute("href", /^https?:\/\/[^/]+\/masuk$/);
+  }
+});
+
+test("aksesibilitas (axe WCAG AA) dan tanpa galat konsol/CSP", async ({ page }) => {
+  const galat: string[] = [];
+  page.on("console", (m) => m.type() === "error" && galat.push(m.text()));
+  page.on("pageerror", (e) => galat.push(e.message));
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  const hasil = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
+  const berat = hasil.violations
+    .filter((v) => v.impact === "serious" || v.impact === "critical")
+    .map((v) => `${v.id}: ${v.help} (${v.nodes.length}x) ${v.nodes[0]?.target.join(" ")}`);
+  expect(berat).toEqual([]);
+  expect(galat.filter((g) => !g.includes("favicon"))).toEqual([]);
 });
 
 test("landing page hanya memuat sumber dari domain sendiri (font di-host sendiri)", async ({ page }) => {
@@ -102,30 +121,20 @@ for (const lebar of LEBAR) {
   });
 }
 
-test("pengguna yang sudah masuk tetap melihat dashboard di /", async ({ page }) => {
-  await page.goto("/masuk");
-  await page.getByLabel("Email atau username").fill("admin@contoh.test");
-  await page.getByLabel("Kata sandi", { exact: true }).fill(SANDI);
-  await page.getByRole("button", { name: "Masuk" }).click();
-  await expect(page.getByText("Admin Contoh")).toBeVisible();
-  await page.goto("/");
-  await expect(page.getByText("Admin Contoh")).toBeVisible();
-  await expect(page.getByText("[NOMOR WHATSAPP]")).toHaveCount(0);
-});
-
-test("hanya / yang boleh diindeks", async ({ request }) => {
+test("boleh diindeks mesin pencari, dengan header keamanan", async ({ request }) => {
   const beranda = await request.get("/");
-  expect(beranda.headers()["x-robots-tag"]).toBeUndefined();
+  const h = beranda.headers();
+  expect(h["x-robots-tag"]).toBeUndefined();
   expect(await beranda.text()).toContain('rel="canonical"');
-
-  for (const jalur of ["/masuk", "/lupa-sandi", "/landing"]) {
-    const res = await request.get(jalur, { maxRedirects: 0 });
-    expect(res.headers()["x-robots-tag"], jalur).toContain("noindex");
-  }
+  expect(h["content-security-policy"]).toContain("frame-ancestors 'none'");
+  expect(h["content-security-policy"]).toContain("object-src 'none'");
+  expect(h["x-frame-options"]).toBe("DENY");
+  expect(h["x-content-type-options"]).toBe("nosniff");
+  expect(h["x-powered-by"]).toBeUndefined();
 
   const robots = await request.get("/robots.txt");
   expect(robots.ok()).toBe(true);
-  expect(await robots.text()).toMatch(/Sitemap: .*\/sitemap\.xml/);
+  expect(await robots.text()).toMatch(/Allow: \/[\s\S]*Sitemap: .*\/sitemap\.xml/);
 
   const sitemap = await (await request.get("/sitemap.xml")).text();
   expect(sitemap.match(/<loc>/g)).toHaveLength(1);

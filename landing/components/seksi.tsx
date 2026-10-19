@@ -1,10 +1,10 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { formatRupiah } from "@/lib/format";
 import {
   siteContent,
   tampilanWhatsApp,
   tautanWhatsApp,
+  urlMasuk,
   type KontenSitus,
   type KunciKelas,
 } from "@/lib/site-content";
@@ -256,7 +256,7 @@ export function Footer() {
     <footer className="lp-footer">
       <div className="lp-footer-isi">
         <span>© 2026 Lembaga Miftah al-Lughah</span>
-        <Link href="/masuk">Masuk (admin dan tutor)</Link>
+        <a href={urlMasuk()}>Masuk (admin dan tutor)</a>
       </div>
     </footer>
   );

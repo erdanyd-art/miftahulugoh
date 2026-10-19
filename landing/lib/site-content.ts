@@ -81,6 +81,13 @@ export function tampilanWhatsApp(nomor: string): string {
   return `+62 ${kelompok.join("-")}`;
 }
 
+// Alamat dashboard (situs terpisah) untuk tombol "Masuk".
+export function urlMasuk(): string {
+  const env = process.env.NEXT_PUBLIC_DASHBOARD_URL?.trim();
+  const dasbor = env || (process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://miftahulugohh.vercel.app");
+  return `${dasbor.replace(/\/+$/, "")}/masuk`;
+}
+
 // URL situs untuk metadata, robots, dan sitemap. NEXT_PUBLIC_SITE_URL diisi setelah domain sendiri dipasang;
 // sampai saat itu dipakai domain produksi Vercel (variabel sistem Vercel saat build).
 export function urlSitus(): string {
@@ -88,5 +95,5 @@ export function urlSitus(): string {
   if (env) return env.replace(/\/+$/, "");
   const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
   if (vercel) return `https://${vercel}`;
-  return "http://localhost:3000";
+  return "http://localhost:3002";
 }
