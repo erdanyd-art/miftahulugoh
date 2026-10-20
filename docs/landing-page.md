@@ -165,6 +165,7 @@ Nomor WhatsApp, akun Instagram, alamat atau kota, jadwal dan biaya tiap program,
 - Tombol "Masuk" adalah tautan ke `/masuk` di dashboard (`NEXT_PUBLIC_DASHBOARD_URL`; bawaan `https://miftahulugohh.vercel.app`, lokal `http://localhost:3000`).
 - Gaya di `landing/app/landing.css` (kelas `lp-*`), token warna di `:root`. Tanpa reset CSS, sama seperti acuan (content-box, tinggi baris bawaan).
 - `landing/vercel.json` (`ignoreCommand`) hanya mem-*build* proyek landing bila folder `landing/` berubah. CI punya job `landing` sendiri (lint, typecheck, tes unit, build, E2E).
+- **Menu ponsel (2026-10-20):** di bawah 768 px menu pil diganti tombol ☰ yang membuka sidebar dari kanan (`landing/components/menu-ponsel.tsx`: tutup dengan ✕, Esc, ketuk latar, atau memilih tautan; fokus tertahan di panel). Header ponsel satu baris: logo asli + nama + "Program Bahasa Arab".
 - Perbedaan yang disengaja dari acuan: (1) tautan menu minimal 44 px (target sentuh); (2) tombol WhatsApp tampak tidak aktif (garis putus-putus) selama nomor kosong; (3) huruf hiasan samar dirender lewat CSS `::before` agar tidak dihitung sebagai teks oleh pemeriksa kontras.
 
 ## 13. Gerak 3D (2026-10-16, permintaan pemilik proyek)

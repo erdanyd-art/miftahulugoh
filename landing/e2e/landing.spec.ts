@@ -162,3 +162,57 @@ test.describe("kurangi gerakan", () => {
     expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
   });
 });
+
+test.describe("menu ponsel (sidebar)", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test("header satu baris: logo + tombol ☰; sidebar buka, Esc dan pilih tautan menutup", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    const menuPil = page.getByRole("navigation", { name: "Navigasi utama" });
+    const tombol = page.getByRole("button", { name: "Buka menu" });
+    await expect(menuPil).toBeHidden();
+    await expect(tombol).toBeVisible();
+
+    // Logo dan tombol sejajar dalam satu baris
+    const logo = (await page.locator(".lp-nav > .lp-logo").boundingBox())!;
+    const kotakTombol = (await tombol.boundingBox())!;
+    expect(Math.abs(logo.y + logo.height / 2 - (kotakTombol.y + kotakTombol.height / 2))).toBeLessThan(6);
+    await expect(page.locator(".lp-nav > .lp-logo img")).toHaveAttribute("src", /logo-tanda/);
+
+    const sidebar = page.getByRole("dialog", { name: "Menu" });
+    await expect(sidebar).toBeHidden();
+    await tombol.click();
+    await expect(sidebar).toBeVisible();
+    await expect(tombol).toHaveAttribute("aria-expanded", "true");
+    await expect(sidebar.getByRole("link")).toHaveText(["Program", "Kurikulum", "Cara belajar", "Daftar", "Masuk"]);
+    await expect(sidebar.getByRole("link", { name: "Masuk" })).toHaveAttribute("href", /\/masuk$/);
+    await expect(sidebar.getByRole("link", { name: "Program" })).toBeFocused();
+
+    await page.keyboard.press("Escape");
+    await expect(sidebar).toBeHidden();
+    await expect(tombol).toBeFocused();
+
+    await tombol.click();
+    await sidebar.getByRole("link", { name: "Kurikulum" }).click();
+    await expect(sidebar).toBeHidden();
+    await expect(page).toHaveURL(/#kurikulum$/);
+    await expect(page.locator("#kurikulum")).toBeInViewport();
+  });
+
+  test("ketuk latar menutup sidebar", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: "Buka menu" }).click();
+    const sidebar = page.getByRole("dialog", { name: "Menu" });
+    await expect(sidebar).toBeVisible();
+    await page.mouse.click(20, 400);
+    await expect(sidebar).toBeHidden();
+  });
+});
+
+test("di desktop menu pil tampil dan tombol ☰ tersembunyi", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/");
+  await expect(page.getByRole("navigation", { name: "Navigasi utama" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Buka menu" })).toBeHidden();
+});

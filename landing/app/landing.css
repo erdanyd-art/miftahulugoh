@@ -70,25 +70,17 @@ body {
   justify-content: space-between;
   gap: 14px;
 }
+/* Logo + nama: tebal di atas, "Program Bahasa Arab" huruf biasa di bawah; tinggi logo setara dua baris */
 .lp-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-.lp-logo-bulat {
-  width: 46px;
-  height: 46px;
-  border-radius: var(--radius-pil);
-  background: var(--navy);
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  gap: 14px;
 }
 .lp-logo-nama {
   font-weight: 800;
-  font-size: 19px;
+  font-size: 23px;
   letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 .lp-menu {
   display: flex;
@@ -714,11 +706,13 @@ body {
 .lp-logo-teks {
   display: flex;
   flex-direction: column;
-  line-height: 1.1;
+  gap: 2px;
+  line-height: 1.2;
 }
 .lp-logo-sub {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 19px;
+  font-weight: 400;
+  white-space: nowrap;
 }
 .lp-miring-kiri-kecil {
   transform: rotate(-1.5deg);
@@ -916,6 +910,165 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* ============ LOGO & MENU PONSEL ============ */
+.lp-logo-gambar {
+  display: block;
+  width: auto;
+  height: 58px;
+}
+.lp-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.lp-tombol-menu,
+.lp-tombol-tutup {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-pil);
+  border: 0;
+  padding: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font: inherit;
+}
+.lp-tombol-menu {
+  background: var(--navy);
+  color: var(--accent);
+}
+.lp-tombol-tutup {
+  display: flex;
+  background: var(--white);
+  color: var(--navy);
+  border: 2.5px solid var(--navy);
+}
+.lp-tombol-menu:focus-visible,
+.lp-tombol-tutup:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 3px;
+}
+.lp-sidebar-latar {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgb(14 30 91 / 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0s linear 0.3s;
+}
+.lp-sidebar-latar.lp-buka {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease;
+}
+.lp-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  width: min(320px, 86vw);
+  box-sizing: border-box;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  overflow-y: auto;
+  background-color: var(--cream);
+  background-image:
+    linear-gradient(var(--grid) 1.5px, transparent 1.5px),
+    linear-gradient(90deg, var(--grid) 1.5px, transparent 1.5px);
+  background-size: 44px 44px;
+  border-left: 3px solid var(--navy);
+  border-radius: 32px 0 0 32px;
+  transform: translateX(105%);
+  visibility: hidden;
+  transition:
+    transform 0.35s cubic-bezier(0.3, 0.7, 0.2, 1),
+    visibility 0s linear 0.35s;
+}
+.lp-sidebar.lp-buka {
+  transform: none;
+  visibility: visible;
+  transition: transform 0.35s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+/* Tombol tutup di baris sendiri (kanan atas), logo + nama di bawahnya dengan ruang penuh */
+.lp-sidebar-kepala {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.lp-sidebar-kepala .lp-tombol-tutup {
+  align-self: flex-end;
+}
+.lp-sidebar-kepala .lp-logo {
+  gap: 12px;
+}
+.lp-sidebar-kepala .lp-logo-gambar {
+  height: 46px;
+}
+.lp-sidebar-kepala .lp-logo-nama {
+  font-size: 19px;
+}
+.lp-sidebar-kepala .lp-logo-sub {
+  font-size: 15.5px;
+}
+.lp-sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.lp-halaman .lp-sidebar-menu a {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 22px;
+  background: var(--white);
+  border-radius: 20px;
+  font-size: 19px;
+  font-weight: 700;
+}
+.lp-halaman .lp-sidebar-menu a.lp-sidebar-masuk {
+  margin-top: 8px;
+  justify-content: center;
+  background: var(--navy);
+  color: var(--white);
+  border-radius: var(--radius-pil);
+}
+
+/* Di bawah 768px: menu pil diganti tombol ☰ + sidebar, header satu baris rata */
+@media (max-width: 767px) {
+  .lp-nav {
+    flex-wrap: nowrap;
+  }
+  .lp-menu {
+    display: none;
+  }
+  .lp-tombol-menu {
+    display: flex;
+  }
+  .lp-nav > .lp-logo {
+    gap: 10px;
+  }
+  .lp-nav > .lp-logo .lp-logo-gambar {
+    height: clamp(40px, 11.5vw, 48px);
+  }
+  .lp-nav > .lp-logo .lp-logo-nama {
+    font-size: clamp(16px, 4.7vw, 20px);
+  }
+  .lp-nav > .lp-logo .lp-logo-sub {
+    font-size: clamp(13.5px, 3.9vw, 16.5px);
+  }
 }
 
 /* ============ GERAK 3D ============
