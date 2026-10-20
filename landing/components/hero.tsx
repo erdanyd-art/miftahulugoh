@@ -1,10 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import { siteContent, urlMasuk, type KontenSitus } from "@/lib/site-content";
+import { MenuPonsel } from "./menu-ponsel";
 import {
   IkonJam,
   IkonKalender,
-  IkonKunci,
   IkonPanah,
   IkonVideo,
   Key,
@@ -18,10 +19,8 @@ export function Nav() {
   return (
     <header className="lp-nav">
       <Link href="/" className="lp-logo">
-        {/* TODO logo asli: ganti ikon sementara ini dengan berkas logo lembaga (public/) bila sudah tersedia */}
-        <span aria-hidden="true" className="lp-logo-bulat">
-          <IkonKunci />
-        </span>
+        {/* Logo asli lembaga (public/logo-tanda.png: buku + kaligrafi, latar transparan). Nama di sebelahnya, jadi alt kosong. */}
+        <Image src="/logo-tanda.png" alt="" width={488} height={226} priority className="lp-logo-gambar" />
         <span className="lp-logo-teks">
           <span className="lp-logo-nama">Miftah al-Lughah</span>
           <span className="lp-logo-sub">Program Bahasa Arab</span>
@@ -35,6 +34,7 @@ export function Nav() {
           Masuk
         </a>
       </nav>
+      <MenuPonsel urlMasuk={urlMasuk()} />
     </header>
   );
 }

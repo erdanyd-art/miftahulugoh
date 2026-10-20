@@ -112,6 +112,6 @@ Brosur memakai logo lembaga (buku terbuka berornamen). **Jangan menggambar ulang
 **Masih terbuka (tetap placeholder / TODO, jangan ditebak):**
 - ~~Nomor WhatsApp~~ diisi 2026-10-19 (0878-6355-4350, di `lib/site-content.ts` sebagai `6287863554350`).
 - ~~Instagram dan alamat/kota~~ dihapus dari landing atas permintaan pemilik (2026-10-19); bagian pendaftaran hanya menampilkan WhatsApp.
-- Berkas logo asli (SVG atau PNG transparan).
+- ~~Berkas logo asli~~ diterima 2026-10-20 (PNG transparan): `landing/public/logo-miftah-al-lughah.png` (lengkap) dan `landing/public/logo-tanda.png` (buku + kaligrafi, dipakai di menu).
 - Jadwal hari dan jam per kelas (tidak ada di brosur).
 - Kepanjangan "ABY" dan izin menuliskannya lengkap (kemungkinan al-'Arabiyyah bayna yadayk).

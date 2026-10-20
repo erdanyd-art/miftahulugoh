@@ -152,13 +152,6 @@ function Garis({ ukuran, lebar, children }: { ukuran: number; lebar: number; chi
   );
 }
 
-export const IkonKunci = () => (
-  <Garis ukuran={26} lebar={2.2}>
-    <circle cx="8" cy="12" r="4" />
-    <path d="M12 12h9M18 12v4M21 12v3" />
-  </Garis>
-);
-
 export const IkonPanah = () => (
   <Garis ukuran={22} lebar={2.4}>
     <path d="M5 12h14M13 6l6 6-6 6" />
